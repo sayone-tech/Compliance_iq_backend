@@ -5,12 +5,17 @@ semantics the document's own annotation legend relies on.
 Usage, from the repository root:
 
     python3 scripts/docx2md.py \\
-        docs/requirement-specification/PRD_v4.docx \\
-        docs/requirement-specification/PRD_v4.md
+        docs/requirement-specification/PRD.docx \\
+        docs/requirement-specification/PRD.md
 
 The .docx stays the signed baseline; the Markdown is a derived, diffable mirror.
-Re-run this whenever a new PRD revision lands, then re-add the header comment at
-the top of the .md (it explains the colour-to-text encoding to readers).
+Filenames carry no version — git history is the version record, and each
+document states its own version in its header.
+
+Re-run this whenever a new PRD revision lands (drop the new .docx in over
+PRD.docx so the rename is a diff, not a new file), then re-add the header
+comment at the top of the .md — it explains the colour-to-text encoding to
+readers and is not produced by this script.
 
 Stdlib only — no pandoc, python-docx, or mammoth required.
 """

@@ -1,6 +1,8 @@
 <!--
-  Markdown rendering of PRD_v4.docx (same directory), for readable diffs on GitHub.
+  Markdown rendering of PRD.docx (same directory), for readable diffs on GitHub.
   The .docx remains the signed baseline; if the two disagree, the .docx wins.
+  This file carries no version in its name — see the version field below, and
+  git history for the revision record. Regenerate with scripts/docx2md.py.
 
   Markdown has no colour, so the document's own annotation legend is encoded as text:
     blue italic   -> trailing `[25 Jun FRD call]` tag
