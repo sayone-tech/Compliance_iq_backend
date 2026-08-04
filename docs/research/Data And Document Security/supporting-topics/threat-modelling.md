@@ -11,14 +11,14 @@ This document covers the **methodology and programme**. The applied result — t
 - **Model data flows, not components.** Threats live at trust boundaries, and trust boundaries are visible only in a data-flow view.
 - **Every threat produces a decision:** mitigate, transfer, accept with a named owner and an expiry, or eliminate. A threat with no decision is a threat you have merely documented.
 - **Mitigations become tests.** An abuse case that is not a test case will regress. This is the single highest-leverage practice in the programme.
-- **Include privacy threats.** Security frameworks find security threats; a privacy framework finds privacy threats. For a GDPR-regulated platform (NFR-06), omitting privacy threat modelling is a visible gap.
-- **Include AI-specific threats.** Standard frameworks predate prompt injection; supplement for the FR-31 mapping path.
+- **Include privacy threats.** Security frameworks find security threats; a privacy framework finds privacy threats. For a GDPR-regulated platform (the GDPR processor requirement), omitting privacy threat modelling is a visible gap.
+- **Include AI-specific threats.** Standard frameworks predate prompt injection; supplement for the advisory AI mapping requirement mapping path.
 
 ## Regulatory implications
 
 - **GDPR Art. 25** — data protection by design requires assessing risks to rights and freedoms at design time. **Art. 35** — a data protection impact assessment must contain an assessment of the risks and the measures addressing them. **A structured privacy threat model is the most defensible way to produce that risk section.**
 - **Delegated Reg. (EU) 2024/1774** — risk assessment on ICT changes and on new or changed systems before deployment. A per-change threat model is the cleanest way to evidence it. *(Design reference.)*
-- **PRD NFR-01, NFR-04, NFR-07** — these three requirements define what "catastrophic" means for this product, and therefore what the model must cover first: cross-firm disclosure, audit tampering, and record loss or deletion.
+- **The tenant isolation requirement, the immutable audit requirement, the non-deletable retention requirement** — these three requirements define what "catastrophic" means for this product, and therefore what the model must cover first: cross-firm disclosure, audit tampering, and record loss or deletion.
 
 ## Recommended programme
 
@@ -38,7 +38,7 @@ T1 is enforced by CI: a change touching a designated path must contain a complet
 - **LINDDUN** — privacy threats: linking, identifying, non-repudiation, detecting, data disclosure, unawareness, non-compliance. Mandatory for personal-data flows; feeds the data protection impact assessment.
 - **MITRE ATT&CK** — for coverage mapping and detection engineering (`security-monitoring`), not for discovery.
 - **MITRE ATLAS and the OWASP LLM Top 10** — for the WSP mapping path: prompt injection, insecure output handling, excessive agency, supply chain.
-- **Attack trees** — for the small number of catastrophic scenarios worth deep analysis, which for this product are defined by the PRD itself: cross-firm disclosure (NFR-01), audit or evidence tampering (NFR-04), record loss (NFR-07), mass exfiltration.
+- **Attack trees** — for the small number of catastrophic scenarios worth deep analysis, which for this product are defined by the PRD itself: cross-firm disclosure (the tenant isolation requirement), audit or evidence tampering (the immutable audit requirement), record loss (the non-deletable retention requirement), mass exfiltration.
 
 ### Per-element checklist
 
@@ -55,13 +55,13 @@ For each mark, record: threat, likelihood, impact, existing control, decision, t
 
 Generic frameworks miss what is specific to ComplianceIQ. These seven questions are mandatory in every T2 model:
 
-1. **Cross-firm (NFR-01):** can any input cause data from firm A to reach firm B? Consider caches, indexes, extracted text, error messages, background jobs, exports, report generation, and any shared inference context.
-2. **Record immutability (NFR-04, NFR-07, FR-27, FR-61, FR-21b):** can this change allow a protected record — evidence, a signed-off result, an issued report, an audit entry, an N/A decision — to be altered, deleted, backdated or created without the required approvals?
-3. **Approval integrity (FR-32, FR-33, FR-44, FR-45):** can a two-person sign-off be satisfied by one person, or by the excluded party (the policy author, or the finding's original recorder)?
+1. **Cross-firm (the tenant isolation requirement):** can any input cause data from firm A to reach firm B? Consider caches, indexes, extracted text, error messages, background jobs, exports, report generation, and any shared inference context.
+2. **Record immutability (the immutable audit requirement, the non-deletable retention requirement, the amendment-not-edit requirement, the immutable issued report requirement, the Not Applicable immutability requirement):** can this change allow a protected record — evidence, a signed-off result, an issued report, an audit entry, an N/A decision — to be altered, deleted, backdated or created without the required approvals?
+3. **Approval integrity (the two-person mapping approval requirement, the mapping reversal requirement, the finding closure requirement, the closure approver exclusion rule):** can a two-person sign-off be satisfied by one person, or by the excluded party (the policy author, or the finding's original recorder)?
 4. **Key exposure:** does this change create a path by which plaintext or key material could reach a log, a metric, an error message or a lower-privilege component?
-5. **Residency (NFR-03):** does this change create a path by which data or metadata could leave the EU, including via a new sub-processor, a globally replicated service, or telemetry?
+5. **Residency (the EU residency requirement):** does this change create a path by which data or metadata could leave the EU, including via a new sub-processor, a globally replicated service, or telemetry?
 6. **Non-EU access:** does this change create a path by which a person outside the EU/EEA could reach production personal data (`cross-border-data-processing`)?
-7. **AI mapping (FR-31, §6.2):** can uploaded WSP content influence model behaviour? Can model output take any action without human confirmation? Can a mapping be confirmed without the two required approvers? Could the change move measured accuracy below the 85% bar?
+7. **AI mapping (the advisory AI mapping requirement, the PRD's WSP mapping accuracy commitment):** can uploaded WSP content influence model behaviour? Can model output take any action without human confirmation? Can a mapping be confirmed without the two required approvers? Could the change move measured accuracy below the 85% bar?
 
 ### Linking threats to tests
 
@@ -103,7 +103,7 @@ The model then becomes traceable: any threat can be followed to the code that mi
 - **Formal method vs. lightweight checklist.** Adoption dominates completeness — an unused rigorous method finds nothing. Recommendation: the tiered approach above. **[PROPOSED]**
 - **Threat-modelling tooling vs. markdown and diagrams in the repository.** Tools add structure and reuse but also friction and licence cost. Recommendation: markdown templates alongside the code, with diagrams as Mermaid so they version and diff. **[PROPOSED]**
 - **Modelling everything vs. risk-based scoping.** Recommendation: risk-based — trust boundaries and the seven questions define scope. **[PROPOSED]**
-- **Publishing a sanitised threat model summary to customers.** A strong maturity signal, but the material is the Client's IP under CC-03 and its publication is the Client's decision. **[OPEN]**
+- **Publishing a sanitised threat model summary to customers.** A strong maturity signal, but the material is the Client's IP under the IP ownership term and its publication is the Client's decision. **[OPEN]**
 
 ## Design decisions
 
@@ -111,13 +111,13 @@ The model then becomes traceable: any threat can be followed to the code that mi
 |---|---|---|
 | DD-24-01 | Three-tier programme: per-change checklist enforced in CI on designated paths, per-feature workshop, periodic system-wide refresh | **[PROPOSED]** |
 | DD-24-02 | STRIDE per element for security, a privacy framework feeding the impact assessment, ATLAS and the OWASP LLM Top 10 for the mapping path, attack trees for the catastrophic scenarios | **[PROPOSED]** |
-| DD-24-03 | The seven domain-specific questions are mandatory in every per-feature model | **[PROPOSED]** — anchored on NFR-01, NFR-03, NFR-04, NFR-07, FR-31, FR-32 |
+| DD-24-03 | The seven domain-specific questions are mandatory in every per-feature model | **[PROPOSED]** — anchored on the tenant isolation requirement, the EU residency requirement, the immutable audit requirement, the non-deletable retention requirement, the advisory AI mapping requirement, the two-person mapping approval requirement |
 | DD-24-04 | Every mitigated threat carries a stable identifier linked to specific tests and detections; the linkage ratio is a reported metric | **[PROPOSED]** |
 | DD-24-05 | Threat models live in the repository as markdown with diagrams, versioned with the code they describe | **[PROPOSED]** |
 | DD-24-06 | Accepted risks require a named owner and an expiry date; expiry escalates rather than lapsing silently | **[PROPOSED]** |
 | DD-24-07 | Independent penetration test before real client data, with the threat model supplied to testers | **[PROPOSED]** |
 | DD-24-08 | Every incident retrospective asks whether the threat was modelled; gaps feed the next refresh | **[PROPOSED]** |
-| DD-24-09 | Publication of a sanitised threat model summary to customers | **[OPEN]** — CC-03 |
+| DD-24-09 | Publication of a sanitised threat model summary to customers | **[OPEN]** — The IP ownership term |
 
 ## References
 

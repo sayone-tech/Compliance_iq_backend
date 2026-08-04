@@ -10,13 +10,13 @@
 
 | ID | Risk | Category | Inherent | Controls (`security-control-matrix`) | Residual | Owner (to assign) |
 |---|---|---|---|---|---|---|
-| R-01 | **Cross-firm data disclosure** via application, cache, index or key-scoping failure — breaches NFR-01 | Confidentiality | 4×5 = 20 | E-01, E-02, E-03, E-06, C-11, D-05, D-08 | **10** | Security owner |
+| R-01 | **Cross-firm data disclosure** via application, cache, index or key-scoping failure — breaches the tenant isolation requirement | Confidentiality | 4×5 = 20 | E-01, E-02, E-03, E-06, C-11, D-05, D-08 | **10** | Security owner |
 | R-02 | **Prompt injection in an uploaded WSP** produces a mapping that conceals a genuine compliance gap | AI / integrity | 4×5 = 20 | I-07, I-08, **I-01 human confirmation**, **I-02 two-person approval**, I-03 | **9** | Product owner |
 | R-03 | **Malicious or coerced insider exfiltrates firm evidence** | Insider | 3×5 = 15 | B-07, K-04, K-11, K-10, E-05 | **9** | Security owner |
-| R-04 | **A firm user fabricates or backdates evidence** to conceal a compliance failure | Integrity | 3×5 = 15 | F-01, F-04, F-05, F-06, I-02, FR-45 exclusion enforced server-side | **9** | Product owner |
+| R-04 | **A firm user fabricates or backdates evidence** to conceal a compliance failure | Integrity | 3×5 = 15 | F-01, F-04, F-05, F-06, I-02, the closure approver exclusion rule exclusion enforced server-side | **9** | Product owner |
 | R-05 | **Mapping accuracy falls below the 85% PRD commitment** after a model or prompt change | Contractual | 4×4 = 16 | I-03, I-09 evaluation harness as a promotion gate | **8** | Product owner |
 | R-06 | **Compromised upstream dependency** introduces a backdoor | Supply chain | 3×5 = 15 | H-10, H-09, G-04, H-08 | **8** | Engineering owner |
-| R-07 | **Ransomware** encrypts production and attempts to destroy backups — would breach NFR-07 | Availability / integrity | 3×5 = 15 | J-04, J-05, F-12, J-06 | **8** | Engineering owner |
+| R-07 | **Ransomware** encrypts production and attempts to destroy backups — would breach the non-deletable retention requirement | Availability / integrity | 3×5 = 15 | J-04, J-05, F-12, J-06 | **8** | Engineering owner |
 | R-08 | **Records destroyed before the six-year minimum** by deletion, key destruction or retention misconfiguration | Regulatory / integrity | 3×5 = 15 | E-07, D-11, F-15, J-03, F-16 | **8** | Security owner |
 | R-09 | **Unresolved delivery topology** leaves an unlawful cross-border access path live | Regulatory | 4×4 = 16 | B-06, B-07, B-08 — **but B-09 is unanswered** | **8** | Legal / Client |
 
@@ -24,7 +24,7 @@
 
 | ID | Risk | Category | Inherent | Controls | Residual | Owner (to assign) |
 |---|---|---|---|---|---|---|
-| R-10 | Portal team accesses firm evidence beyond the agreed boundary | Confidentiality | 3×4 | C-16 — **boundary unresolved (SA-06/SA-08)** | 7 | Client / Product |
+| R-10 | Portal team accesses firm evidence beyond the agreed boundary | Confidentiality | 3×4 | C-16 — **boundary unresolved (the Portal firm-visibility statement/the Portal system settings requirement)** | 7 | Client / Product |
 | R-11 | SIM-swap defeats an SMS-based second factor | Access | 3×4 | C-04, C-05 — **mechanism unresolved** | 6 | Security owner |
 | R-12 | Two-person sign-off defeated by one person or by an excluded party | Integrity | 3×5 | Server-side approver identity and exclusion checks; C-03 invitation-only accounts | 6 | Product owner |
 | R-13 | Cloud misconfiguration exposes storage or a database publicly | Confidentiality | 3×5 | G-01, G-02, G-03, conformance scanning | 6 | Engineering owner |
@@ -36,7 +36,7 @@
 | R-19 | Untested restore fails when needed | Availability | 3×5 | J-06 automated restore verification | 5 | Engineering owner |
 | R-20 | Derivative artefacts (previews, extracted text, OCR output) escape access control | Confidentiality | 3×4 | E-06 derivative registry with inheritance | 5 | Engineering owner |
 | R-21 | Malware uploaded as evidence and later downloaded by a firm user | Integrity | 3×4 | E-09 quarantine-scan-promote, fail closed | 5 | Engineering owner |
-| R-22 | Storage cost growth over six-plus non-deletable years exceeds the model | Commercial | 3×3 | Lifecycle transitions; NFR-11 ceiling; cost modelling in `deployment-recommendations` §7 | 5 | Client / Delivery |
+| R-22 | Storage cost growth over six-plus non-deletable years exceeds the model | Commercial | 3×3 | Lifecycle transitions; the configurable file-size limit ceiling; cost modelling in `deployment-recommendations` §7 | 5 | Client / Delivery |
 | R-23 | Inference provider changes terms, region or retention | Third party | 2×4 | Contractual change notice; selection criteria — **provider unselected** | 5 | Product owner |
 | R-24 | Session token theft via a script in a rendered document | Access | 3×4 | E-11 separate content origin, sandboxed policy | 5 | Engineering owner |
 | R-25 | Incident assessed or notified too late for firms to meet their own clocks | Regulatory | 3×4 | K-05, K-06 — **deadline unresolved** | 5 | Security owner |
@@ -58,7 +58,7 @@
 | R-36 | Irreversible retention applied with the wrong duration or to the wrong class | Staged rollout (`deployment-recommendations` §5), retention derived only from the service | 3 | Security owner |
 | R-37 | Employee monitoring deployed without a lawful basis | K-14 — **legal advice pending (L-8)** | 4 | Legal / Client |
 | R-38 | Third-party service breach affecting platform data | H-12 vendor intake gate; per-provider playbook | 4 | Security owner |
-| R-39 | Dependency licence incompatible with CC-03 exclusive assignment | H-11 licence deny-list, review at addition time | 3 | Engineering owner |
+| R-39 | Dependency licence incompatible with the IP ownership term exclusive assignment | H-11 licence deny-list, review at addition time | 3 | Engineering owner |
 
 ## Residual risks proposed for acceptance — **NOT YET ACCEPTED**
 
@@ -67,10 +67,10 @@ These are risks this research judges cannot be economically eliminated. **None h
 | ID | Risk | Rationale for proposing acceptance | Status |
 |---|---|---|---|
 | RA-01 | A determined insider photographs a screen to exfiltrate a small number of documents | No technical control prevents this. Watermarking provides attribution; volume is inherently limited | **Proposed — awaiting Client decision** |
-| RA-02 | Single cloud provider concentration | The PRD selects AWS (TI-01). Portability and an exit plan are the proportionate response; multi-cloud would degrade every control through inconsistency | **Proposed — the provider choice is PRD-fixed; the residual is not formally accepted** |
+| RA-02 | Single cloud provider concentration | The PRD selects AWS (the confirmed cloud decision). Portability and an exit plan are the proportionate response; multi-cloud would degrade every control through inconsistency | **Proposed — the provider choice is PRD-fixed; the residual is not formally accepted** |
 | RA-03 | Blind index leaks equality and frequency information within a firm | Necessary for searchability of encrypted fields. Per-firm keys prevent cross-firm analysis; the field set is limited and documented | **Proposed — awaiting Client decision** |
 | RA-04 | Prompt injection cannot be eliminated, only reduced | No complete technical defence exists. The PRD's own human-confirmation and two-approver rules are the substantive mitigation | **Proposed — awaiting Client decision** |
-| RA-05 | Source code hosted outside EU-controlled infrastructure, if a non-EU repository provider is used | Source code is the Client's IP (CC-03), not client personal data. Build and deploy runners remain EU-resident | **Proposed — depends on the unresolved delivery topology (L-1)** |
+| RA-05 | Source code hosted outside EU-controlled infrastructure, if a non-EU repository provider is used | Source code is the Client's IP (the IP ownership term), not client personal data. Build and deploy runners remain EU-resident | **Proposed — depends on the unresolved delivery topology (L-1)** |
 
 ## Register governance **[PROPOSED]**
 

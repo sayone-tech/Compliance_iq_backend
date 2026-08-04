@@ -2,7 +2,7 @@
 
 > **Baseline:** PRD v4.0. **[PRD REQUIRED]** · **[PROPOSED]** · **[OPEN]** · **[FUTURE]** — see [Future and Optional Scope](future-scope/future-and-optional-scope.md).
 
-The pipeline is the most privileged system in the organisation: it can change production, it holds deployment identity, and every downstream control trusts it. Compromise the pipeline and NFR-01, NFR-02, NFR-04 and NFR-07 all become claims rather than properties. Treat it as production.
+The pipeline is the most privileged system in the organisation: it can change production, it holds deployment identity, and every downstream control trusts it. Compromise the pipeline and the tenant isolation requirement, the encryption requirement, the immutable audit requirement and the non-deletable retention requirement all become claims rather than properties. Treat it as production.
 
 Not named by the PRD. Everything here is **[PROPOSED]**. Specific tools named below are examples of a pattern, not selections. **[OPEN]**
 
@@ -18,9 +18,9 @@ Not named by the PRD. Everything here is **[PROPOSED]**. Specific tools named be
 ## Regulatory implications
 
 - **GDPR Art. 32** — the pipeline holds access paths that could reach personal data; its controls are Art. 32 measures.
-- **Delegated Reg. (EU) 2024/1774** — change management: changes recorded, tested, risk-assessed, approved and deployed in a controlled manner, with separation between development and production and between those who develop and those who approve. Emergency changes need a defined post-implementation process. *(Design reference — and the two-person model below mirrors the product's own approval philosophy in FR-32 and FR-44.)*
+- **Delegated Reg. (EU) 2024/1774** — change management: changes recorded, tested, risk-assessed, approved and deployed in a controlled manner, with separation between development and production and between those who develop and those who approve. Emergency changes need a defined post-implementation process. *(Design reference — and the two-person model below mirrors the product's own approval philosophy in the two-person mapping approval requirement and the finding closure requirement.)*
 - **Residency (`data-residency`, `cross-border-data-processing`)** — runners that touch production configuration should run in the EU. Where the pipeline is triggered from matters less than where its privileged execution happens.
-- **CC-03** — the pipeline builds artefacts whose IP belongs exclusively to the Client; build provenance is part of demonstrating that.
+- **the IP ownership term** — the pipeline builds artefacts whose IP belongs exclusively to the Client; build provenance is part of demonstrating that.
 
 ## Recommended architecture
 
@@ -67,7 +67,7 @@ Cannot access secrets            No production data access       Manual approval
 | Post-deploy | — | Drift detection, configuration compliance scan, deployment record written to the immutable store |
 
 - **Promotion is by digest.** The exact artefact tested in pre-production is deployed to production. No rebuild, no mutable tags.
-- **Progressive delivery** with automated rollback on error-rate, latency or security-signal regression. Latency regression matters directly here — NFR-05 sets a two-second dashboard target.
+- **Progressive delivery** with automated rollback on error-rate, latency or security-signal regression. Latency regression matters directly here — The performance requirement sets a two-second dashboard target.
 - **Declarative deployment** (the desired state lives in a repository and the environment reconciles to it) is worth considering: it removes cluster credentials from the pipeline and makes production state reviewable. **[PROPOSED / OPEN]**
 
 ### Emergency changes
@@ -101,7 +101,7 @@ A defined emergency-change process, not the absence of one:
 
 ## Trade-offs
 
-- **Hosted runners vs. self-hosted in the EU.** Source code is the Client's IP under CC-03, not client personal data, so hosted runners are defensible for untrusted PR validation. Zones 2 and 3 handle deployment identity and should be EU-resident. Recommendation: hosted for Zone 1, self-hosted ephemeral in the EU for build and deploy. **[PROPOSED]**
+- **Hosted runners vs. self-hosted in the EU.** Source code is the Client's IP under the IP ownership term, not client personal data, so hosted runners are defensible for untrusted PR validation. Zones 2 and 3 handle deployment identity and should be EU-resident. Recommendation: hosted for Zone 1, self-hosted ephemeral in the EU for build and deploy. **[PROPOSED]**
 - **Declarative reconciliation vs. push-based deploy from CI.** The former removes cluster credentials from the pipeline; it adds a component. Recommendation: adopt it if the team has capacity; the credential reduction is the main benefit. **[PROPOSED / OPEN]**
 - **Manual production approval vs. fully automated deployment.** For a platform whose records must be provably unaltered, an approval gate is worth the latency. Recommendation: manual approval by two reviewers for production; automatic to pre-production. **[PROPOSED]**
 - **Two reviewers vs. one.** Painful in a small team. Recommendation: two for production deploys and for changes to security-relevant paths (authentication, authorisation, cryptography, tenancy, retention, pipeline, infrastructure); one for everything else. Monitor override rates. **[PROPOSED]**
@@ -114,14 +114,14 @@ A defined emergency-change process, not the absence of one:
 | DD-19-01 | Three trust zones; unreviewed code never executes with privileged credentials or on self-hosted runners | **[PROPOSED]** |
 | DD-19-02 | Zero long-lived credentials in CI; federation only, with trust conditions matching the exact repository and branch or environment, and short sessions | **[PROPOSED]** |
 | DD-19-03 | Build and deploy identities are separate; neither can read client data or decrypt firm keys | **[PROPOSED]** |
-| DD-19-04 | Self-hosted runners are ephemeral, single-job, EU-resident, network-restricted, built from in-house scanned and signed images | **[PROPOSED]** — supports NFR-03 |
+| DD-19-04 | Self-hosted runners are ephemeral, single-job, EU-resident, network-restricted, built from in-house scanned and signed images | **[PROPOSED]** — supports the EU residency requirement |
 | DD-19-05 | Artefact promotion is by immutable digest; no rebuild between environments | **[PROPOSED]** |
 | DD-19-06 | Production deployment requires two reviewers; progressive rollout with automated rollback | **[PROPOSED]** |
 | DD-19-07 | Emergency changes use a faster approval path but never bypass signing, attestation or admission control | **[PROPOSED]** |
 | DD-19-08 | Workflow files, federation trust policies and branch protection changes require security review and generate alerts | **[PROPOSED]** |
 | DD-19-09 | Periodic reconciliation of production artefact digests against signed build records | **[PROPOSED]** |
 | DD-19-10 | Signed commits required on branches that can reach production | **[PROPOSED]** |
-| DD-19-11 | Every deployment produces a record (actor, approvers, artefact digest, attestations, timestamp) in the immutable store | **[PROPOSED]** — reuses the NFR-04 store |
+| DD-19-11 | Every deployment produces a record (actor, approvers, artefact digest, attestations, timestamp) in the immutable store | **[PROPOSED]** — reuses the immutable audit requirement store |
 | DD-19-12 | Declarative deployment reconciliation | **[PROPOSED / OPEN]** |
 
 ## References

@@ -6,17 +6,17 @@
 
 | ID | Asset | PRD anchor | Confidentiality | Integrity | Availability |
 |---|---|---|---|---|---|
-| AS-1 | Evidence files uploaded during tests and remediation | FR-24, FR-42, §2 | **Critical** | **Critical** | High |
-| AS-2 | Test executions, results, findings, remediation records | §2, FR-27 | High | **Critical** | High |
-| AS-3 | Generated compliance reports | FR-56, FR-61 | High | **Critical** | High |
-| AS-4 | Audit log and notification log | FR-13, NFR-04, §2 | High | **Critical** | High |
-| AS-5 | WSP manuals, versions and rule mappings | FR-30, FR-37 | High | **Critical** | Medium |
-| AS-6 | Firm and staff records (qualifications, hardware, contact chain) | FR-63, FR-69, FR-70 | **Critical** | High | Medium |
-| AS-7 | Encryption keys (per-firm, audit, evidence sealing) | NFR-02 | **Critical** | **Critical** | **Critical** |
-| AS-8 | Regulatory content: Requirement IDs, test procedures, sampling library | SA-01, SA-02, SA-05, CC-03 | High | **Critical** | High — **the Client's core IP** |
-| AS-9 | Platform source code, architecture and schemas | CC-03 | Medium | High | Medium — **owned 100% by the Client** |
+| AS-1 | Evidence files uploaded during tests and remediation | Accepted evidence file type list, the remediation evidence requirement, the PRD's data and retention table | **Critical** | **Critical** | High |
+| AS-2 | Test executions, results, findings, remediation records | The PRD's data and retention table, the amendment-not-edit requirement | High | **Critical** | High |
+| AS-3 | Generated compliance reports | Report contents requirement, the immutable issued report requirement | High | **Critical** | High |
+| AS-4 | Audit log and notification log | Permanent audit log requirement, the immutable audit requirement, the PRD's data and retention table | High | **Critical** | High |
+| AS-5 | WSP manuals, versions and rule mappings | Single WSP upload requirement, the permanent WSP version history requirement | High | **Critical** | Medium |
+| AS-6 | Firm and staff records (qualifications, hardware, contact chain) | Staff record fields requirement, the hardware inventory requirement, the business continuity call tree requirement | **Critical** | High | Medium |
+| AS-7 | Encryption keys (per-firm, audit, evidence sealing) | Encryption requirement | **Critical** | **Critical** | **Critical** |
+| AS-8 | Regulatory content: Requirement IDs, test procedures, sampling library | Requirement ID library, the test procedure versioning requirement, the sampling methodology library, the IP ownership term | High | **Critical** | High — **the Client's core IP** |
+| AS-9 | Platform source code, architecture and schemas | IP ownership term | Medium | High | Medium — **owned 100% by the Client** |
 | AS-10 | Backups | — | **Critical** | High | **Critical** |
-| AS-11 | User credentials and sessions | FR-11, FR-12 | **Critical** | High | High |
+| AS-11 | User credentials and sessions | Phone-based second factor requirement, the invitation-only account requirement | **Critical** | High | High |
 
 ## 2. Trust boundaries
 
@@ -31,9 +31,9 @@
 | TB-7 | Non-EU location → EU production | Cross-border access, if any exists (`cross-border-data-processing`) |
 | TB-8 | CI/CD → production | Deployment authority |
 | TB-9 | Operator → firm data | Insider access |
-| TB-10 | **Platform Admin Portal → firm data** | The SA-06/SA-08 boundary, **unresolved** |
+| TB-10 | **Platform Admin Portal → firm data** | The Portal firm-visibility statement/the Portal system settings requirement boundary, **unresolved** |
 | TB-11 | Platform → sub-processors | Data leaving platform control |
-| TB-12 | **Firm A ↔ Firm B** | **The isolation boundary; NFR-01 requires it be impermeable** |
+| TB-12 | **Firm A ↔ Firm B** | **The isolation boundary; the tenant isolation requirement requires it be impermeable** |
 
 ## 3. Threat actors
 
@@ -48,7 +48,7 @@
 | Opportunistic scanner | Low | Automated exploitation | AS-11, edge |
 | Compromised supplier | High | Supply-chain foothold | AS-9, AS-10, all via deploy |
 
-The firm-user threat deserves emphasis: this product's *purpose* is to produce a record a regulator will trust. A user who wants to hide a compliance failure is inside the trust boundary and is the reason FR-32, FR-44, FR-45, FR-27, FR-21b and FR-21c all exist.
+The firm-user threat deserves emphasis: this product's *purpose* is to produce a record a regulator will trust. A user who wants to hide a compliance failure is inside the trust boundary and is the reason the two-person mapping approval requirement, the finding closure requirement, the closure approver exclusion rule, the amendment-not-edit requirement, the Not Applicable immutability requirement and the sample-change approval requirement all exist.
 
 ## 4. Threat catalogue
 
@@ -81,8 +81,8 @@ The firm-user threat deserves emphasis: this product's *purpose* is to produce a
 | ID | Threat | STRIDE | Boundary | L | I | Risk | Controls | Residual |
 |---|---|---|---|---|---|---|---|---|
 | T-15 | Insider alters or deletes audit entries or evidence to conceal an action | T, R | TB-9 | 2 | 5 | 10 | F-02 no delete path, F-12 write-once and write-only archive, D-11 key deletion blocked, K-09 separation of duties | 3 |
-| T-16 | **Firm user fabricates or backdates evidence to satisfy a regulator** | T, R | TB-2 | 3 | 5 | **15** | F-01 creation-time audit with actor and device, I-02/two-person approvals, FR-45 recorder exclusion, F-04/F-05 immutability after sign-off | 5 |
-| T-17 | Two-person sign-off defeated — one person operates two accounts, or the excluded party approves | S, T | TB-2 | 3 | 5 | **15** | Approver identity checks, policy-author and recorder exclusion enforced server-side (FR-32, FR-45), C-03 invitation-only accounts, C-12 step-up | 5 |
+| T-16 | **Firm user fabricates or backdates evidence to satisfy a regulator** | T, R | TB-2 | 3 | 5 | **15** | F-01 creation-time audit with actor and device, I-02/two-person approvals, the closure approver exclusion rule recorder exclusion, F-04/F-05 immutability after sign-off | 5 |
+| T-17 | Two-person sign-off defeated — one person operates two accounts, or the excluded party approves | S, T | TB-2 | 3 | 5 | **15** | Approver identity checks, policy-author and recorder exclusion enforced server-side (the two-person mapping approval requirement, the closure approver exclusion rule), C-03 invitation-only accounts, C-12 step-up | 5 |
 | T-18 | Sealing key compromised, enabling forged records | S, T | TB-4 | 2 | 5 | 10 | Sign-only non-exportable key, D-09 separation of duties, historical public keys retained | 4 |
 | T-19 | Hash chain broken by an ingestion gap, indistinguishable from tampering | T | TB-3 | 3 | 3 | 9 | Single-writer sealer, monotonic sequence, gap detection, documented repair that itself produces a record | 4 |
 | T-20 | Audit gap prevents scoping a breach within 72 hours | R | TB-3 | 3 | 4 | 12 | F-14 coverage tests, F-13 synchronous writes, pre-written scoping queries | 4 |
@@ -124,15 +124,15 @@ Note what is **not** on this list, because the PRD's design removes it: the mode
 
 | Rank | Threat | Residual | Why it stays elevated | Further action |
 |---|---|---|---|---|
-| 1 | **T-22 prompt injection steering a mapping** | 6 | No complete technical defence exists; adversarial documents evolve. Mitigated in depth by the PRD's own human-confirmation and two-approver rules | Adversarial testing of the mapping pipeline; conservative confidence thresholds; keep FR-31/FR-32 inviolate |
+| 1 | **T-22 prompt injection steering a mapping** | 6 | No complete technical defence exists; adversarial documents evolve. Mitigated in depth by the PRD's own human-confirmation and two-approver rules | Adversarial testing of the mapping pipeline; conservative confidence thresholds; keep the advisory AI mapping requirement/the two-person mapping approval requirement inviolate |
 | 2 | **T-28 compromised dependency** | 6 | Upstream compromise is outside our control | Dependency reduction as a tracked objective; runtime behavioural detection; egress limits |
-| 3 | **T-05 SIM-swap on an SMS second factor** | 6 | Depends on an **unresolved** decision (C-05) | Choose an app-based or push factor within the FR-11 wording |
-| 4 | **T-08 Portal visibility of firm evidence** | 6 | Depends on an **unresolved** boundary (SA-06/SA-08) | Settle the boundary before the Portal data layer is built |
+| 3 | **T-05 SIM-swap on an SMS second factor** | 6 | Depends on an **unresolved** decision (C-05) | Choose an app-based or push factor within the phone-based second factor requirement wording |
+| 4 | **T-08 Portal visibility of firm evidence** | 6 | Depends on an **unresolved** boundary (the Portal firm-visibility statement/the Portal system settings requirement) | Settle the boundary before the Portal data layer is built |
 | 5 | T-01, T-02, T-03, T-09, T-10, T-16, T-17, T-30 | 5 | Catastrophic impact even at moderate likelihood | These are the standing test scenarios for the isolation matrix and for penetration testing |
 
 ## 6. Attack trees for the catastrophic scenarios
 
-**AT-1 — Mass cross-firm disclosure (breaches NFR-01)**
+**AT-1 — Mass cross-firm disclosure (breaches the tenant isolation requirement)**
 
 ```
 Goal: read evidence belonging to many firms
@@ -147,12 +147,12 @@ Goal: read evidence belonging to many firms
 │   ├── Over-broad grant                       → blocked by the per-firm key encryption context
 │   └── Public bucket misconfiguration         → account-level public-access block, conformance rules
 └── Key compromise
-    └── One key for all firms                  → eliminated by the NFR-02 per-firm key design
+    └── One key for all firms                  → eliminated by the encryption requirement per-firm key design
 ```
 
 Every leaf requires defeating at least two independent layers. That is the intended property.
 
-**AT-2 — Record tampering (breaches NFR-04 / NFR-07).** Requires simultaneously defeating write-once retention (not possible for any principal within the retention period), the hash chain (detectable), and the key-deletion block. **The practical residual is concentrated on records created fraudulently at the outset (T-16, T-17), not on alteration afterwards** — which is why the creation-time approval workflow and the exclusion rules matter as much as the storage immutability.
+**AT-2 — Record tampering (breaches the immutable audit requirement / the non-deletable retention requirement).** Requires simultaneously defeating write-once retention (not possible for any principal within the retention period), the hash chain (detectable), and the key-deletion block. **The practical residual is concentrated on records created fraudulently at the outset (T-16, T-17), not on alteration afterwards** — which is why the creation-time approval workflow and the exclusion rules matter as much as the storage immutability.
 
 **AT-3 — Mass exfiltration by an insider.** Requires standing access (removed), rate-limit evasion (slow exfiltration, partially detectable by cumulative baselines), and avoiding canary records (unlikely at scale). Residual concentrated in slow, small-volume exfiltration by a patient insider.
 
@@ -179,7 +179,7 @@ Full traceability is maintained in the repository alongside the code; the propor
 |---|---|---|
 | **Linking** | Blind index frequency analysis links records within a firm | Per-firm index keys; limited field set; documented residual leakage |
 | **Identifying** | Extracted text and any embeddings enable reidentification | Classified and protected as the source document; firm-key encrypted |
-| **Non-repudiation** | The audit trail exposes an individual's actions beyond what is necessary | Minimised audit fields; documented retention; note the tension with FR-13, which *requires* full attribution — the PRD prioritises accountability here |
+| **Non-repudiation** | The audit trail exposes an individual's actions beyond what is necessary | Minimised audit fields; documented retention; note the tension with the permanent audit log requirement, which *requires* full attribution — the PRD prioritises accountability here |
 | **Detecting** | Existence of a record inferable from timing or error differences | Uniform error responses; constant-time authorisation failure paths |
 | **Data disclosure** | Special-category data inside evidence uploads over-exposed | Classification, `RESTRICTED` handling, step-up access, watermarking |
 | **Unawareness** | Data subjects unaware that WSP content is AI-processed | AI labelling; the controller firm's own transparency obligations supported by platform documentation |

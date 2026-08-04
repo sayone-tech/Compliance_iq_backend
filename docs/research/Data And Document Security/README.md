@@ -4,7 +4,7 @@ Security research set for **ComplianceIQ**: a two-application, multi-tenant B2B 
 
 **Baseline:** [`docs/requirement-specification/PRD.md`](../../requirement-specification/PRD.md) — ComplianceIQ PRD v4.0 — is the **sole source of truth**. Where this research and the PRD disagree, the PRD wins. Unresolved PRD questions stay unresolved here.
 
-**Regulatory scope:** MiCA and DORA are the **customer-domain** regulations the product serves. **GDPR** binds the platform's own processing, as a processor under a DPA (NFR-06). NIS2, CRA, the AI Act, AMLR, TFR, eIDAS 2 and the EU Data Act are **adjacent or conditional** — none is confirmed applicable by the PRD, and none drives MVP architecture without legal confirmation and Client approval.
+**Regulatory scope:** MiCA and DORA are the **customer-domain** regulations the product serves. **GDPR** binds the platform's own processing, as a processor under a DPA (the GDPR processor requirement). NIS2, CRA, the AI Act, AMLR, TFR, eIDAS 2 and the EU Data Act are **adjacent or conditional** — none is confirmed applicable by the PRD, and none drives MVP architecture without legal confirmation and Client approval.
 
 > Engineering and architecture research, not legal advice. The delivery-topology transfer position, the GDPR-erasure-versus-non-deletability conflict, and any determination under NIS2, the AI Act or the CRA each require qualified counsel before anything is contracted or represented to a customer. See [open-questions.md](open-questions.md).
 
@@ -42,7 +42,7 @@ Everything outside that list has been moved, not deleted:
 
 | Label | Meaning |
 |---|---|
-| **[PRD REQUIRED]** | Explicitly required by the PRD. The supporting section or requirement ID is cited |
+| **[PRD REQUIRED]** | Explicitly required by the PRD. The requirement is named descriptively and quoted where the wording settles the point |
 | **[PROPOSED]** | An implementation recommendation — reasonably necessary to deliver a PRD requirement, but not selected by the PRD |
 | **[OPEN]** / **[OPEN — LEGAL]** | A stakeholder or legal decision is required. **No default is adopted** |
 | **[FUTURE]** | Outside the MVP baseline. Indexed in [future-scope/future-and-optional-scope.md](future-scope/future-and-optional-scope.md), with no commitment attached |
@@ -82,7 +82,7 @@ Each states what the PRD requires, what is proposed to implement it, what stays 
 | [encryption-architecture.md](encryption-architecture.md) | AES-256 and TLS 1.3 — applied where, and how does it stay agile? |
 | [key-management.md](key-management.md) | Per-firm keys — and why key destruction cannot become a deletion route |
 | [identity-and-access-management.md](identity-and-access-management.md) | Eight system roles, invitation-only accounts, phone-based MFA, least privilege |
-| [secure-media-storage.md](secure-media-storage.md) | How is a hostile FR-24 upload scanned, parsed and served safely? |
+| [secure-media-storage.md](secure-media-storage.md) | How is a hostile evidence upload scanned, parsed and served safely? |
 
 ### Records, resilience and detection
 | Document | Core question |
@@ -98,10 +98,10 @@ Each states what the PRD requires, what is proposed to implement it, what stays 
 | Document | Contents |
 |---|---|
 | [reference-cloud-architecture.md](reference-cloud-architecture.md) | What the PRD fixes (AWS, EU data centre, Client-owned account), account topology, data plane, residency boundary — **region, compute platform, database engine, mesh, policy engine and AI provider deliberately unselected**, with selection criteria |
-| [security-control-matrix.md](security-control-matrix.md) | 141 controls (A–K) mapped to PRD requirement IDs, implementation, evidence, phase and priority |
+| [security-control-matrix.md](security-control-matrix.md) | 141 controls (A–K) mapped to the PRD requirements they serve, plus implementation, evidence, phase and priority |
 | [threat-model.md](threat-model.md) | Assets, trust boundaries, actors, scored threat catalogue, attack trees, privacy threats, threat-to-test traceability |
 | [architecture-diagrams.md](architecture-diagrams.md) | 11 Mermaid diagrams, each mapped to a confirmed scope item: context, account topology, evidence access path, upload pipeline, WSP mapping pipeline, key hierarchy, CI/CD zones, record integrity chain, backup and recovery, record lifecycle, incident handling |
-| [deployment-recommendations.md](deployment-recommendations.md) | Build order, staged rollout of irreversible controls, what to measure before committing, go/no-go criteria (§11) |
+| [deployment-recommendations.md](deployment-recommendations.md) | Build order, staged rollout of irreversible controls, what to measure before committing, go/no-go criteria (the PRD's systems and IT risk section) |
 | [security-roadmap.md](security-roadmap.md) | Two MVP phases gated by capability — **no durations, no headcount, no budget figures** — plus an explicitly uncommitted post-MVP list |
 | [open-questions.md](open-questions.md) | Questions this research cannot settle, grouped by owner. Interim engineering positions are marked as **not decisions** |
 | [risk-register.md](risk-register.md) | Scored risks with owners given as **roles to be assigned**. **No risk has been accepted by anyone** |
@@ -109,7 +109,7 @@ Each states what the PRD requires, what is proposed to implement it, what stays 
 
 ## The load-bearing points
 
-1. **Non-deletability is a PRD requirement, and it is the hardest constraint here.** NFR-07, NFR-04 and §2 mean no deletion path for any principal — and **key destruction must be blocked as a route around it**. Crypto-shredding, deletion sagas and soft-delete grace periods are **not adopted**. (ADR-004, ADR-005, ADR-012)
+1. **Non-deletability is a PRD requirement, and it is the hardest constraint here.** The non-deletable retention requirement, the immutable audit requirement and the PRD's data and retention table mean no deletion path for any principal — and **key destruction must be blocked as a route around it**. Crypto-shredding, deletion sagas and soft-delete grace periods are **not adopted**. (ADR-004, ADR-005, ADR-012)
 2. **Tenant isolation must survive a single bug.** Layered enforcement on the path to evidence plaintext, with a cross-firm negative test matrix as a blocking CI gate. (ADR-003, ADR-010)
 3. **The AI feature is WSP-to-rule mapping, it is advisory, and it carries a contractual 85% UAT accuracy number.** Human confirmation and two-person approval are PRD rules, not design choices. The platform makes no automated compliance decisions. (ADR-007, ADR-009)
 4. **Backups, recovery and availability are proposals.** A restore must be proven; no SLA, RTO or RPO figure is committed anywhere. (ADR-013)
@@ -122,7 +122,8 @@ Each states what the PRD requires, what is proposed to implement it, what stays 
 - `T-nn` — threats in [threat-model.md](threat-model.md).
 - `R-nn` — risks in [risk-register.md](risk-register.md).
 - `ADR-001`…`ADR-014` — decision records in [architecture-decision-records.md](architecture-decision-records.md).
-- PRD references are cited by requirement ID (`NFR-02`, `FR-31`, `TI-01`, `SA-06`, `GAP-07`, `CC-04`) or section number.
+- **PRD requirements are named descriptively, never by ID** — "the encryption requirement", "the advisory AI mapping requirement", "the confirmed cloud decision", "the non-deletable retention requirement", "the Portal firm-visibility statement". PRD requirement IDs and section numbers change between PRD versions, so quoting them here would rot. The **only** place that binds these names to PRD v4.0 IDs is [REVIEW-TRACEABILITY.md §0](REVIEW-TRACEABILITY.md). When a new PRD version lands, that one table is the only thing to update.
+- Section references of the form `` `document-name` §N `` point at a section of that research document, not at the PRD.
 
 Cross-references are bidirectional: every control traces to a PRD requirement and a threat; every mitigated threat traces to a test and a detection.
 

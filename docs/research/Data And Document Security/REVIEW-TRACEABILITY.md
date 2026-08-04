@@ -2,7 +2,127 @@
 
 **Review of:** `docs/research/Data And Document Security/` — 35 research documents plus README and CLAUDE.md
 **Against:** `docs/requirement-specification/PRD.md` — ComplianceIQ PRD v4.0, treated as the **sole source of truth**
-**Outcome:** research set revised in place, then restructured so the top level maps onto the confirmed MVP security scope. This document records what was kept, what was reclassified, what was deferred, what was removed, how the folder was reorganised (§7a), and what the PRD cannot answer.
+**Outcome:** research set revised in place, then restructured so the top level maps onto the confirmed MVP security scope. This document records what was kept, what was reclassified, what was deferred, what was removed, how the folder was reorganised (§7a), the PRD ID mapping (§0), and what the PRD cannot answer.
+
+> ### ⚠ This is the only file in the set that quotes PRD requirement IDs
+>
+> PRD requirement IDs and section numbers change when the PRD is revised. Every other document in this set names PRD requirements **descriptively** instead — "the non-deletable retention requirement", not "NFR-07". The mapping below is the single place that binds those descriptive names to PRD v4.0 IDs.
+>
+> **When a new PRD version lands, update this one table.** Nothing else in the set needs renumbering.
+
+---
+
+## 0. PRD ID mapping (PRD v4.0)
+
+### Requirements
+
+| PRD v4.0 ID | Referred to in this set as | What it says, in short |
+|---|---|---|
+| NFR-01 | the **tenant isolation requirement** | Each firm's data in a completely separate partition; no firm can ever access another's |
+| NFR-02 | the **encryption requirement** | AES-256 at rest, TLS 1.3 in transit, each firm has its own encryption key |
+| NFR-03 | the **EU residency requirement** | All client data stored in EU-based data centres |
+| NFR-04 | the **immutable audit requirement** | Tamper-proof audit log; not even SayOne administrators can modify or delete it |
+| NFR-05 | the **performance requirement** | Dashboards within two seconds; up to 100 concurrent users per firm |
+| NFR-06 | the **GDPR processor requirement** | GDPR-compliant as a data processor, under a Data Processing Agreement |
+| NFR-07 | the **non-deletable retention requirement** | Minimum six years for results, findings, evidence, reports and audit logs; no user including administrators can delete them |
+| NFR-08 | the **availability target** | Targets 99.5% availability; planned maintenance communicated in advance |
+| NFR-09 | the **certification roadmap item** | ISO 27001 and SOC 2 Type II on the roadmap; timeline to be agreed with the Client |
+| NFR-10 | the **browser support requirement** | Desktop browsers; no dedicated mobile app in v1 |
+| NFR-11 | the **configurable file-size limit** | Maximum evidence file size is Portal configuration, changeable without a code release |
+| TI-01 | the **confirmed cloud decision** | AWS, EU-resident data centre, account owned solely by the Client |
+| TI-02 | the **open uptime-SLA question** | 99.5% or 99.9%? Recorded as an estimation blocker |
+| TI-03 | the **open certification question** | Are ISO 27001 / SOC 2 required by clients to sign? |
+| TI-05 | the **open public-API question** | Public API in v1 or a later phase? |
+| TI-06 | the **open Year-1 scale question** | Expected number of firms and concurrent users |
+
+### Access and audit
+
+| PRD v4.0 ID | Referred to in this set as |
+|---|---|
+| FR-09 | the **automatic role enforcement requirement** |
+| FR-10 | the **custom firm role requirement** |
+| FR-11 | the **phone-based second factor requirement** |
+| FR-12 | the **invitation-only account requirement** |
+| FR-13 | the **permanent audit log requirement** |
+| FR-14 | the **deactivate-never-delete requirement** |
+| FR-15 | the **two-Super-Admin requirement** |
+| FR-09 → FR-15 (as a group) | the **access requirements** |
+| FR-52 | the **Remediation Owner view requirement** |
+
+### Testing, evidence and records
+
+| PRD v4.0 ID | Referred to in this set as |
+|---|---|
+| FR-20 | the **test assignment requirement** |
+| FR-21 | the **Lead Tester accountability requirement** |
+| FR-21b | the **Not Applicable immutability requirement** |
+| FR-21c | the **sample-change approval requirement** |
+| FR-24 | the **accepted evidence file type list** |
+| FR-25 | the **document checklist requirement** |
+| FR-27 | the **amendment-not-edit requirement** |
+| FR-28 | the **evidence validity requirement** |
+| FR-42 | the **remediation evidence requirement** |
+| FR-44 | the **finding closure requirement** |
+| FR-45 | the **closure approver exclusion rule** |
+| FR-55 | the **report pre-conditions requirement** |
+| FR-59 | the **report distribution requirement** |
+| FR-61 | the **immutable issued report requirement** |
+| FR-77 | the **resilience test report storage requirement** |
+
+### WSP and AI mapping
+
+| PRD v4.0 ID | Referred to in this set as |
+|---|---|
+| FR-30 | the **single WSP upload requirement** |
+| FR-31 | the **advisory AI mapping requirement** |
+| FR-32 | the **two-person mapping approval requirement** |
+| FR-33 | the **mapping reversal requirement** |
+| FR-37 | the **permanent WSP version history requirement** |
+| GAP-09 | the **mapping override initiation gap** |
+
+### Platform Admin Portal, commercial and open items
+
+| PRD v4.0 ID | Referred to in this set as |
+|---|---|
+| SA-01 | the **Requirement ID library** |
+| SA-02 | the **test procedure versioning requirement** |
+| SA-03 | the **regulatory monitoring requirement** |
+| SA-04 | the **publication review requirement** |
+| SA-06 | the **Portal firm-visibility statement** |
+| SA-08 | the **Portal system settings requirement** |
+| CC-01 | the **pricing model decision** |
+| CC-03 | the **IP ownership term** |
+| CC-04 | the **fixed-price milestone engagement model** |
+| CC-06 | the **reseller contracting model** |
+| GAP-07 | the **Remediation Owner scope gap** |
+| GAP-11 | the **deactivation reassignment gap** |
+| FO-07 | the **open onboarding permission question** |
+| RE-05 | the **open news feed sourcing question** |
+| NT-01 | the **notification channel decision** |
+| MKT-02 | the **no self-serve checkout statement** |
+
+### PRD sections
+
+| PRD v4.0 section | Referred to in this set as |
+|---|---|
+| §1 | the PRD's product overview |
+| §1.1 | the PRD's two-application description |
+| §2 | the PRD's data and retention table |
+| §3 | the PRD's roles section |
+| §3.1 | the PRD's system-role table |
+| §3.2 | the PRD's firm-role mapping section |
+| §3.3 | the PRD's access requirements |
+| §4 | the PRD's Platform Admin Portal section |
+| §5 | the PRD's onboarding wizard section |
+| §6.2 | the PRD's WSP mapping accuracy commitment |
+| §6.3 | the PRD's mapping sign-off rules |
+| §7 | the PRD's testing section |
+| §7.1 | the PRD's testing workflow |
+| §12 | the PRD's notifications section |
+| §13 | the PRD's technical and security requirements |
+| §16 | the PRD's baseline-freeze note |
+
+**Section references of the form `` `document-name` §N `` elsewhere in this set point at a section of that research document, not at the PRD.** Those are stable and were left alone.
 
 ---
 
@@ -248,6 +368,23 @@ Plus the consolidated deliverables, which serve the whole list: `reference-cloud
 **`supporting-topics/`** — MVP-relevant depth outside the confirmed list, moved rather than removed because the control matrix, threat model and risk register still cite it: `network-security`, `zero-trust-architecture`, `insider-threat-protection`, `data-loss-prevention`, `threat-modelling`, and the conditional `cross-border-data-processing`.
 
 **`future-scope/`** — nothing in the MVP: `future-and-optional-scope` and `customer-managed-encryption`.
+
+### PRD IDs removed from every other document
+
+Following Client instruction — PRD requirement IDs may be renumbered in a future PRD version — roughly 1,500 ID references and every PRD section number were replaced across the set with **stable descriptive names**. The binding between those names and PRD v4.0 IDs now lives only in **§0** of this file.
+
+| Before | After |
+|---|---|
+| `NFR-07` | the non-deletable retention requirement |
+| `NFR-02` | the encryption requirement |
+| `TI-01` | the confirmed cloud decision |
+| `FR-31` | the advisory AI mapping requirement |
+| `PRD §2` | the PRD's data and retention table |
+| `PRD §6.2` | the PRD's WSP mapping accuracy commitment |
+
+Direct PRD quotations were kept verbatim — they are the strongest evidence of what a requirement says and they survive renumbering. Section references of the form `` `document-name` §N `` point at a research document's own section and were left alone, as were legal citations such as `18 U.S.C. §2713`.
+
+**Effect on traceability:** a future PRD renumber now requires editing one table instead of 40 files. The cost is that no document except this one names a specific PRD line — a reader wanting the exact ID looks it up in §0.
 
 **Scope effect of the restructure: none.** No requirement was added or removed, no classification changed, and no proposal became a commitment. In particular, `secure-backups` and `disaster-recovery` remain at the top level *with* their SLA, RTO and RPO positions unchanged — none is proposed as a value, and DD-16-12 still forbids committing an unmeasured figure.
 

@@ -6,7 +6,7 @@
 >
 > | Status | Meaning |
 > |---|---|
-> | **PRD REQUIRED** | Fixed by the PRD. The supporting section or requirement ID is cited. Not open for redecision without an amendment to the baseline |
+> | **PRD REQUIRED** | Fixed by the PRD. The supporting requirement is named and, where useful, quoted. Not open for redecision without an amendment to the baseline |
 > | **PROPOSED** | This research recommends it. Nobody has approved it |
 > | **OPEN — STAKEHOLDER DECISION REQUIRED** | The choice genuinely belongs to the Client or to counsel, and is not made here |
 > | **FUTURE/OPTIONAL** | Outside the MVP baseline — see [Future and Optional Scope](future-scope/future-and-optional-scope.md) |
@@ -17,19 +17,19 @@
 
 ## ADR-001 — AWS, EU data centre, account owned solely by the Client
 
-**Status: PRD REQUIRED** · **Basis:** PRD §13.2 TI-01 (*"RESOLVED: AWS, deployed inside an EU-resident data centre, on an account owned solely by the Client (not SayOne)"*), NFR-03.
+**Status: PRD REQUIRED** · **Basis:** the PRD's technical and security requirements, the confirmed cloud decision (*"RESOLVED: AWS, deployed inside an EU-resident data centre, on an account owned solely by the Client (not SayOne)"*), the EU residency requirement.
 
-**Context.** Clients are EU-licensed CASPs with strong residency expectations. NFR-03 requires EU data centres for all client data.
+**Context.** Clients are EU-licensed CASPs with strong residency expectations. The EU residency requirement requires EU data centres for all client data.
 
 **Decision.** AWS, EU data centre, Client-owned account. **The region is not specified by the PRD and is not chosen here** (ADR-002).
 
-**Consequences.** *Positive:* mature managed services; the Client owns the account, which simplifies the "who can compel production of plaintext" conversation and aligns with CC-03's exclusive IP assignment. *Negative:* provisioning, role handover and root-credential custody inside a Client-owned account are operational questions the PRD does not answer (`open-questions`, P-2). *Mitigation:* portability maintained as a design discipline; the handover model agreed before go-live.
+**Consequences.** *Positive:* mature managed services; the Client owns the account, which simplifies the "who can compel production of plaintext" conversation and aligns with the IP ownership term's exclusive IP assignment. *Negative:* provisioning, role handover and root-credential custody inside a Client-owned account are operational questions the PRD does not answer (`open-questions`, P-2). *Mitigation:* portability maintained as a design discipline; the handover model agreed before go-live.
 
 ---
 
 ## ADR-002 — EU region selection
 
-**Status: OPEN — STAKEHOLDER DECISION REQUIRED** · **Basis:** PRD is silent; NFR-03 requires only "EU data centres".
+**Status: OPEN — STAKEHOLDER DECISION REQUIRED** · **Basis:** PRD is silent; the EU residency requirement requires only "EU data centres".
 
 **Context.** Every subsequent resource inherits the region. Service availability, availability-zone count, write-once storage features and key-service capabilities differ by region.
 
@@ -41,19 +41,19 @@
 
 ## ADR-003 — Per-firm encryption keys with context binding
 
-**Status: PRD REQUIRED (the per-firm key) / PROPOSED (the binding mechanism)** · **Basis:** NFR-02 (*"Each firm has its own encryption key"*), PRD §2 (*"per-tenant encryption keys"*), NFR-01.
+**Status: PRD REQUIRED (the per-firm key) / PROPOSED (the binding mechanism)** · **Basis:** The encryption requirement (*"Each firm has its own encryption key"*), the PRD's data and retention table (*"per-tenant encryption keys"*), the tenant isolation requirement.
 
 **Context.** Cross-firm disclosure is the failure this product cannot survive (R-01).
 
 **Decision.** A distinct key per firm, as the PRD requires. **Proposed** implementation: envelope encryption with per-object data keys wrapped by the firm key, and a key policy that only permits decryption when the request's encryption context carries the matching firm identifier.
 
-**Consequences.** *Positive:* a data-mixing bug fails closed rather than leaking; the per-firm key becomes a real isolation control rather than a label. *Negative:* per-key cost and key-service request volume; key count to monitor at scale. *Mitigation:* bounded data-key caching; benchmark against the NFR-05 performance target.
+**Consequences.** *Positive:* a data-mixing bug fails closed rather than leaking; the per-firm key becomes a real isolation control rather than a label. *Negative:* per-key cost and key-service request volume; key count to monitor at scale. *Mitigation:* bounded data-key caching; benchmark against the performance requirement performance target.
 
 ---
 
 ## ADR-004 — Records that cannot be deleted, by anyone
 
-**Status: PRD REQUIRED** · **Basis:** NFR-04 (*"Not even the system administrators at SayOne can modify or delete this log"*), NFR-07 (*"No user — including administrators — can delete them"*), PRD §2 retention table, §7.1 step 5, FR-13, FR-27, FR-61, FR-37, FR-21b, FR-21c.
+**Status: PRD REQUIRED** · **Basis:** The immutable audit requirement (*"Not even the system administrators at SayOne can modify or delete this log"*), the non-deletable retention requirement (*"No user — including administrators — can delete them"*), the PRD's data and retention table retention table, the PRD's testing workflow step 5, the permanent audit log requirement, the amendment-not-edit requirement, the immutable issued report requirement, the permanent WSP version history requirement, the Not Applicable immutability requirement, the sample-change approval requirement.
 
 **Context.** The product's promise is a permanent, provable record of a firm's compliance activity.
 
@@ -67,7 +67,7 @@
 
 ## ADR-005 — Key destruction cannot be a route around ADR-004
 
-**Status: PRD REQUIRED in effect / PROPOSED as mechanism** · **Basis:** NFR-07, PRD §2, read together with NFR-02.
+**Status: PRD REQUIRED in effect / PROPOSED as mechanism** · **Basis:** The non-deletable retention requirement, the PRD's data and retention table, read together with the encryption requirement.
 
 **Context.** Destroying a firm's key would render that firm's six-year records unreadable. An unreadable record is a deleted record in substance.
 
@@ -79,7 +79,7 @@
 
 ## ADR-006 — GDPR erasure versus the non-deletability rule
 
-**Status: OPEN — STAKEHOLDER AND LEGAL DECISION REQUIRED** · **Basis:** PRD §2 and NFR-07 versus GDPR Art. 17; NFR-06 makes the platform a processor.
+**Status: OPEN — STAKEHOLDER AND LEGAL DECISION REQUIRED** · **Basis:** the PRD's data and retention table and the non-deletable retention requirement versus GDPR Art. 17; the GDPR processor requirement makes the platform a processor.
 
 **Context.** The PRD says protected records cannot be deleted by anyone. GDPR grants a right to erasure, subject to Art. 17(3)(b) where processing is necessary for compliance with a legal obligation on the *controller* — which is the client firm, not the platform.
 
@@ -93,7 +93,7 @@
 
 ## ADR-007 — AI-assisted WSP mapping is advisory and human-approved
 
-**Status: PRD REQUIRED** · **Basis:** FR-31 (*"The AI suggestions are a starting point only — not a final determination… the human makes the final call"*), FR-32, FR-33, §6.2 (accepted 3 Jul 2026), §6.3 (GAP-09 answer), FR-37.
+**Status: PRD REQUIRED** · **Basis:** The advisory AI mapping requirement (*"The AI suggestions are a starting point only — not a final determination… the human makes the final call"*), the two-person mapping approval requirement, the mapping reversal requirement, the PRD's WSP mapping accuracy commitment (accepted 3 Jul 2026), the PRD's mapping sign-off rules (the mapping override initiation gap answer), the permanent WSP version history requirement.
 
 **Context.** The product's only AI feature suggests mappings between a firm's compliance manual and regulatory Requirement IDs.
 
@@ -107,13 +107,13 @@
 
 ## ADR-008 — AI inference is EU-resident, no-training, no-retention; provider unselected
 
-**Status: PROPOSED (the properties) / OPEN — STAKEHOLDER DECISION REQUIRED (the provider)** · **Basis:** NFR-03 requires EU residency; the PRD names no provider or model.
+**Status: PROPOSED (the properties) / OPEN — STAKEHOLDER DECISION REQUIRED (the provider)** · **Basis:** The EU residency requirement requires EU residency; the PRD names no provider or model.
 
 **Context.** WSP content must reach an inference service without leaving the EU boundary or being retained or trained on.
 
 **Decision.** State the requirement as an outcome: EU-resident inference under terms giving no training on inputs or outputs and no provider-side retention, with contractual change notice. Build behind an abstraction so the provider is replaceable.
 
-**Selection criteria:** EU-resident processing; no-training and no-retention terms; contractual change notice; measured accuracy against the §6.2 verification vectors; cost per mapping run, noting that re-runs are automatic on every new WSP version.
+**Selection criteria:** EU-resident processing; no-training and no-retention terms; contractual change notice; measured accuracy against the PRD's WSP mapping accuracy commitment verification vectors; cost per mapping run, noting that re-runs are automatic on every new WSP version.
 
 **Not decided.** No provider or model is chosen here (`open-questions`, P-6).
 
@@ -121,7 +121,7 @@
 
 ## ADR-009 — Deterministic verification of cited WSP spans
 
-**Status: PROPOSED** · **Basis:** supports §6.2's accuracy commitment and FR-31's reviewability.
+**Status: PROPOSED** · **Basis:** supports the PRD's WSP mapping accuracy commitment's accuracy commitment and the advisory AI mapping requirement's reviewability.
 
 **Context.** A suggestion pointing at text that does not exist in the manual is the most damaging failure class: it wastes reviewer time and erodes trust in the feature that the fixed fee is committed to delivering at 85% accuracy.
 
@@ -133,21 +133,21 @@
 
 ## ADR-010 — Layered enforcement on the path to evidence
 
-**Status: PROPOSED** · **Basis:** implements NFR-01.
+**Status: PROPOSED** · **Basis:** implements the tenant isolation requirement.
 
 **Context.** Cross-firm disclosure is the risk that ends the product. Single-layer enforcement, however well written, will eventually have a bug.
 
 **Decision.** Five independent enforcement points: per-request authorisation at ingress; service-identity authorisation between services; application repository firm scoping; database row-level security; and a key policy requiring a matching firm encryption context. Each is independently sufficient to prevent cross-firm disclosure.
 
-**Consequences.** *Positive:* no single bug produces a breach; the design is explainable in one diagram. *Negative:* per-request latency across five layers, against NFR-05's two-second dashboard target and 100 concurrent users per firm; five places to keep consistent. *Mitigation:* local policy evaluation; benchmark p99 early; a cross-firm negative test matrix as a blocking CI gate.
+**Consequences.** *Positive:* no single bug produces a breach; the design is explainable in one diagram. *Negative:* per-request latency across five layers, against the performance requirement's two-second dashboard target and 100 concurrent users per firm; five places to keep consistent. *Mitigation:* local policy evaluation; benchmark p99 early; a cross-firm negative test matrix as a blocking CI gate.
 
 ---
 
 ## ADR-011 — Zero standing human access to production
 
-**Status: PROPOSED** · **Basis:** supports NFR-04, FR-13 and, if any delivery is non-EU, the transfer position in `cross-border-data-processing`.
+**Status: PROPOSED** · **Basis:** supports the immutable audit requirement, the permanent audit log requirement and, if any delivery is non-EU, the transfer position in `cross-border-data-processing`.
 
-**Context.** The platform concentrates every client firm's compliance evidence. NFR-04 and NFR-07 already say administrators cannot alter or delete records; access to *read* them is the remaining insider surface.
+**Context.** The platform concentrates every client firm's compliance evidence. The immutable audit requirement and the non-deletable retention requirement already say administrators cannot alter or delete records; access to *read* them is the remaining insider surface.
 
 **Decision.** No standing human access to production. Deployment via pipeline identity only. Break-glass is dual-approved, conducted through a controlled EU-hosted session with egress disabled, fully recorded, time-boxed and auto-revoked, with every use reviewed and trended toward zero.
 
@@ -157,9 +157,9 @@
 
 ## ADR-012 — Retention service as the single source of truth
 
-**Status: PROPOSED** · **Basis:** implements NFR-07 and PRD §2.
+**Status: PROPOSED** · **Basis:** implements the non-deletable retention requirement and the PRD's data and retention table.
 
-**Context.** Retention is stated per record class across PRD §2 and NFR-07, with different rules for evidence, results, reports, WSP versions and requirement-ID versions.
+**Context.** Retention is stated per record class across the PRD's data and retention table and the non-deletable retention requirement, with different rules for evidence, results, reports, WSP versions and requirement-ID versions.
 
 **Decision.** A retention service holds per-record-class policy objects — minimum retention, legal basis, deletability, legal-hold capability. It is the **only** source for write-once retain-until dates and for any future disposal scheduling. Extension is supported (a firm whose authority extends its own retention); shortening below the PRD floor is impossible. **No maximum retention or expiry job is defined, because the PRD sets a floor and no ceiling** (ADR-006, `open-questions` L-4).
 
@@ -169,19 +169,19 @@
 
 ## ADR-013 — Availability target, recovery architecture and recovery objectives
 
-**Status: PRD REQUIRED (the 99.5% target) / OPEN — STAKEHOLDER DECISION REQUIRED (everything else)** · **Basis:** NFR-08 (*"targets 99.5% availability"*), TI-02 (*"Is 99.5% sufficient, or do clients require 99.9%? — still open — estimation blocker"*).
+**Status: PRD REQUIRED (the 99.5% target) / OPEN — STAKEHOLDER DECISION REQUIRED (everything else)** · **Basis:** The availability target (*"targets 99.5% availability"*), the open uptime-SLA question (*"Is 99.5% sufficient, or do clients require 99.9%? — still open — estimation blocker"*).
 
 **Context.** The PRD states an availability target and simultaneously records it as unresolved. It sets no recovery-time or recovery-point objective and mandates no recovery architecture.
 
-**Decision.** The stated target is 99.5%. **No recovery-time or recovery-point objective is proposed, and no recovery architecture is selected.** What this research does recommend: record copies must exist outside the primary environment's failure domain, within the EU, because record loss breaches NFR-07 and cannot be remediated — and record durability should be funded before faster service recovery.
+**Decision.** The stated target is 99.5%. **No recovery-time or recovery-point objective is proposed, and no recovery architecture is selected.** What this research does recommend: record copies must exist outside the primary environment's failure domain, within the EU, because record loss breaches the non-deletable retention requirement and cannot be remediated — and record durability should be funded before faster service recovery.
 
-**Decision required.** Resolve TI-02; then choose a recovery architecture against measured restore times (`deployment-recommendations` §7). **No figure may be quoted to a customer before it is measured twice.**
+**Decision required.** Resolve the open uptime-SLA question; then choose a recovery architecture against measured restore times (`deployment-recommendations` §7). **No figure may be quoted to a customer before it is measured twice.**
 
 ---
 
 ## ADR-014 — Security controls, policies and detections as code
 
-**Status: PROPOSED** · **Basis:** supports NFR-01, NFR-04 and the auditability the product itself sells.
+**Status: PROPOSED** · **Basis:** supports the tenant isolation requirement, the immutable audit requirement and the auditability the product itself sells.
 
 **Context.** Security rules edited in consoles drift, break silently, and cannot be tested or audited.
 
@@ -195,13 +195,13 @@
 
 | ADR | Subject | Status | Reversibility | Primary risk addressed |
 |---|---|---|---|---|
-| 001 | AWS, EU data centre, Client-owned account | **PRD REQUIRED** — TI-01, NFR-03 | Low | Residency (R-32) |
+| 001 | AWS, EU data centre, Client-owned account | **PRD REQUIRED** — The confirmed cloud decision, the EU residency requirement | Low | Residency (R-32) |
 | 002 | EU region selection | **OPEN** | Low once built | Foundation blocker |
-| 003 | Per-firm keys with context binding | **PRD REQUIRED** (key) / **PROPOSED** (binding) — NFR-02 | **Low** (data migration) | R-01 cross-firm |
-| 004 | Non-deletable records, six-year minimum | **PRD REQUIRED** — NFR-04, NFR-07, §2 | **Very low** (permanent) | R-04, R-08, R-27 |
+| 003 | Per-firm keys with context binding | **PRD REQUIRED** (key) / **PROPOSED** (binding) — The encryption requirement | **Low** (data migration) | R-01 cross-firm |
+| 004 | Non-deletable records, six-year minimum | **PRD REQUIRED** — The immutable audit requirement, the non-deletable retention requirement, the PRD's data and retention table | **Very low** (permanent) | R-04, R-08, R-27 |
 | 005 | Key destruction blocked during retention | **PRD REQUIRED in effect** | Low | R-08 |
 | 006 | Erasure versus non-deletability | **OPEN — LEGAL** | — | R-16 |
-| 007 | AI mapping advisory, human-approved | **PRD REQUIRED** — FR-31, FR-32, §6.2 | High | R-02, R-05 |
+| 007 | AI mapping advisory, human-approved | **PRD REQUIRED** — The advisory AI mapping requirement, the two-person mapping approval requirement, the PRD's WSP mapping accuracy commitment | High | R-02, R-05 |
 | 008 | EU-resident inference; provider unselected | **PROPOSED** / **OPEN** | High | R-23 |
 | 009 | Deterministic span verification | **PROPOSED** | High | R-02, R-05 |
 | 010 | Layered enforcement to evidence | **PROPOSED** | Medium | R-01 |

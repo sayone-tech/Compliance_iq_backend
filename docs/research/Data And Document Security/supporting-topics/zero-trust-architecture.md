@@ -2,7 +2,7 @@
 
 > **Baseline:** PRD v4.0. **[PRD REQUIRED]** · **[PROPOSED]** · **[OPEN]** · **[FUTURE]** — see [Future and Optional Scope](../future-scope/future-and-optional-scope.md).
 
-Not named by the PRD. This document is **[PROPOSED]**: it describes the property that makes NFR-01 hold under failure — **no access decision depends on network position** — and the enforcement layers that deliver it. No mesh, policy-engine or workload-identity product is selected.
+Not named by the PRD. This document is **[PROPOSED]**: it describes the property that makes the tenant isolation requirement hold under failure — **no access decision depends on network position** — and the enforcement layers that deliver it. No mesh, policy-engine or workload-identity product is selected.
 
 ## Best practices
 
@@ -41,10 +41,10 @@ Signals ─────────────▶  Policy decision layer
                                                    encryption context
                                                           │ every decision
                                                           ▼
-                                                 Audit log (FR-13, `audit-logging`)
+                                                 Audit log (the permanent audit log requirement, `audit-logging`)
 ```
 
-**Five independent enforcement points stand between a user and evidence plaintext, and any one of them alone prevents cross-firm disclosure.** That redundancy is deliberate: cross-firm disclosure (NFR-01) is the failure mode that ends the product.
+**Five independent enforcement points stand between a user and evidence plaintext, and any one of them alone prevents cross-firm disclosure.** That redundancy is deliberate: cross-firm disclosure (the tenant isolation requirement) is the failure mode that ends the product.
 
 ### Workload identity **[PROPOSED]**
 
@@ -58,20 +58,20 @@ Signals ─────────────▶  Policy decision layer
 - Workforce devices enrolled in management with enforced disk encryption, endpoint detection, patch level, screen lock and firewall.
 - **Device compliance is an input to the policy decision.** A non-compliant device gets read-only metadata at most; never evidence content, never production.
 
-Device-trust enforcement for **firm users** is not in the PRD, would add friction for a B2B compliance tool used by small teams (TI-06 records roughly ten platform users per firm), and is **[FUTURE]**.
+Device-trust enforcement for **firm users** is not in the PRD, would add friction for a B2B compliance tool used by small teams (the open Year-1 scale question records roughly ten platform users per firm), and is **[FUTURE]**.
 
 ### Per-request authorisation inputs
 
 | Signal | Example condition |
 |---|---|
 | Subject identity and system role | actor holds the CCO / Compliance Manager system role |
-| Firm match | resource firm equals subject firm — the NFR-01 predicate |
-| Assignment | actor is the assigned Lead Tester for this test (FR-20, GAP-05) |
-| MFA state | second factor satisfied for this session (FR-11) |
+| Firm match | resource firm equals subject firm — the tenant isolation requirement predicate |
+| Assignment | actor is the assigned Lead Tester for this test (the test assignment requirement, the in-progress test visibility gap) |
+| MFA state | second factor satisfied for this session (the phone-based second factor requirement) |
 | Device posture | workforce sessions only |
 | Location | production access from an approved location (`cross-border-data-processing`) |
 | Purpose | test execution, review, report generation, remediation validation, support |
-| Record state | test signed off (FR-27), report issued (FR-61), N/A recorded (FR-21b) — all of which make records immutable |
+| Record state | test signed off (the amendment-not-edit requirement), report issued (the immutable issued report requirement), N/A recorded (the Not Applicable immutability requirement) — all of which make records immutable |
 | Resource classification | `RESTRICTED` evidence requires step-up |
 
 Decisions are cached only for an identical tuple and only for seconds — never for the session.
@@ -89,10 +89,10 @@ Behavioural analytics beyond a small set of high-signal rules is **[FUTURE]** (`
 | The policy layer becomes a single point of failure | Total outage — every request depends on it | Locally evaluated, signed policy bundles; fail-closed for writes and `RESTRICTED` reads; documented degraded mode |
 | Policy complexity outgrows comprehension | Unintended allows; nobody can reason about the rules | Mandatory policy unit tests; a written authoring standard; periodic review; keep firm-role mapping as data, permissions as code |
 | Zero Trust theatre — mutual TLS deployed but every service allowed to call every other | False assurance | Explicit authorisation policy per service; deny-by-default; automated call-graph conformance checks |
-| Workload certificate rotation failure | Cascading outage against NFR-08 | Rotation well before expiry; alerting on renewal failure; rotation tested |
+| Workload certificate rotation failure | Cascading outage against the availability target | Rotation well before expiry; alerting on renewal failure; rotation tested |
 | Device posture signal unavailable | Either lockout or fail-open | Documented decision: fail-closed for production and `RESTRICTED`; degraded-allow with alerting for low-sensitivity reads |
-| Per-request authorisation overhead | Latency against the NFR-05 two-second dashboard target | Benchmark early; evaluate policy locally; measure p99 |
-| Users defeat friction (shared logins) | Control erosion; FR-13 attribution broken | Monitor for it; make the compliant path fast; note FR-12 makes each account individually invited, so sharing is a policy violation with an audit trail |
+| Per-request authorisation overhead | Latency against the performance requirement two-second dashboard target | Benchmark early; evaluate policy locally; measure p99 |
+| Users defeat friction (shared logins) | Control erosion; the permanent audit log requirement attribution broken | Monitor for it; make the compliant path fast; note the invitation-only account requirement makes each account individually invited, so sharing is a policy violation with an audit trail |
 
 ## Trade-offs
 
@@ -105,12 +105,12 @@ Behavioural analytics beyond a small set of high-signal rules is **[FUTURE]** (`
 
 | ID | Decision | Classification |
 |---|---|---|
-| DD-12-01 | Five independent enforcement points on the path to evidence plaintext: ingress authorisation, service identity authorisation, application tenant scoping, database row-level security, key policy encryption context | **[PROPOSED]** — implements NFR-01 |
+| DD-12-01 | Five independent enforcement points on the path to evidence plaintext: ingress authorisation, service identity authorisation, application tenant scoping, database row-level security, key policy encryption context | **[PROPOSED]** — implements the tenant isolation requirement |
 | DD-12-02 | Cryptographic workload identities with short-lived credentials; mutual authentication between services; deny-by-default call graph | **[PROPOSED]** |
-| DD-12-03 | Policy authored centrally, version-controlled, unit-tested in CI, evaluated locally per request | **[PROPOSED]** — implements FR-09 |
+| DD-12-03 | Policy authored centrally, version-controlled, unit-tested in CI, evaluated locally per request | **[PROPOSED]** — implements the automatic role enforcement requirement |
 | DD-12-04 | Device posture is a mandatory input for workforce access; non-compliant devices cannot reach production or evidence content | **[PROPOSED]** |
 | DD-12-05 | Session location is a policy input for production access | **[PROPOSED]** — enforcement point for `cross-border-data-processing` |
-| DD-12-06 | Purpose is a required parameter on evidence access requests, logged and policy-evaluated | **[PROPOSED]** — supports FR-13 |
+| DD-12-06 | Purpose is a required parameter on evidence access requests, logged and policy-evaluated | **[PROPOSED]** — supports the permanent audit log requirement |
 | DD-12-07 | Fail-closed for writes, privileged operations and `RESTRICTED` reads; fail-open with alerting for low-sensitivity metadata reads | **[PROPOSED]** |
 | DD-12-08 | Continuous session re-evaluation with automatic revocation on device non-compliance or identity risk events | **[PROPOSED]** |
 | DD-12-09 | Device-trust enforcement for firm users | **[FUTURE]** |
@@ -127,4 +127,4 @@ Behavioural analytics beyond a small set of high-signal rules is **[FUTURE]** (`
 
 **High** — the decision/enforcement model, layered enforcement points and incremental adoption path.
 
-**Medium** — the real latency cost of five enforcement layers against NFR-05 at production scale in a small team. Benchmark rather than assume.
+**Medium** — the real latency cost of five enforcement layers against the performance requirement at production scale in a small team. Benchmark rather than assume.

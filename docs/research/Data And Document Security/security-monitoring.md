@@ -2,7 +2,7 @@
 
 > **Baseline:** PRD v4.0. **[PRD REQUIRED]** · **[PROPOSED]** · **[OPEN]** · **[FUTURE]** — see [Future and Optional Scope](future-scope/future-and-optional-scope.md).
 
-Not named by the PRD. Everything here is **[PROPOSED]** unless marked. Its purpose is to detect a breach of NFR-01, NFR-04 or NFR-07 quickly enough to act, and to give client firms what they need for their own regulatory obligations.
+Not named by the PRD. Everything here is **[PROPOSED]** unless marked. Its purpose is to detect a breach of the tenant isolation requirement, the immutable audit requirement or the non-deletable retention requirement quickly enough to act, and to give client firms what they need for their own regulatory obligations.
 
 ## Best practices
 
@@ -15,10 +15,10 @@ Not named by the PRD. Everything here is **[PROPOSED]** unless marked. Its purpo
 
 ## Regulatory implications
 
-- **GDPR Art. 33** — notification to the supervisory authority within 72 hours of becoming aware. As a **processor** (NFR-06), the platform's duty is to notify the controller — the client firm — "without undue delay". **A specific numeric SLA is not set by the PRD and is a contractual matter.** **[OPEN]**
+- **GDPR Art. 33** — notification to the supervisory authority within 72 hours of becoming aware. As a **processor** (the GDPR processor requirement), the platform's duty is to notify the controller — the client firm — "without undue delay". **A specific numeric SLA is not set by the PRD and is a contractual matter.** **[OPEN]**
 - **GDPR Art. 34** — communication to data subjects where there is high risk; not required where data was rendered unintelligible by encryption with uncompromised keys (`encryption-architecture`).
 - **Detection quality determines when "becoming aware" starts** and whether the scope can be characterised in time. That is the practical reason to invest here.
-- **DORA and MiCA incident reporting are the customer's obligations, not the platform's.** The PRD builds tooling for the customer's four-hour DORA notification workflow (FR-76) as a *product feature*; that is not a statement about the platform vendor's own reporting duties. Whether any DORA reporting obligation flows to the platform by contract is **[OPEN]** (`regulatory-obligations`).
+- **DORA and MiCA incident reporting are the customer's obligations, not the platform's.** The PRD builds tooling for the customer's four-hour DORA notification workflow (the regulator notification drafting requirement) as a *product feature*; that is not a statement about the platform vendor's own reporting duties. Whether any DORA reporting obligation flows to the platform by contract is **[OPEN]** (`regulatory-obligations`).
 - **NIS2 Art. 23** reporting deadlines would apply **only if** NIS2 applies to the platform, which is undetermined. **[OPEN — LEGAL]** No NIS2 reporting commitment is made here.
 - **Employee monitoring constraints** — as in `insider-threat-protection`, security monitoring that processes employee personal data requires a lawful basis, transparency and proportionality, and in some member states consultation.
 
@@ -65,8 +65,8 @@ Normalising to a common event schema before ingestion means detection logic surv
 Ranked by value for this specific platform:
 
 1. **Canary record access** (document or credential) — zero false positives, immediate top severity.
-2. **Cross-firm access attempt** — an authorisation denial where the resource firm differs from the principal's firm. Should be identically zero in normal operation. **This is the NFR-01 tripwire.**
-3. **Attempted delete or modify on a protected record or audit entry** — should also be identically zero. **This is the NFR-04 / NFR-07 tripwire.**
+2. **Cross-firm access attempt** — an authorisation denial where the resource firm differs from the principal's firm. Should be identically zero in normal operation. **This is the tenant isolation requirement tripwire.**
+3. **Attempted delete or modify on a protected record or audit entry** — should also be identically zero. **This is the immutable audit requirement / the non-deletable retention requirement tripwire.**
 4. **Bulk evidence access** — a user exceeding their role's baseline by a defined multiple within a window.
 5. **First-time firm access by a workforce user.**
 6. **Key anomalies** — decrypt volume spike, key policy change, any deletion attempt, grant creation.
@@ -124,7 +124,7 @@ Continuous human coverage is a cost and headcount decision the PRD does not make
 - **Commercial monitoring platform vs. cloud-native services plus a lightweight detection layer vs. open source.** Recommendation: start with the cloud provider's native detection services plus a rules-as-code layer; adopt a commercial platform when there is a security function able to exploit it. Normalise to a common schema from day one so migration is cheap. **[PROPOSED / OPEN on cost]**
 - **Continuous external triage vs. internal-only.** A platform serving crypto-sector firms will be probed outside business hours. Recommendation: put the cost of continuous coverage to the Client alongside the residual risk of not having it. **[OPEN]**
 - **Automatic containment vs. human approval.** Recommendation: automatically contain only unambiguous cases — disable a credential on canary access, block an IP on confirmed scanning, revoke a session on impossible travel. Everything else human-approved. **[PROPOSED]**
-- **Full-fidelity retention vs. tiered.** Recommendation: tiered — a searchable recent window, then long-term audit retention in immutable storage per NFR-07's six-year minimum. **[PROPOSED]**
+- **Full-fidelity retention vs. tiered.** Recommendation: tiered — a searchable recent window, then long-term audit retention in immutable storage per the non-deletable retention requirement's six-year minimum. **[PROPOSED]**
 - **Adversarial validation exercises.** Valuable for proving detections fire, but a recurring cost the PRD does not fund. **[FUTURE]**
 
 ## Design decisions
@@ -133,14 +133,14 @@ Continuous human coverage is a cost and headcount decision the PRD does not make
 |---|---|---|
 | DD-22-01 | All detections defined as version-controlled code with rationale, technique mapping, false-positive profile, runbook and mandatory positive/negative unit tests. No console-authored rules | **[PROPOSED]** |
 | DD-22-02 | Telemetry normalised to a common schema before ingestion to preserve detection portability | **[PROPOSED]** |
-| DD-22-03 | The priority detections listed above are implemented before real client data is accepted; canary access, cross-firm attempts and protected-record modification attempts are top severity with automated containment | **[PROPOSED]** — protects NFR-01, NFR-04, NFR-07 |
+| DD-22-03 | The priority detections listed above are implemented before real client data is accepted; canary access, cross-firm attempts and protected-record modification attempts are top severity with automated containment | **[PROPOSED]** — protects the tenant isolation requirement, the immutable audit requirement, the non-deletable retention requirement |
 | DD-22-04 | Heartbeat monitoring on every log source; absence of expected events raises an alert | **[PROPOSED]** |
 | DD-22-05 | Severity model links operational impact to a GDPR Art. 33 processor assessment performed at triage, with the rationale retained | **[PROPOSED]** |
 | DD-22-06 | Pre-drafted, legally reviewed firm notification templates; **the notification deadline is agreed contractually, not assumed** | **[PROPOSED / OPEN]** |
 | DD-22-07 | Automatic evidence preservation on P1 declaration with chain-of-custody recording | **[PROPOSED]** |
 | DD-22-08 | Continuous alert triage model (internal, contracted, or provider) | **[OPEN]** |
 | DD-22-09 | Automatic containment limited to unambiguous cases; all other response actions human-approved | **[PROPOSED]** |
-| DD-22-10 | Tiered retention: searchable recent window, then audit events in immutable storage for the six-year minimum | **[PROPOSED]** — NFR-07 |
+| DD-22-10 | Tiered retention: searchable recent window, then audit events in immutable storage for the six-year minimum | **[PROPOSED]** — The non-deletable retention requirement |
 | DD-22-11 | No NIS2 or DORA reporting commitment is made until applicability is confirmed | **[OPEN — LEGAL]** |
 
 ## References

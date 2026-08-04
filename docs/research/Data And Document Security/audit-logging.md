@@ -6,14 +6,14 @@
 
 | PRD ref | Requirement |
 |---|---|
-| FR-13 | "Every action any user takes is permanently recorded in an audit log — **what they did, when, and from which device**. This log cannot be altered or deleted by anyone, including administrators. It exists precisely to prove, to a regulator if needed, that the compliance process was followed correctly." |
-| NFR-04 | "Every action in the platform is permanently recorded in a tamper-proof audit log. **Not even the system administrators at SayOne** can modify or delete this log." |
-| PRD §2 (dev note) | "Audit log is immutable — append-only. **No admin-level delete or modify capability.**" |
-| PRD §2 (table) | Audit log: **minimum 6 years**, cannot be modified by anyone. Notification log: minimum 6 years |
-| NFR-07 | Audit logs retained a minimum of six years; no user, including administrators, can delete them |
-| FR-21 | Every action is timestamped and linked to the individual who performed it |
-| FR-14, GAP-11 | Reassignment of a departed user's open work is documented with reasoning in an immutable audit trail |
-| FR-27, FR-21b, FR-21c, FR-33, FR-44 | Amendments, N/A decisions, sample changes, mapping reversals and finding closures all record the actor, the reason and both approvers where two are required |
+| Permanent audit log requirement | "Every action any user takes is permanently recorded in an audit log — **what they did, when, and from which device**. This log cannot be altered or deleted by anyone, including administrators. It exists precisely to prove, to a regulator if needed, that the compliance process was followed correctly." |
+| Immutable audit requirement | "Every action in the platform is permanently recorded in a tamper-proof audit log. **Not even the system administrators at SayOne** can modify or delete this log." |
+| the PRD's data and retention table (dev note) | "Audit log is immutable — append-only. **No admin-level delete or modify capability.**" |
+| the PRD's data and retention table (table) | Audit log: **minimum 6 years**, cannot be modified by anyone. Notification log: minimum 6 years |
+| Non-deletable retention requirement | Audit logs retained a minimum of six years; no user, including administrators, can delete them |
+| Lead Tester accountability requirement | Every action is timestamped and linked to the individual who performed it |
+| Deactivate-never-delete requirement, the deactivation reassignment gap | Reassignment of a departed user's open work is documented with reasoning in an immutable audit trail |
+| Amendment-not-edit requirement, the Not Applicable immutability requirement, the sample-change approval requirement, the mapping reversal requirement, the finding closure requirement | Amendments, N/A decisions, sample changes, mapping reversals and finding closures all record the actor, the reason and both approvers where two are required |
 
 **This is the strongest requirement in the PRD's technical section, and it is stated three times.** Everything below implements it.
 
@@ -23,11 +23,11 @@ Conflating them produces a system that is simultaneously too noisy to search and
 
 | | **Operational logs** | **Audit log** |
 |---|---|---|
-| Purpose | Debugging, performance | Accountability and proof (FR-13) |
+| Purpose | Debugging, performance | Accountability and proof (the permanent audit log requirement) |
 | Content | Technical detail | Who did what to which resource, when, from which device, why, and the outcome |
 | Personal data | Redacted or absent | Contains identifiers by necessity |
-| Retention | Short (weeks) | **Minimum 6 years** (NFR-07) |
-| Mutability | Deletable | **Append-only, tamper-evident, no delete or modify path for anyone** (NFR-04) |
+| Retention | Short (weeks) | **Minimum 6 years** (the non-deletable retention requirement) |
+| Mutability | Deletable | **Append-only, tamper-evident, no delete or modify path for anyone** (the immutable audit requirement) |
 | Access | Engineering | Compliance and security; reads are themselves audited |
 
 ## Best practices
@@ -47,7 +47,7 @@ Conflating them produces a system that is simultaneously too noisy to search and
 - **Delegated Reg. (EU) 2024/1774** — logging of ICT operations and of user and privileged activity, with logs protected against unauthorised access, modification and deletion. *(Design reference; the PRD already requires the stricter version.)*
 - **MiCA Art. 68(9)** (customer-side) — for the firm, the record of who accessed and approved what is part of their own record set.
 
-> **Retention note.** MiCA's floor is five years. **The platform's baseline is the PRD's minimum six years (NFR-07, PRD §2).** No 5-year or 7-year default appears anywhere in this set.
+> **Retention note.** MiCA's floor is five years. **The platform's baseline is the PRD's minimum six years (the non-deletable retention requirement, the PRD's data and retention table).** No 5-year or 7-year default appears anywhere in this set.
 
 ## Recommended architecture
 
@@ -65,12 +65,12 @@ Conflating them produces a system that is simultaneously too noisy to search and
     "type": "user|service|system|portal_admin",
     "id": "usr_...",
     "system_role": "compliance_officer",       // one of the eight PRD system roles
-    "firm_role_label": "AML Analyst",          // the firm's own name for it (PRD §3.2)
+    "firm_role_label": "AML Analyst",          // the firm's own name for it (the PRD's firm-role mapping section)
     "session_id": "ses_...",
-    "auth_method": "password+phone_mfa",       // FR-11
+    "auth_method": "password+phone_mfa",       // the phone-based second factor requirement
     "ip": "203.0.113.10",
     "country": "PT",
-    "device": { "id": "dev_...", "user_agent_hash": "..." }   // FR-13 "from which device"
+    "device": { "id": "dev_...", "user_agent_hash": "..." }   // the permanent audit log requirement "from which device"
   },
   "action": "evidence.upload",
   "resource": { "type": "evidence_file", "id": "evd_...", "classification": "RESTRICTED",
@@ -86,15 +86,15 @@ Conflating them produces a system that is simultaneously too noisy to search and
 }
 ```
 
-The `device` field is not optional garnish — **FR-13 names it explicitly.**
+The `device` field is not optional garnish — **the permanent audit log requirement names it explicitly.**
 
 ### Events that must always be logged
 
-**Compliance workflow (the PRD's own audit surface):** test scheduled, assigned (FR-20), opened, step completed, sampling recorded (FR-21c), evidence uploaded, result recorded (Pass/Fail/Observation), N/A recorded with reason (FR-21b), finding created, remediation plan created, milestone confirmed, CCO approval or send-back (§7.1 step 10), AML Officer agreement (step 11), report generated (FR-55), senior management sign-off (FR-58), report distribution (FR-59), amendment added (FR-27), finding closure with both approvers (FR-44), deadline extension with justification (GAP-08), WSP upload and version (FR-30, FR-37), mapping suggestion, confirmation with both approvers (FR-32), reversal (FR-33), manual override with its tag (GAP-09).
+**Compliance workflow (the PRD's own audit surface):** test scheduled, assigned (the test assignment requirement), opened, step completed, sampling recorded (the sample-change approval requirement), evidence uploaded, result recorded (Pass/Fail/Observation), N/A recorded with reason (the Not Applicable immutability requirement), finding created, remediation plan created, milestone confirmed, CCO approval or send-back (the PRD's testing workflow step 10), AML Officer agreement (step 11), report generated (the report pre-conditions requirement), senior management sign-off (the report sign-off requirement), report distribution (the report distribution requirement), amendment added (the amendment-not-edit requirement), finding closure with both approvers (the finding closure requirement), deadline extension with justification (the deadline extension gap), WSP upload and version (the single WSP upload requirement, the permanent WSP version history requirement), mapping suggestion, confirmation with both approvers (the two-person mapping approval requirement), reversal (the mapping reversal requirement), manual override with its tag (the mapping override initiation gap).
 
 **Data plane:** document read, preview, download, export; search queries (query text is sensitive — hash or classify it); bulk operations with counts.
 
-**Control plane:** authentication success and failure, MFA challenge, step-up; authorisation denials; session create and terminate; invitation issued and accepted (FR-12); role assignment and change (FR-10); user deactivation and work reassignment (FR-14); key create, rotate, grant change; break-glass request, approval and use; configuration and policy changes; Portal actions affecting firms (SA-04 publication, SA-07 configuration, SA-08 settings).
+**Control plane:** authentication success and failure, MFA challenge, step-up; authorisation denials; session create and terminate; invitation issued and accepted (the invitation-only account requirement); role assignment and change (the custom firm role requirement); user deactivation and work reassignment (the deactivate-never-delete requirement); key create, rotate, grant change; break-glass request, approval and use; configuration and policy changes; Portal actions affecting firms (the publication review requirement publication, the service-line configuration requirement configuration, the Portal system settings requirement settings).
 
 **AI plane:** every inference call — firm, user, document identifiers, prompt hash, prompt version, model version, token counts, validation results, reviewer decision, both approver identities (`ai-governance`).
 
@@ -114,8 +114,8 @@ Services ──▶ structured logger (redaction by typed field registry)
                                      └─▶ monitoring for detection (`security-monitoring`)
 ```
 
-- **Delivery guarantee:** audit events are written durably **before** the action completes for high-value actions — evidence upload and read, result sign-off, approvals, exports, key operations, and anything that makes a record immutable. Lower-value actions may use at-least-once asynchronous delivery. State the classification per action: "best-effort logging of an evidence read" is not defensible against FR-13.
-- **Log-archive isolation:** a separate account that accepts writes from other accounts and grants delete to **nobody**. Even the organisation management account cannot delete from it — enforced by organisation policy, bucket policy and write-once retention together. This is what makes NFR-04's "not even the system administrators at SayOne" technically true rather than aspirational.
+- **Delivery guarantee:** audit events are written durably **before** the action completes for high-value actions — evidence upload and read, result sign-off, approvals, exports, key operations, and anything that makes a record immutable. Lower-value actions may use at-least-once asynchronous delivery. State the classification per action: "best-effort logging of an evidence read" is not defensible against the permanent audit log requirement.
+- **Log-archive isolation:** a separate account that accepts writes from other accounts and grants delete to **nobody**. Even the organisation management account cannot delete from it — enforced by organisation policy, bucket policy and write-once retention together. This is what makes the immutable audit requirement's "not even the system administrators at SayOne" technically true rather than aspirational.
 - **Separate audit key** whose policy denies deletion to every principal (`key-management`).
 - **Hash chaining** over events per firm, so any alteration or removal breaks the chain and is detectable. **[PROPOSED]**
 
@@ -129,22 +129,22 @@ A typed field registry marks sensitive fields. The serialiser refuses to emit th
 
 ### Firm-visible audit trail **[PROPOSED]**
 
-FR-13 states the log exists "to prove, to a regulator if needed, that the compliance process was followed correctly." A firm therefore needs to be able to *produce* it. A searchable, filterable, exportable view of a firm's own audit events is the reasonable implementation of that purpose. Firms see only their own events.
+The permanent audit log requirement states the log exists "to prove, to a regulator if needed, that the compliance process was followed correctly." A firm therefore needs to be able to *produce* it. A searchable, filterable, exportable view of a firm's own audit events is the reasonable implementation of that purpose. Firms see only their own events.
 
-Signed or cryptographically verifiable export formats, and surfacing Portal-team access inside the firm's own log, are **[FUTURE]** — and the second depends on resolving the SA-06/SA-08 visibility boundary **[OPEN]**.
+Signed or cryptographically verifiable export formats, and surfacing Portal-team access inside the firm's own log, are **[FUTURE]** — and the second depends on resolving the Portal firm-visibility statement/the Portal system settings requirement visibility boundary **[OPEN]**.
 
 ## Risks
 
 | Risk | Impact | Mitigation |
 |---|---|---|
 | Personal data or evidence content leaks into logs | The log becomes an unprotected copy of the crown jewels | Typed field registry, static-analysis rule, redaction tests, periodic log-content sampling |
-| A delete or modify path exists for the audit log | **Direct breach of NFR-04 and FR-13** | Write-once retention, write-only log-archive account, audit key with deletion denied, static-analysis rule forbidding delete on audit tables, tests asserting deletion fails |
+| A delete or modify path exists for the audit log | **Direct breach of the immutable audit requirement and the permanent audit log requirement** | Write-once retention, write-only log-archive account, audit key with deletion denied, static-analysis rule forbidding delete on audit tables, tests asserting deletion fails |
 | Log volume and cost growth over six years | Sampling introduced; evidence gaps appear | Separate audit (never sampled) from operational (sampled freely); tier storage; model cost at multiples of projected volume |
 | Log tampering by an insider | Forensics and proof value destroyed | Hash chaining, write-once storage, separate account, separate key, separation of duties (`insider-threat-protection`) |
-| Clock skew or timezone errors | Event ordering wrong; FR-21 timestamps unreliable | Network time synchronisation, UTC only, monotonic identifiers, both event and ingest time, alert on skew |
+| Clock skew or timezone errors | Event ordering wrong; the Lead Tester accountability requirement timestamps unreliable | Network time synchronisation, UTC only, monotonic identifiers, both event and ingest time, alert on skew |
 | Missing logs for a critical action, discovered during an incident | Cannot scope a breach within 72 hours; cannot prove process compliance | Mandatory audit-event coverage test per endpoint in CI; periodic coverage review against the threat model |
 | Audit log is itself an erasure target | Conflict between accountability and erasure | Documented retention basis; pseudonymise actor identifiers where feasible; escalate as part of the open erasure question (`regulatory-obligations`) |
-| Synchronous logging in the hot path causes latency | NFR-05 two-second target missed, or logging disabled under pressure | Asynchronous by default; synchronous only for the defined high-value set; buffered with backpressure and a fail-closed decision for `RESTRICTED` reads |
+| Synchronous logging in the hot path causes latency | Performance requirement two-second target missed, or logging disabled under pressure | Asynchronous by default; synchronous only for the defined high-value set; buffered with backpressure and a fail-closed decision for `RESTRICTED` reads |
 | Nobody reads the logs | Detection value zero | Detections as code with tested rules (`security-monitoring`); periodic review of denial and anomaly trends |
 
 ## Trade-offs
@@ -158,18 +158,18 @@ Signed or cryptographically verifiable export formats, and surfacing Portal-team
 
 | ID | Decision | Classification | Basis |
 |---|---|---|---|
-| DD-14-01 | Every user action is permanently recorded with actor, action, timestamp and originating device | **[PRD REQUIRED]** | FR-13, FR-21 |
-| DD-14-02 | The audit log is append-only with **no delete or modify capability for any principal, including platform administrators** | **[PRD REQUIRED]** | NFR-04, PRD §2 |
-| DD-14-03 | Audit log and notification log retained a minimum of six years | **[PRD REQUIRED]** | NFR-07, PRD §2 |
-| DD-14-04 | Strict separation of operational logs (short retention, redacted, deletable) from audit events | **[PROPOSED]** | implements NFR-04 |
+| DD-14-01 | Every user action is permanently recorded with actor, action, timestamp and originating device | **[PRD REQUIRED]** | Permanent audit log requirement, the Lead Tester accountability requirement |
+| DD-14-02 | The audit log is append-only with **no delete or modify capability for any principal, including platform administrators** | **[PRD REQUIRED]** | Immutable audit requirement, the PRD's data and retention table |
+| DD-14-03 | Audit log and notification log retained a minimum of six years | **[PRD REQUIRED]** | Non-deletable retention requirement, the PRD's data and retention table |
+| DD-14-04 | Strict separation of operational logs (short retention, redacted, deletable) from audit events | **[PROPOSED]** | implements the immutable audit requirement |
 | DD-14-05 | Single versioned audit event schema with mandatory decision, policy version, purpose and reason fields; allows and denies both logged | **[PROPOSED]** | — |
 | DD-14-06 | Redaction by construction via a typed sensitive-field registry, enforced by a blocking static-analysis rule | **[PROPOSED]** | — |
-| DD-14-07 | Audit events hash-chained and written to write-once storage in a dedicated log-archive account that grants delete to no principal | **[PROPOSED]** | implements NFR-04 |
+| DD-14-07 | Audit events hash-chained and written to write-once storage in a dedicated log-archive account that grants delete to no principal | **[PROPOSED]** | implements the immutable audit requirement |
 | DD-14-08 | Synchronous durable audit write before completing evidence reads and uploads, sign-offs, approvals, exports, key operations and privileged changes | **[PROPOSED]** | — |
-| DD-14-09 | Full AI inference audit record for every mapping call, retained with the resulting mapping | **[PROPOSED]** | supports FR-31, FR-32 |
+| DD-14-09 | Full AI inference audit record for every mapping call, retained with the resulting mapping | **[PROPOSED]** | supports the advisory AI mapping requirement, the two-person mapping approval requirement |
 | DD-14-10 | Audit-event coverage asserted by automated tests per endpoint; missing coverage fails CI | **[PROPOSED]** | — |
-| DD-14-11 | Firms can search and export their own audit trail | **[PROPOSED]** | implements the stated purpose of FR-13 |
-| DD-14-12 | UTC everywhere, synchronised time, monotonic event identifiers, both event and ingest time recorded, clock-skew alerting | **[PROPOSED]** | supports FR-21 |
+| DD-14-11 | Firms can search and export their own audit trail | **[PROPOSED]** | implements the stated purpose of the permanent audit log requirement |
+| DD-14-12 | UTC everywhere, synchronised time, monotonic event identifiers, both event and ingest time recorded, clock-skew alerting | **[PROPOSED]** | supports the Lead Tester accountability requirement |
 | DD-14-13 | Cryptographically signed exports and external anchoring of the chain | **[FUTURE]** | not in PRD |
 
 ## References
@@ -185,4 +185,4 @@ Signed or cryptographically verifiable export formats, and surfacing Portal-team
 
 **High** — the operational/audit split, schema design, redaction by construction, hash chaining and the write-only archive account. These implement the PRD's strongest technical requirement directly.
 
-**Medium** — the cost profile at six-year retention and high evidence-access volume, and the latency impact of synchronous writes against the NFR-05 target. Both should be benchmarked before the action classification is fixed.
+**Medium** — the cost profile at six-year retention and high evidence-access volume, and the latency impact of synchronous writes against the performance requirement. Both should be benchmarked before the action classification is fixed.

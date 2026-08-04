@@ -2,7 +2,7 @@
 
 > **Baseline:** PRD v4.0. **[PRD REQUIRED]** · **[PROPOSED]** · **[OPEN]** · **[FUTURE]** — see [Future and Optional Scope](../future-scope/future-and-optional-scope.md).
 
-The insider with legitimate access is the hardest threat to defend against and the most plausible source of a catastrophic confidentiality breach here. The platform concentrates every client firm's compliance evidence behind a small number of operators, and the PRD's own rules — NFR-04's "not even the system administrators at SayOne" and NFR-07's "no user, including administrators" — are explicitly insider-threat requirements.
+The insider with legitimate access is the hardest threat to defend against and the most plausible source of a catastrophic confidentiality breach here. The platform concentrates every client firm's compliance evidence behind a small number of operators, and the PRD's own rules — The immutable audit requirement's "not even the system administrators at SayOne" and the non-deletable retention requirement's "no user, including administrators" — are explicitly insider-threat requirements.
 
 Note the sector angle: staff at a company serving crypto-asset service providers are a plausible target for coercion, bribery and social engineering by well-funded actors. Treat it as live, not theoretical.
 
@@ -18,20 +18,20 @@ Three insider categories, each needing different controls:
 
 | PRD ref | Requirement |
 |---|---|
-| NFR-04 | Not even SayOne's system administrators can modify or delete the audit log |
-| NFR-07, §2 | No user, **including administrators**, can delete test results, findings, evidence, reports or audit logs |
-| FR-13 | Every action recorded permanently with actor, time and device; not alterable by anyone |
-| FR-14 | Departing users are deactivated, not deleted; their history remains; reassignment of open work is documented with reasoning in an immutable audit trail |
-| SA-06, SA-08 | The Platform Admin Portal team's visibility of firm data — **the boundary is an open question**, with the expectation that evidence visibility is handled contractually |
+| Immutable audit requirement | Not even SayOne's system administrators can modify or delete the audit log |
+| Non-deletable retention requirement, the PRD's data and retention table | No user, **including administrators**, can delete test results, findings, evidence, reports or audit logs |
+| Permanent audit log requirement | Every action recorded permanently with actor, time and device; not alterable by anyone |
+| Deactivate-never-delete requirement | Departing users are deactivated, not deleted; their history remains; reassignment of open work is documented with reasoning in an immutable audit trail |
+| Portal firm-visibility statement, the Portal system settings requirement | The Platform Admin Portal team's visibility of firm data — **the boundary is an open question**, with the expectation that evidence visibility is handled contractually |
 
 Everything else below is **[PROPOSED]**.
 
 ## Best practices
 
 - **Reduce what an insider can reach before trying to detect what they do.** Zero standing access (`identity-and-access-management`) removes most of the insider surface outright.
-- **Dual control for irreversible or high-impact actions.** This mirrors the product's own philosophy — FR-32 two-person mapping sign-off, FR-44 two-person finding closure, FR-21c sample-change approval.
+- **Dual control for irreversible or high-impact actions.** This mirrors the product's own philosophy — The two-person mapping approval requirement two-person mapping sign-off, the finding closure requirement two-person finding closure, the sample-change approval requirement sample-change approval.
 - **Separation of duties by design.** Encode it in identity policy, not in a policy document.
-- **Everything an operator does with a firm's data should be visible to that firm.** Radical transparency is both an ethical position and a strong deterrent — but see the open SA-06/SA-08 boundary.
+- **Everything an operator does with a firm's data should be visible to that firm.** Radical transparency is both an ethical position and a strong deterrent — but see the open the Portal firm-visibility statement/the Portal system settings requirement boundary.
 - **Baseline behaviour and alert on deviation** — volume, timing, breadth, sequence.
 - **Address the human side.** Screening proportionate to access, clear policy, a confidential reporting channel, and a supportive path for anyone under external pressure.
 - **Offboarding is a security event with a deadline**, not an HR formality.
@@ -48,7 +48,7 @@ Everything else below is **[PROPOSED]**.
 ### Layer 1 — prevention (the highest-value layer) **[PROPOSED]**
 
 - **Zero standing access to production personal data** (`cross-border-data-processing`, `identity-and-access-management`). Most insider scenarios cannot start.
-- **No deletion path for protected records, for anyone.** This is the PRD's own requirement (NFR-04, NFR-07) and it is the single strongest insider control in the product: the most damaging insider action — destroying evidence of what happened — is architecturally unavailable.
+- **No deletion path for protected records, for anyone.** This is the PRD's own requirement (the immutable audit requirement, the non-deletable retention requirement) and it is the single strongest insider control in the product: the most damaging insider action — destroying evidence of what happened — is architecturally unavailable.
 - **Separation of duties, enforced and continuously verified:**
 
 | Capability | Mutually exclusive with |
@@ -84,7 +84,7 @@ Broad behavioural analytics beyond this small set is **[FUTURE]** — it costs, 
 
 ### Layer 3 — firm-facing transparency **[PROPOSED / OPEN]**
 
-Ideally, every operator action on a firm's data appears in that firm's own audit log with actor, purpose, timestamp and scope. **Whether and how this is surfaced depends on the unresolved SA-06/SA-08 visibility boundary** — the PRD records an intention to handle Portal visibility of evidence contractually rather than through per-firm toggles. Resolve the boundary, then implement it in the authorisation layer and reflect it in the audit trail. **[OPEN]**
+Ideally, every operator action on a firm's data appears in that firm's own audit log with actor, purpose, timestamp and scope. **Whether and how this is surfaced depends on the unresolved the Portal firm-visibility statement/the Portal system settings requirement visibility boundary** — the PRD records an intention to handle Portal visibility of evidence contractually rather than through per-firm toggles. Resolve the boundary, then implement it in the authorisation layer and reflect it in the audit trail. **[OPEN]**
 
 Customer-approved access (a lockbox model where the firm must approve each support access) is **[FUTURE]**.
 
@@ -101,20 +101,20 @@ Customer-approved access (a lockbox model where the firm must approve each suppo
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| Privileged operator exfiltrates evidence at scale | Catastrophic; breach of NFR-01 | Zero standing access, rate limits, canary records, dual control, firm-visible access, watermarking |
-| Operator attempts to alter or delete audit evidence | Would breach NFR-04 directly | Write-once storage, write-only log-archive account, hash chain, deletion denied to all principals, key-deletion blocked during retention |
+| Privileged operator exfiltrates evidence at scale | Catastrophic; breach of the tenant isolation requirement | Zero standing access, rate limits, canary records, dual control, firm-visible access, watermarking |
+| Operator attempts to alter or delete audit evidence | Would breach the immutable audit requirement directly | Write-once storage, write-only log-archive account, hash chain, deletion denied to all principals, key-deletion blocked during retention |
 | Slow, low-volume exfiltration below thresholds | Sustained undetected leakage | Cumulative as well as rate baselines; distinct-firm-count monitoring; canary records; periodic access-pattern review |
 | Coerced or bribed employee | Bypasses all trust-based controls | Technical prevention over trust; dual control; coercion reporting policy with protection; proportionate screening |
 | Monitoring deployed without a lawful basis or required consultation | Regulatory and employment-law exposure; evidence inadmissible | Legal review before deployment; employee privacy notice; documented balancing test; consultation where required |
-| Departing employee retains access via a shared credential | Post-departure access | No shared credentials (`secrets-management`); note FR-12 makes every account individually invited; prompt revocation; device recovery |
-| Portal team access exceeds firm expectations | Contractual and confidentiality breach | Resolve SA-06/SA-08; enforce in the authorisation layer |
+| Departing employee retains access via a shared credential | Post-departure access | No shared credentials (`secrets-management`); note the invitation-only account requirement makes every account individually invited; prompt revocation; device recovery |
+| Portal team access exceeds firm expectations | Contractual and confidentiality breach | Resolve the Portal firm-visibility statement/the Portal system settings requirement; enforce in the authorisation layer |
 | Alert fatigue causes real signals to be ignored | Detection exists on paper only | A small number of high-signal detections; canary records as the zero-false-positive tier; measured alert-to-triage ratio |
 | Over-surveillance damages culture | Loss of good engineers; a worse security outcome overall | Prefer prevention over surveillance; be transparent about what is monitored and why; never monitor covertly |
 
 ## Trade-offs
 
 - **Technical prevention vs. monitoring and trust.** Detection after evidence has been exfiltrated does not undo the harm. Recommendation: invest in prevention first; monitoring is the backstop, not the strategy. **[PROPOSED]**
-- **Firm-visible operator access after the fact vs. firm-approved access before it.** Recommendation: transparent-after-the-fact as the baseline once SA-06/SA-08 is resolved; approval-before-access is **[FUTURE]**.
+- **Firm-visible operator access after the fact vs. firm-approved access before it.** Recommendation: transparent-after-the-fact as the baseline once the Portal firm-visibility statement/the Portal system settings requirement is resolved; approval-before-access is **[FUTURE]**.
 - **Broad behavioural analytics vs. targeted high-signal detections.** Recommendation: a small set plus canary records. **[PROPOSED]**
 - **Session recording of all privileged sessions vs. command logging only.** Recommendation: full recording for break-glass and key administration; command-level logging for routine privileged operations. **[PROPOSED]**
 - **Deep background screening vs. proportionate.** Recommendation: deeper screening only for the small set of break-glass and key-administration-eligible roles. **[PROPOSED]**
@@ -123,7 +123,7 @@ Customer-approved access (a lockbox model where the firm must approve each suppo
 
 | ID | Decision | Classification | Basis |
 |---|---|---|---|
-| DD-17-01 | Platform administrators cannot delete or modify the audit log or protected records; there is no privileged override | **[PRD REQUIRED]** | NFR-04, NFR-07 |
+| DD-17-01 | Platform administrators cannot delete or modify the audit log or protected records; there is no privileged override | **[PRD REQUIRED]** | Immutable audit requirement, the non-deletable retention requirement |
 | DD-17-02 | Prevention over detection: zero standing production access is the primary insider control | **[PROPOSED]** | — |
 | DD-17-03 | Mutually exclusive capability matrix enforced in identity policy and verified continuously; violations are top severity | **[PROPOSED]** | — |
 | DD-17-04 | Dual authorisation for key operations, retention changes, legal hold release, bulk export above threshold, break-glass grants and disabling any security control | **[PROPOSED]** | — |
@@ -131,9 +131,9 @@ Customer-approved access (a lockbox model where the firm must approve each suppo
 | DD-17-06 | Canary records seeded per firm; any access is a top-severity incident with a defined verification-before-accusation procedure | **[PROPOSED]** | — |
 | DD-17-07 | Full session recording for break-glass and key-administration sessions | **[PROPOSED]** | — |
 | DD-17-08 | Monitoring is transparent: documented in the employee privacy notice, supported by a balancing test, and subject to any locally required consultation | **[PROPOSED / OPEN — LEGAL]** | — |
-| DD-17-09 | Offboarding revokes all access promptly with a documented checklist retained as evidence | **[PROPOSED]** | supports FR-14 |
+| DD-17-09 | Offboarding revokes all access promptly with a documented checklist retained as evidence | **[PROPOSED]** | supports the deactivate-never-delete requirement |
 | DD-17-10 | Non-punitive coercion-reporting policy communicated in onboarding and training | **[PROPOSED]** | — |
-| DD-17-11 | Operator access to a firm's data surfaced in that firm's audit trail | **[OPEN]** | depends on SA-06/SA-08 |
+| DD-17-11 | Operator access to a firm's data surfaced in that firm's audit trail | **[OPEN]** | depends on the Portal firm-visibility statement/the Portal system settings requirement |
 | DD-17-12 | Firm-approved (lockbox) support access; broad behavioural analytics; enclave-based decryption | **[FUTURE]** | not in PRD |
 
 ## References

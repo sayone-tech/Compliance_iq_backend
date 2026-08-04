@@ -2,7 +2,7 @@
 
 > **Baseline:** PRD v4.0. **[PRD REQUIRED]** · **[PROPOSED]** · **[OPEN]** · **[FUTURE]** — see [Future and Optional Scope](../future-scope/future-and-optional-scope.md).
 
-Not named by the PRD. Everything here is **[PROPOSED]**: it is how NFR-01 (isolation), NFR-03 (EU residency) and NFR-08 (availability) survive contact with the internet. Compute, orchestration and mesh products are **not** selected — the patterns below are stated in terms of tiers and policies, not products.
+Not named by the PRD. Everything here is **[PROPOSED]**: it is how the tenant isolation requirement (isolation), the EU residency requirement (EU residency) and the availability target (availability) survive contact with the internet. Compute, orchestration and mesh products are **not** selected — the patterns below are stated in terms of tiers and policies, not products.
 
 ## Best practices
 
@@ -17,14 +17,14 @@ Not named by the PRD. Everything here is **[PROPOSED]**: it is how NFR-01 (isola
 
 - **GDPR Art. 32(1)(b)** — ongoing confidentiality, integrity, availability and resilience of processing systems.
 - **Delegated Reg. (EU) 2024/1774** — network security management: segmentation according to criticality, isolation of processing systems, protection against intrusion and data misuse, security of network traffic. *(Design reference.)*
-- **Residency (`data-residency`)** — CDN edge locations, DNS resolution paths and any globally replicated network service must be constrained so request metadata does not leave the EU (NFR-03).
+- **Residency (`data-residency`)** — CDN edge locations, DNS resolution paths and any globally replicated network service must be constrained so request metadata does not leave the EU (the EU residency requirement).
 
 ## Recommended architecture
 
 ### Account and network topology
 
 ```
-Client-owned cloud organisation (TI-01), region policy denying non-EU regions
+Client-owned cloud organisation (the confirmed cloud decision), region policy denying non-EU regions
 ├── management         — organisation, policy, billing. No workloads
 ├── security-tooling   — detection services, monitoring ingestion
 ├── log-archive        — immutable log and evidence storage; write-only from other accounts
@@ -53,7 +53,7 @@ Client-owned cloud organisation (TI-01), region policy denying non-EU regions
 
 ```
 Client ──▶ DNS (signed, query logging)
-       ──▶ CDN (TLS 1.3 per NFR-02, EU points of presence for authenticated content)
+       ──▶ CDN (TLS 1.3 per the encryption requirement, EU points of presence for authenticated content)
        ──▶ WAF (managed rule groups + custom rules + rate limiting)
        ──▶ Load balancer (re-encrypt to targets)
        ──▶ Application ingress ──▶ services
@@ -62,17 +62,17 @@ Client ──▶ DNS (signed, query logging)
 WAF configuration:
 
 - Managed rule groups covering common web attack classes, known-bad inputs, SQL injection and reputation lists.
-- Custom rules: per-firm and per-IP rate limits; a stricter limit on authentication endpoints (credential stuffing against FR-11 accounts) and on evidence upload and download endpoints (bulk exfiltration, and denial of service by upload — note FR-24 permits video and ZIP files, and NFR-11 makes the maximum size configurable).
-- Request size limits aligned with the configured evidence file-size ceiling (NFR-11); reject unexpected content types on JSON endpoints.
+- Custom rules: per-firm and per-IP rate limits; a stricter limit on authentication endpoints (credential stuffing against the phone-based second factor requirement accounts) and on evidence upload and download endpoints (bulk exfiltration, and denial of service by upload — note the accepted evidence file type list permits video and ZIP files, and the configurable file-size limit makes the maximum size configurable).
+- Request size limits aligned with the configured evidence file-size ceiling (the configurable file-size limit); reject unexpected content types on JSON endpoints.
 - **Deploy in count mode first**, tune against real traffic, then switch to blocking. Blocking a firm's legitimate evidence upload mid-test is its own incident.
 - WAF logs to monitoring with detections for scanning and credential stuffing.
 
-Advanced managed DDoS protection with a response team is **[FUTURE]** — worth revisiting only if availability commitments carry penalties, and NFR-08's 99.5% target is not yet contracted (TI-02 open).
+Advanced managed DDoS protection with a response team is **[FUTURE]** — worth revisiting only if availability commitments carry penalties, and the 99.5% availability target is not yet contracted (the open uptime-SLA question open).
 
 ### Egress control — the exfiltration control
 
 - All outbound HTTP/HTTPS from application subnets routes through a controlled egress path with domain-based filtering.
-- **Default deny.** An allowlist of destination hostnames maintained in version control and reviewed on change: the AI inference endpoint (preferably reached by a private endpoint so it never leaves the provider network), the email sending service (FR-59 report distribution, PRD §12 alerts), the regulatory monitoring sources for the Portal (SA-03 — EUR-Lex, EBA, ESMA feeds), package registries at build time only, and nothing else.
+- **Default deny.** An allowlist of destination hostnames maintained in version control and reviewed on change: the AI inference endpoint (preferably reached by a private endpoint so it never leaves the provider network), the email sending service (the report distribution requirement report distribution, the PRD's notifications section alerts), the regulatory monitoring sources for the Portal (the regulatory monitoring requirement — EUR-Lex, EBA, ESMA feeds), package registries at build time only, and nothing else.
 - Every allowed and denied egress connection is logged with the requesting workload identity. **Denied egress is a high-signal alert.**
 - **DNS egress control:** resolver firewall blocking known-malicious and newly registered domains and blocking encrypted-DNS bypass; query logging catches tunnelling.
 
@@ -92,14 +92,14 @@ Advanced managed DDoS protection with a response team is **[FUTURE]** — worth 
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| Security group misconfiguration exposes a database | Direct data exposure; breach of NFR-01 | Infrastructure-as-code-only changes; policy rules blocking open ingress; continuous conformance scanning; no public subnet for the data tier |
+| Security group misconfiguration exposes a database | Direct data exposure; breach of the tenant isolation requirement | Infrastructure-as-code-only changes; policy rules blocking open ingress; continuous conformance scanning; no public subnet for the data tier |
 | Egress control bypassed via an allowlisted domain | Slow exfiltration through a legitimate channel | Registry access allowed only from build accounts; volume anomaly detection; egress classification checks (`data-loss-prevention`) |
 | WAF false positives block a legitimate evidence upload | Customer-impacting incident during a firm's testing cycle; pressure to disable the WAF | Count-mode tuning period; per-rule metrics; documented exception process; never disable wholesale |
-| Denial of service on the API | Availability incident against NFR-08 | CDN, rate limiting, autoscaling, graceful degradation |
+| Denial of service on the API | Availability incident against the availability target | CDN, rate limiting, autoscaling, graceful degradation |
 | Lateral movement after a single workload compromise | Broad internal access | Default-deny network policy, mutual TLS with identity-based authorisation, no shared service accounts, hardened runtime |
 | DNS exfiltration | Undetected data loss | Resolver firewall, query logging, volumetric detection |
 | Network path opened from a lower environment to production | Environment isolation collapse; synthetic-only guarantee broken | No peering to production, ever; enforced by organisation policy |
-| Large evidence uploads used as a resource-exhaustion vector | Availability incident | Size limits enforced at the pre-signed-upload step, aligned to NFR-11 |
+| Large evidence uploads used as a resource-exhaustion vector | Availability incident | Size limits enforced at the pre-signed-upload step, aligned to the configurable file-size limit |
 
 ## Trade-offs
 
@@ -112,9 +112,9 @@ Advanced managed DDoS protection with a response team is **[FUTURE]** — worth 
 
 | ID | Decision | Classification |
 |---|---|---|
-| DD-11-01 | Multi-account organisation with policies enforcing EU-only regions; no network path from dev or staging to production | **[PROPOSED]** — implements NFR-03 |
+| DD-11-01 | Multi-account organisation with policies enforcing EU-only regions; no network path from dev or staging to production | **[PROPOSED]** — implements the EU residency requirement |
 | DD-11-02 | Three-tier subnet model; the data tier has no route to the internet under any configuration | **[PROPOSED]** |
-| DD-11-03 | Private service endpoints with restrictive policies for all cloud service access, including AI inference | **[PROPOSED]** — implements NFR-03 |
+| DD-11-03 | Private service endpoints with restrictive policies for all cloud service access, including AI inference | **[PROPOSED]** — implements the EU residency requirement |
 | DD-11-04 | Default-deny egress with a version-controlled hostname allowlist; denied egress raises a high-priority alert | **[PROPOSED]** |
 | DD-11-05 | DNS resolver firewall enabled with query logging | **[PROPOSED]** |
 | DD-11-06 | CDN plus WAF at the edge; WAF in count mode before blocking, with per-rule metrics and a documented exception process | **[PROPOSED]** |

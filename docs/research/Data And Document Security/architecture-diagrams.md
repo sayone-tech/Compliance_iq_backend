@@ -27,25 +27,25 @@ Mermaid source. Renders in GitHub, GitLab, VS Code and most documentation toolin
 ```mermaid
 graph TB
     subgraph EXT["External"]
-        FU["Firm users<br/>8 system roles (PRD §3.1)<br/>invitation-only, phone MFA"]
-        PA["Platform Admin Portal team<br/>separate login (PRD §4)"]
-        REG["Regulatory sources<br/>EUR-Lex · EBA · ESMA<br/>RSS / official API only (SA-03)"]
+        FU["Firm users<br/>8 system roles (the PRD's system-role table)<br/>invitation-only, phone MFA"]
+        PA["Platform Admin Portal team<br/>separate login (the PRD's Platform Admin Portal section)"]
+        REG["Regulatory sources<br/>EUR-Lex · EBA · ESMA<br/>RSS / official API only (the regulatory monitoring requirement)"]
     end
 
-    subgraph EU["EU boundary — AWS, EU data centre, Client-owned account (TI-01, NFR-03)"]
+    subgraph EU["EU boundary — AWS, EU data centre, Client-owned account (the confirmed cloud decision, the EU residency requirement)"]
         FIRM["Firm Application"]
         PORTAL["Platform Admin Portal"]
         INF["AI inference<br/>EU-resident · no training · no retention<br/>PROVIDER NOT SELECTED"]
         MAIL["Email delivery<br/>EU sending infrastructure"]
     end
 
-    FU -->|"email + password + phone second factor (FR-11)"| FIRM
+    FU -->|"email + password + phone second factor (the phone-based second factor requirement)"| FIRM
     PA -->|"separate login"| PORTAL
-    PORTAL -->|"publishes test procedure versions (SA-04)"| FIRM
+    PORTAL -->|"publishes test procedure versions (the publication review requirement)"| FIRM
     REG -.->|"feeds, human-reviewed before publication"| PORTAL
     FIRM -->|"WSP spans only, pseudonymised"| INF
-    FIRM -->|"report + alert notifications (FR-59, §12)"| MAIL
-    PORTAL -.->|"firm data visibility — BOUNDARY UNRESOLVED (SA-06/SA-08)"| FIRM
+    FIRM -->|"report + alert notifications (the report distribution requirement, the PRD's notifications section)"| MAIL
+    PORTAL -.->|"firm data visibility — BOUNDARY UNRESOLVED (the Portal firm-visibility statement/the Portal system settings requirement)"| FIRM
 
     style EU fill:#0d2818,stroke:#2e7d4f,color:#fff
     style EXT fill:#1a1a2e,stroke:#4a4a7a,color:#fff
@@ -54,14 +54,14 @@ graph TB
 
 ## D2 — Account topology and data plane
 
-Account separation is what makes "no admin can delete the audit log" (NFR-04) and "no deletion path" (NFR-07) structural rather than procedural. Network-layer detail — subnet tiering, egress allowlisting, WAF tuning — is in [`supporting-topics/network-security`](supporting-topics/network-security.md).
+Account separation is what makes "no admin can delete the audit log" (the immutable audit requirement) and "no deletion path" (the non-deletable retention requirement) structural rather than procedural. Network-layer detail — subnet tiering, egress allowlisting, WAF tuning — is in [`supporting-topics/network-security`](supporting-topics/network-security.md).
 
 ```mermaid
 graph TB
-    NET["Internet"] --> EDGE["Edge: DNS + CDN + WAF<br/>TLS 1.3 (NFR-02)"]
+    NET["Internet"] --> EDGE["Edge: DNS + CDN + WAF<br/>TLS 1.3 (the encryption requirement)"]
 
     subgraph PROD["Account: prod — EU region (NOT SELECTED)"]
-        EDGE --> AUTHZ["Per-request authorisation<br/>versioned policy, every decision audited (FR-09)"]
+        EDGE --> AUTHZ["Per-request authorisation<br/>versioned policy, every decision audited (the automatic role enforcement requirement)"]
         subgraph APP["Application tier · egress via controlled allowlist only"]
             AUTHZ --> API["api gateway"]
             AUTHZ --> DOC["document service"]
@@ -80,11 +80,11 @@ graph TB
     end
 
     VPE --> OBJ[("Object storage<br/>quarantine · primary<br/>evidence (write-once)<br/>derivatives · forensic")]
-    VPE --> KMS["Key service<br/>per-firm keys (NFR-02)"]
+    VPE --> KMS["Key service<br/>per-firm keys (the encryption requirement)"]
     VPE --> AI["AI inference endpoint<br/>EU-resident"]
 
-    subgraph OTHER["Other accounts in the Client-owned organisation (TI-01)"]
-        LOG["log-archive<br/>write-only · delete denied to ALL principals<br/>NFR-04"]
+    subgraph OTHER["Other accounts in the Client-owned organisation (the confirmed cloud decision)"]
+        LOG["log-archive<br/>write-only · delete denied to ALL principals<br/>the immutable audit requirement"]
         BAK["backup<br/>immutable retention lock"]
         SEC["security-tooling"]
         SND["sandbox-processing<br/>no creds · no egress"]
@@ -104,7 +104,7 @@ graph TB
 
 ## D3 — Evidence access path: layered tenant isolation
 
-Each numbered check is independent. Any one of them alone prevents cross-firm disclosure — that redundancy is the answer to NFR-01. The enforcement-model rationale is in [`supporting-topics/zero-trust-architecture`](supporting-topics/zero-trust-architecture.md); the isolation requirement itself is `document-confidentiality`.
+Each numbered check is independent. Any one of them alone prevents cross-firm disclosure — that redundancy is the answer to the tenant isolation requirement. The enforcement-model rationale is in [`supporting-topics/zero-trust-architecture`](supporting-topics/zero-trust-architecture.md); the isolation requirement itself is `document-confidentiality`.
 
 ```mermaid
 sequenceDiagram
@@ -119,7 +119,7 @@ sequenceDiagram
     participant S as Object storage
     participant AL as Audit log
 
-    U->>IDP: email + password + phone second factor (FR-11)
+    U->>IDP: email + password + phone second factor (the phone-based second factor requirement)
     IDP-->>U: session (system role, firm)
     U->>GW: GET /evidence/{id}?purpose=test_execution
     GW->>GW: validate session, rate limit, build firm context
@@ -133,20 +133,20 @@ sequenceDiagram
     K-->>DS: data key (FAILS on context mismatch)
     DS->>S: fetch ciphertext
     DS->>DS: decrypt, render, watermark
-    DS->>AL: synchronous durable write (FR-13)
+    DS->>AL: synchronous durable write (the permanent audit log requirement)
     AL-->>DS: recorded
     DS-->>U: signed GET, short TTL, single use
 ```
 
-## D4 — Upload pipeline (FR-24 file types, NFR-11 size ceiling)
+## D4 — Upload pipeline (the evidence file types the PRD lists, the configurable file-size limit size ceiling)
 
 ```mermaid
 flowchart LR
-    A["Client"] -->|"pre-signed PUT<br/>short TTL, size bounded (NFR-11)"| Q[("quarantine")]
+    A["Client"] -->|"pre-signed PUT<br/>short TTL, size bounded (the configurable file-size limit)"| Q[("quarantine")]
     Q -->|"event"| SQS[["queue"]]
     SQS --> SC["Scanner<br/>sandbox account<br/>no credentials · no egress · ephemeral"]
 
-    SC --> MB{"Content type matches<br/>declared type and FR-24 list?"}
+    SC --> MB{"Content type matches<br/>declared type and the accepted evidence file type list?"}
     MB -->|no| REJ["Reject + log security event"]
     MB -->|yes| AV{"Multi-engine scan<br/>+ structural checks<br/>+ archive limits (ZIP)<br/>+ media container checks"}
     AV -->|infected| FOR[("forensic<br/>separate key")]
@@ -155,9 +155,9 @@ flowchart LR
 
     P --> DER["Derivation service"]
     DER --> TH[("previews / transcodes")]
-    DER --> TX[("extracted text / OCR (FR-30)")]
+    DER --> TX[("extracted text / OCR (the single WSP upload requirement)")]
     DER --> REG[("derivative registry")]
-    P --> EVD[("evidence — write-once retention<br/>NON-DELETABLE, ≥6 years<br/>NFR-07, §7.1 step 5")]
+    P --> EVD[("evidence — write-once retention<br/>NON-DELETABLE, ≥6 years<br/>the non-deletable retention requirement, the PRD's testing workflow step 5")]
 
     FOR --> ALERT["Alert security<br/>notify Firm Super Admin"]
 
@@ -170,7 +170,7 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    D[("WSP document<br/>.docx / PDF / scanned PDF — FR-30<br/>firm key")] --> EX["Extract text incl. OCR<br/>sandboxed, no network"]
+    D[("WSP document<br/>.docx / PDF / scanned PDF — The single WSP upload requirement<br/>firm key")] --> EX["Extract text incl. OCR<br/>sandboxed, no network"]
     EX --> CH["Chunk + index<br/>in-region, firm key"]
     CH --> RT["Retrieve minimal relevant spans"]
     RT --> PS["Pseudonymise entities<br/>reversible, in-region"]
@@ -181,12 +181,12 @@ flowchart TB
     V -->|"cited span not found at offset"| RJ
     V -->|"injection signature"| RJ
     V -->|pass| RI["Re-identify entities"]
-    RI --> HR{"Compliance officer<br/>confirms or adjusts — FR-31"}
-    HR -->|adjust| OVR["Manual override<br/>VISIBLY TAGGED (GAP-09)"]
-    HR -->|confirm| TP{"Two independent senior approvers<br/>policy author excluded — FR-32"}
+    RI --> HR{"Compliance officer<br/>confirms or adjusts — The advisory AI mapping requirement"}
+    HR -->|adjust| OVR["Manual override<br/>VISIBLY TAGGED (the mapping override initiation gap)"]
+    HR -->|confirm| TP{"Two independent senior approvers<br/>policy author excluded — The two-person mapping approval requirement"}
     OVR --> TP
-    TP -->|approved| MAP[("Mapping record<br/>full version history<br/>nothing overwritten — FR-37")]
-    MAP --> ACC["Accuracy measured against<br/>verification vectors ≥85% — PRD §6.2"]
+    TP -->|approved| MAP[("Mapping record<br/>full version history<br/>nothing overwritten — The permanent WSP version history requirement")]
+    MAP --> ACC["Accuracy measured against<br/>verification vectors ≥85% — the PRD's WSP mapping accuracy commitment"]
 
     style BR fill:#3a3a1a,stroke:#a0a040,color:#fff
     style HR fill:#2d3a1a,stroke:#7aa04a,color:#fff
@@ -195,7 +195,7 @@ flowchart TB
     style RJ fill:#4a1010,stroke:#c04040,color:#fff
 ```
 
-## D6 — Key hierarchy (NFR-02)
+## D6 — Key hierarchy (the encryption requirement)
 
 ```mermaid
 graph TB
@@ -205,13 +205,13 @@ graph TB
     HSM --> AK["Audit key<br/>DELETION DENIED to all principals"]
     HSM --> BK["Backup key<br/>DELETION DENIED"]
     HSM --> SK["Record-sealing key<br/>sign-only · non-exportable"]
-    HSM --> TK["Per-firm key — firm-{id}<br/>REQUIRED BY NFR-02"]
+    HSM --> TK["Per-firm key — firm-{id}<br/>REQUIRED BY the encryption requirement"]
 
     TK --> DEK["Per-object data key<br/>wrapped, stored with ciphertext<br/>AAD = firm id + object id + class"]
     TK --> FDK["Field data key"]
     TK --> HK["Blind-index key (per firm)"]
 
-    TK -.->|"deletion BLOCKED while any record<br/>is inside its retention period<br/>(NFR-07 / §2)"| GUARD["Retention precondition check"]
+    TK -.->|"deletion BLOCKED while any record<br/>is inside its retention period<br/>(the non-deletable retention requirement / the PRD's data and retention table)"| GUARD["Retention precondition check"]
 
     style GUARD fill:#4a3010,stroke:#c08040,color:#fff
     style TK fill:#0d2818,stroke:#2e7d4f,color:#fff
@@ -256,7 +256,7 @@ graph LR
     E1["Record n-1<br/>manifest hash H(n-1)"] --> E2["Record n<br/>prev_hash = H(n-1)<br/>hash = H(n)"]
     E2 --> E3["Record n+1<br/>prev_hash = H(n)"]
     E2 --> SG["Manifest signature<br/>sign-only key"]
-    SG --> OL[("Write-once object retention<br/>NO DELETE PATH FOR ANY PRINCIPAL<br/>NFR-04 · NFR-07")]
+    SG --> OL[("Write-once object retention<br/>NO DELETE PATH FOR ANY PRINCIPAL<br/>the immutable audit requirement · the non-deletable retention requirement")]
     OL --> REP[("Copy outside the primary<br/>failure domain, within the EU")]
     VER["Scheduled internal verification<br/>digests · signature · chain head"] -.-> OL
 
@@ -288,8 +288,8 @@ graph TB
 
     P -->|"push only, no delete path back"| BV
     BV --> VR
-    PS -.->|"record copies (protects NFR-07)"| SS
-    NOTE["Recovery architecture, availability SLA and any recovery<br/>time/point targets: PROPOSALS ONLY, NOT COMMITTED<br/>(TI-02, `disaster-recovery`)"]
+    PS -.->|"record copies (protects the non-deletable retention requirement)"| SS
+    NOTE["Recovery architecture, availability SLA and any recovery<br/>time/point targets: PROPOSALS ONLY, NOT COMMITTED<br/>(the open uptime-SLA question, `disaster-recovery`)"]
 
     style B fill:#2a1a3e,stroke:#7a5aaa,color:#fff
     style S fill:#1f1f1f,stroke:#666,color:#fff
@@ -306,7 +306,7 @@ stateDiagram-v2
     Classified --> Active: classification assigned
     Active --> Active: access · preview · derive
     Active --> Sealed: attached to a test, result signed off,<br/>or report issued
-    Sealed --> Sealed: amendment added on top (FR-27)<br/>original never removed
+    Sealed --> Sealed: amendment added on top (the amendment-not-edit requirement)<br/>original never removed
     Active --> LegalHold: hold applied (dual approval)
     Sealed --> LegalHold: hold applied
     LegalHold --> Sealed: hold released (dual approval)
@@ -314,7 +314,7 @@ stateDiagram-v2
 
     note right of Sealed
         NO DELETION PATH.
-        Minimum 6 years (NFR-07).
+        Minimum 6 years (the non-deletable retention requirement).
         End of retention after the
         minimum: OPEN QUESTION.
     end note

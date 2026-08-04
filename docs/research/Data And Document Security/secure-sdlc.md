@@ -2,7 +2,7 @@
 
 > **Baseline:** PRD v4.0. **[PRD REQUIRED]** · **[PROPOSED]** · **[OPEN]** · **[FUTURE]** — see [Future and Optional Scope](future-scope/future-and-optional-scope.md).
 
-Nothing in this document is named by the PRD. Its content is classified **[PROPOSED]** unless stated otherwise: it is the development discipline reasonably necessary to deliver NFR-01 (tenant isolation), NFR-02 (encryption), NFR-04 (immutable audit) and NFR-07 (non-deletable six-year retention) with any confidence that they actually hold in the shipped product.
+Nothing in this document is named by the PRD. Its content is classified **[PROPOSED]** unless stated otherwise: it is the development discipline reasonably necessary to deliver the tenant isolation requirement (tenant isolation), the encryption requirement (encryption), the immutable audit requirement (immutable audit) and the non-deletable retention requirement (non-deletable six-year retention) with any confidence that they actually hold in the shipped product.
 
 ## Best practices
 
@@ -10,13 +10,13 @@ Nothing in this document is named by the PRD. Its content is classified **[PROPO
 - **Threat model per feature, not per year.** A short structured pass on every design touching authentication, authorisation, tenant isolation, cryptography, file handling, retention or the AI mapping path. Output is a list of abuse cases that become test cases (`threat-modelling`).
 - **Security requirements as acceptance criteria.** "Evidence files are encrypted with the firm's key" belongs in the story's definition of done, verified by an automated test — not in a wiki page.
 - **Everything as code, everything reviewed.** Application code, infrastructure, authorisation policy, pipelines and detection rules all go through the same review and CI path. No console changes in production.
-- **Two-person rule on anything that reaches production**, with the author unable to approve their own change. This mirrors the product's own two-person sign-off philosophy (FR-32, FR-44) and is simultaneously a quality control and an insider-threat control.
+- **Two-person rule on anything that reaches production**, with the author unable to approve their own change. This mirrors the product's own two-person sign-off philosophy (the two-person mapping approval requirement, the finding closure requirement) and is simultaneously a quality control and an insider-threat control.
 - **Reproducible, attested builds.** Every artefact traceable to a commit and a build (`supply-chain-security`).
 - **Track and enforce remediation SLAs by severity**, measured and reported.
 
 ## Regulatory context
 
-- **GDPR Art. 25** — data protection by design and by default is a *development-process* obligation. Privacy requirements must appear as design inputs and be testable. This is the one item here with a direct line to a PRD requirement (NFR-06).
+- **GDPR Art. 25** — data protection by design and by default is a *development-process* obligation. Privacy requirements must appear as design inputs and be testable. This is the one item here with a direct line to a PRD requirement (the GDPR processor requirement).
 - **GDPR Art. 32** — security of processing; the SDLC is how the stated measures come to exist in the code.
 - **Delegated Reg. (EU) 2024/1774** (DORA ICT risk management RTS) contains explicit expectations on change management; secure acquisition, development and maintenance; environment separation; testing before deployment; and vulnerability and patch management. Used here as a **design reference** — it binds customers, not the platform vendor (`regulatory-obligations`).
 - **NIS2 Art. 21(2)(e)** would mandate a secure SDLC and coordinated vulnerability disclosure **if** NIS2 applies. Scope is undetermined (`regulatory-obligations`). **[OPEN — LEGAL]**
@@ -40,20 +40,20 @@ Nothing in this document is named by the PRD. Its content is classified **[PROPO
 
 Generic scanners find generic bugs. The defects that will actually hurt ComplianceIQ are domain-specific. Write rules for:
 
-- Any database query on a tenant-scoped table lacking a tenant predicate or not routed through the tenant-scoped repository layer. *(NFR-01)*
-- Any object-storage operation not routed through the tenant-key-aware storage service. *(NFR-02)*
+- Any database query on a tenant-scoped table lacking a tenant predicate or not routed through the tenant-scoped repository layer. *(the tenant isolation requirement)*
+- Any object-storage operation not routed through the tenant-key-aware storage service. *(the encryption requirement)*
 - Any log statement whose arguments include a field marked sensitive in the field registry. *(`audit-logging`)*
-- Any HTTP handler lacking an authorisation decorator or middleware. *(FR-09)*
-- Any use of a raw cryptographic primitive outside the approved crypto module. *(NFR-02)*
-- Any outbound call to a host not in the egress allowlist. *(NFR-03)*
-- Any code path that deletes or overwrites a record in a PRD non-deletable class. *(NFR-07, FR-13)*
+- Any HTTP handler lacking an authorisation decorator or middleware. *(the automatic role enforcement requirement)*
+- Any use of a raw cryptographic primitive outside the approved crypto module. *(the encryption requirement)*
+- Any outbound call to a host not in the egress allowlist. *(the EU residency requirement)*
+- Any code path that deletes or overwrites a record in a PRD non-deletable class. *(the non-deletable retention requirement, the permanent audit log requirement)*
 - Any prompt-construction call whose inputs include customer document content outside the sanctioned mapping path. *(`ai-governance`)*
 
 The last two are specific to this product and are worth writing first.
 
 ### Environment separation **[PROPOSED]**
 
-- Separate cloud accounts for development, pre-production, production, security tooling, log archive and shared services, inside the Client-owned AWS organisation (TI-01). No trust path from lower to higher environments.
+- Separate cloud accounts for development, pre-production, production, security tooling, log archive and shared services, inside the Client-owned AWS organisation (the confirmed cloud decision). No trust path from lower to higher environments.
 - Promotion is artefact-based: the exact signed image tested in pre-production is the image deployed to production. No rebuild between environments.
 - Production deployment identity is the pipeline's federated role, scoped narrowly, with no interactive assume path.
 
@@ -78,7 +78,7 @@ Exceptions require documented, dated risk acceptance by a named owner. Overdue i
 
 ### Coordinated vulnerability disclosure **[PROPOSED]**
 
-A published `security.txt` and `SECURITY.md`, a monitored security inbox, a defined triage SLA, safe-harbour language, and a public advisory practice. Cheap, and the cheapest source of high-quality external findings. Note CC-03: anything published about the platform is the Client's IP and its publication is the Client's call. **[OPEN]**
+A published `security.txt` and `SECURITY.md`, a monitored security inbox, a defined triage SLA, safe-harbour language, and a public advisory practice. Cheap, and the cheapest source of high-quality external findings. Note the IP ownership term: anything published about the platform is the Client's IP and its publication is the Client's call. **[OPEN]**
 
 A private bug-bounty programme is **[FUTURE]**.
 
@@ -88,18 +88,18 @@ A private bug-bounty programme is **[FUTURE]**.
 |---|---|---|
 | Gate fatigue — noisy scanners bypassed with blanket suppressions | False assurance; real findings buried | Tune ruthlessly; measure false-positive rate; suppression requires a comment with a ticket and expiry |
 | Two-person rule circumvented (self-merge, emergency bypass) | Unreviewed production change | Branch protection at organisation level; emergency bypass alerts and requires a retrospective review |
-| Tenant isolation untested | Cross-firm data exposure — the catastrophic failure for this product (NFR-01) | Mandatory per-endpoint cross-tenant negative tests; coverage gate |
-| Retention/immutability rules implemented but never tested | Silent breach of NFR-07 / FR-13 | Automated tests asserting that delete and update paths fail for protected record classes |
+| Tenant isolation untested | Cross-firm data exposure — the catastrophic failure for this product (the tenant isolation requirement) | Mandatory per-endpoint cross-tenant negative tests; coverage gate |
+| Retention/immutability rules implemented but never tested | Silent breach of the non-deletable retention requirement / the permanent audit log requirement | Automated tests asserting that delete and update paths fail for protected record classes |
 | Dependency updates deferred for stability | Exploitable known vulnerabilities | Automated update PRs with strong test coverage; batch low-risk updates |
 | Design-stage threat modelling skipped under delivery pressure | Structural flaws found in pen test or production | Threat model as a merge requirement for qualifying change types, validated in CI against changed paths |
-| SDLC evidence not retained | Cannot satisfy a customer security review | Pipeline emits evidence records into the same immutable store used for NFR-04 |
+| SDLC evidence not retained | Cannot satisfy a customer security review | Pipeline emits evidence records into the same immutable store used for the immutable audit requirement |
 
 ## Trade-offs
 
 - **Blocking gates vs. velocity.** Block only on: secrets, new Critical/High vulnerabilities, tenant-isolation test failures, unsigned artefacts, policy violations, and violations of the non-deletability rules. Everything else advisory with a tracked SLA.
 - **Custom rules vs. off-the-shelf only.** Custom rules catch what matters here. Budget a small recurring maintenance allowance.
 - **Build vs. buy the toolchain.** Open-source core plus one commercial dependency-reachability tool cuts the main source of gate fatigue. Cost is a Client decision. **[OPEN]**
-- **Monorepo vs. polyrepo.** The product has two applications (Firm Application and Platform Admin Portal, PRD §1.1) that share tenancy, audit and evidence infrastructure. A monorepo with ownership rules per area is the simplest path to uniform enforcement across both.
+- **Monorepo vs. polyrepo.** The product has two applications (Firm Application and Platform Admin Portal, the PRD's two-application description) that share tenancy, audit and evidence infrastructure. A monorepo with ownership rules per area is the simplest path to uniform enforcement across both.
 
 ## Design decisions
 
@@ -113,7 +113,7 @@ A private bug-bounty programme is **[FUTURE]**.
 | DD-04-06 | Vulnerability SLAs as tabled; exceptions require dated, signed risk acceptance | **[PROPOSED]** |
 | DD-04-07 | Independent penetration test, including multi-tenancy isolation, before real customer data is accepted; ongoing cadence is a Client decision | **[PROPOSED / OPEN]** |
 | DD-04-08 | No console or manual changes in production; all change flows through infrastructure as code and the pipeline, with drift detection | **[PROPOSED]** |
-| DD-04-09 | Coordinated vulnerability disclosure policy published, subject to Client approval given CC-03 | **[PROPOSED / OPEN]** |
+| DD-04-09 | Coordinated vulnerability disclosure policy published, subject to Client approval given the IP ownership term | **[PROPOSED / OPEN]** |
 
 ## References
 

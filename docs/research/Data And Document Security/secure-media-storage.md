@@ -8,15 +8,15 @@ Covers the upload → scan → store → serve pipeline for every file the platf
 
 | PRD ref | Requirement |
 |---|---|
-| FR-24 | Accepted evidence types: **PDF, .docx, .xlsx, PNG, JPG, MP3, WAV, MP4, MOV, AVI, screen recordings, ZIP archives, CSV**. Maximum file size is set in platform configuration and adjustable without a code change |
-| NFR-11 | The maximum evidence file size is a configuration setting managed in the Platform Admin Portal; the initial limit is set from infrastructure cost modelling |
-| FR-30 | WSP upload accepts `.docx`, PDF and **scanned PDF, read via OCR** |
-| FR-02 | Optional upload of the regulator licence document (PDF) |
-| FR-04, FR-62 | Structured uploads: revenue-source Excel template, staff CSV template |
-| §7.1 step 5 | "All uploads are non-deletable and permanently linked to the test" |
-| PRD §2, NFR-07 | Evidence files: minimum six years, **cannot be deleted by anyone** |
-| NFR-02 | Evidence stored in encrypted object storage with per-firm encryption keys |
-| FR-28 | Evidence has a shelf life; the platform tracks age and alerts before validity lapses. **This is an alerting feature, not a deletion feature** |
+| Accepted evidence file type list | Accepted evidence types: **PDF, .docx, .xlsx, PNG, JPG, MP3, WAV, MP4, MOV, AVI, screen recordings, ZIP archives, CSV**. Maximum file size is set in platform configuration and adjustable without a code change |
+| Configurable file-size limit | The maximum evidence file size is a configuration setting managed in the Platform Admin Portal; the initial limit is set from infrastructure cost modelling |
+| Single WSP upload requirement | WSP upload accepts `.docx`, PDF and **scanned PDF, read via OCR** |
+| Licence capture requirement | Optional upload of the regulator licence document (PDF) |
+| Revenue file requirement, the staff import requirement | Structured uploads: revenue-source Excel template, staff CSV template |
+| The PRD's testing workflow step 5 | "All uploads are non-deletable and permanently linked to the test" |
+| the PRD's data and retention table, the non-deletable retention requirement | Evidence files: minimum six years, **cannot be deleted by anyone** |
+| Encryption requirement | Evidence stored in encrypted object storage with per-firm encryption keys |
+| Evidence validity requirement | Evidence has a shelf life; the platform tracks age and alerts before validity lapses. **This is an alerting feature, not a deletion feature** |
 
 **The accepted type list is unusually broad for a compliance product.** Video, audio, screen recordings and ZIP archives are all attacker-friendly formats, they are large, and they must be retained unaltered for at least six years. That combination drives most of the design below.
 
@@ -33,11 +33,11 @@ Covers the upload → scan → store → serve pipeline for every file the platf
 
 - **GDPR Art. 32** — the integrity of the storage pipeline; distributing malware to customers through the platform would be a reportable breach affecting them.
 - **GDPR Art. 9** — evidence uploads may include identity documents containing biometric facial images; the controller (the firm) needs an Art. 9(2) condition, and the platform owes heightened measures.
-- **GDPR Art. 5(1)(c)** — minimisation. Note the tension: minimisation would argue for discarding an original once a redacted derivative suffices, but **PRD §7.1 and NFR-07 forbid deleting evidence**. The PRD wins; see the note below.
+- **GDPR Art. 5(1)(c)** — minimisation. Note the tension: minimisation would argue for discarding an original once a redacted derivative suffices, but **the PRD's testing workflow and the non-deletable retention requirement forbid deleting evidence**. The PRD wins; see the note below.
 - **Delegated Reg. (EU) 2024/1774** — malware protection is an explicit control area. *(Design reference.)*
-- **PRD §2 / NFR-07** — stored files are records; their integrity across the six-year retention period must be demonstrable (`immutable-evidence-retention`).
+- **the PRD's data and retention table / the non-deletable retention requirement** — stored files are records; their integrity across the six-year retention period must be demonstrable (`immutable-evidence-retention`).
 
-> **Minimisation vs. non-deletability.** Earlier drafts of this research proposed retaining a redacted derivative and applying aggressive retention to the original identity document. **That is incompatible with PRD §7.1 step 5 and NFR-07.** Redacted derivatives may be generated *in addition* to the original, for display purposes; the original is retained. Whether the firm should be discouraged at upload time from attaching more personal data than the test requires is a **product** question worth raising. **[OPEN]**
+> **Minimisation vs. non-deletability.** Earlier drafts of this research proposed retaining a redacted derivative and applying aggressive retention to the original identity document. **That is incompatible with the PRD's testing workflow step 5 and the non-deletable retention requirement.** Redacted derivatives may be generated *in addition* to the original, for display purposes; the original is retained. Whether the firm should be discouraged at upload time from attaching more personal data than the test requires is a **product** question worth raising. **[OPEN]**
 
 ## Recommended architecture
 
@@ -45,8 +45,8 @@ Covers the upload → scan → store → serve pipeline for every file the platf
 
 ```
 1. Client requests upload        API validates authentication, authorisation, firm quota,
-                                 declared type against FR-24, and declared size against the
-                                 NFR-11 configured maximum. Issues a short-lived, single-use
+                                 declared type against the accepted evidence file type list, and declared size against the
+                                 the configurable file-size limit configured maximum. Issues a short-lived, single-use
                                  pre-signed PUT to the QUARANTINE bucket with an enforced
                                  content-length range and required encryption headers
                                      ↓
@@ -59,7 +59,7 @@ Covers the upload → scan → store → serve pipeline for every file the platf
                                  • Structural sanity checks per format
                                  • Multi-engine malware scan
                                  • Archive recursion depth and decompression-ratio limits (ZIP is
-                                   an accepted type — FR-24)
+                                   an accepted type — The accepted evidence file type list)
                                  • Embedded active-content detection: scripts in PDF, macros in
                                    Office, scripts in SVG, external entity references in XML
                                  • Media container validation for MP4/MOV/AVI/MP3/WAV
@@ -68,7 +68,7 @@ Covers the upload → scan → store → serve pipeline for every file the platf
                   object is evidence) ──▶ metadata row ──▶ derivation jobs ──▶ available
 4b. INFECTED  ──▶ FORENSIC bucket (separate key, restricted access), alert, notify the Firm Super
                   Admin, record the event. Never silently discarded — and note that a rejected
-                  upload never became evidence, so NFR-07 does not attach to it
+                  upload never became evidence, so the non-deletable retention requirement does not attach to it
 4c. ERROR     ──▶ Remain in quarantine, alert, manual review. **Fail closed** — a scanner failure
                   never results in a file being marked clean
 ```
@@ -97,7 +97,7 @@ The processor (parse, OCR, thumbnail, text extract, transcode) runs:
 
 A successful parser exploit then yields: one file's plaintext, no credentials, no network, and a container that dies in seconds. That is an acceptable worst case.
 
-**OCR deserves specific attention** (FR-30): OCR output is a full plaintext copy of a firm's compliance manual. It inherits the source classification, the firm key and the derivative registry entry, and it is the text that feeds the FR-31 mapping path — which makes it the injection surface described in `ai-governance`.
+**OCR deserves specific attention** (the single WSP upload requirement): OCR output is a full plaintext copy of a firm's compliance manual. It inherits the source classification, the firm key and the derivative registry entry, and it is the text that feeds the advisory AI mapping requirement mapping path — which makes it the injection surface described in `ai-governance`.
 
 ### Serving **[PROPOSED]**
 
@@ -114,28 +114,28 @@ A successful parser exploit then yields: one file's plaintext, no credentials, n
 | Parser or media-container exploit yields remote code execution | Compromise of the processing tier | No credentials, no network, ephemeral compute, separate account, memory-safe parsers, resource limits |
 | Malware stored and later downloaded by a firm user | The platform becomes the distribution vector | Quarantine before availability, multi-engine scanning, fail-closed on scanner error, rescan recent uploads when signatures update |
 | Stored script via SVG or HTML rendered in-app | Session theft, account takeover | Separate origin, sandboxed CSP, no sniffing, server-side rendering by default |
-| Archive bomb or recursive ZIP | Resource exhaustion; availability incident against NFR-08 | Decompression ratio and depth limits, hard time and memory caps, size limit enforced at pre-sign time per NFR-11 |
+| Archive bomb or recursive ZIP | Resource exhaustion; availability incident against the availability target | Decompression ratio and depth limits, hard time and memory caps, size limit enforced at pre-sign time per the configurable file-size limit |
 | Signed URL leaked via referrer or a shared link | Unauthorised access within the TTL | Short TTL, single use, no-referrer policy, never in emails or logs |
 | Write-once retention applied to the wrong bucket | Unremovable data in a class with no retention basis | Apply write-once retention only to the evidence class; stage the rollout (`deployment-recommendations`) |
 | Derivative artefacts escape access control | Silent confidentiality breach | Derivative registry; identical bucket policy, key and classification inheritance |
 | Upload bypasses scanning via pre-sign misuse | Unscanned content in the primary bucket | Pre-signs issued only for quarantine; the primary bucket accepts writes only from the scanner role |
-| Large media files blow the cost model | Unbudgeted storage growth over six years | NFR-11 configurable ceiling; model storage at multiples of projected volume before setting it |
+| Large media files blow the cost model | Unbudgeted storage growth over six years | Configurable file-size limit configurable ceiling; model storage at multiples of projected volume before setting it |
 
 ## Trade-offs
 
 - **Single scanning engine vs. multiple.** Compliance documents from crypto firms are a plausible malware delivery target. Recommendation: an open-source engine plus one commercial engine in parallel, failing closed if either times out. Cost is a Client decision. **[PROPOSED / OPEN]**
-- **Content disarm and reconstruction vs. detection only.** Flattening a PDF can destroy signatures and structure that make it useful evidence. Recommendation: apply disarming to the **preview derivative only, never to the retained original** — which is also what NFR-07 requires. **[PROPOSED]**
+- **Content disarm and reconstruction vs. detection only.** Flattening a PDF can destroy signatures and structure that make it useful evidence. Recommendation: apply disarming to the **preview derivative only, never to the retained original** — which is also what the non-deletable retention requirement requires. **[PROPOSED]**
 - **Direct-to-storage pre-signed upload vs. proxying through the application.** Recommendation: direct-to-quarantine; inspection happens asynchronously and the denial-of-service surface is far smaller, which matters with video. **[PROPOSED]**
 - **Server-side rendered preview vs. client-side rendering.** Recommendation: server-side by default; client-side only for plain text and pre-sanitised formats; media streamed from the separate origin. **[PROPOSED]**
-- **How large the configured maximum file size should be.** NFR-11 makes it configurable and defers the number to infrastructure cost modelling. **The number itself is [OPEN]** and should be set from measured storage and egress cost against the six-year retention obligation.
+- **How large the configured maximum file size should be.** The configurable file-size limit makes it configurable and defers the number to infrastructure cost modelling. **The number itself is [OPEN]** and should be set from measured storage and egress cost against the six-year retention obligation.
 
 ## Design decisions
 
 | ID | Decision | Classification | Basis |
 |---|---|---|---|
-| DD-13-01 | The platform accepts exactly the FR-24 file type list; anything else is rejected at upload | **[PRD REQUIRED]** | FR-24 |
-| DD-13-02 | Maximum file size is a Portal-managed configuration value, changeable without a code release | **[PRD REQUIRED]** | NFR-11, FR-24 |
-| DD-13-03 | Uploaded evidence is non-deletable and permanently linked to its test | **[PRD REQUIRED]** | PRD §7.1 step 5, NFR-07 |
+| DD-13-01 | The platform accepts exactly the accepted evidence file type list file type list; anything else is rejected at upload | **[PRD REQUIRED]** | Accepted evidence file type list |
+| DD-13-02 | Maximum file size is a Portal-managed configuration value, changeable without a code release | **[PRD REQUIRED]** | Configurable file-size limit, the accepted evidence file type list |
+| DD-13-03 | Uploaded evidence is non-deletable and permanently linked to its test | **[PRD REQUIRED]** | the PRD's testing workflow step 5, the non-deletable retention requirement |
 | DD-13-04 | Five-bucket topology (`quarantine`, `primary`, `evidence`, `derivatives`, `forensic`) with distinct keys and policies | **[PROPOSED]** | — |
 | DD-13-05 | All uploads land in quarantine via a short-lived single-use pre-signed PUT with an enforced size range; the primary bucket accepts writes only from the scanner role | **[PROPOSED]** | — |
 | DD-13-06 | Multi-engine malware scanning plus structural and active-content inspection; **fail closed** on scanner error or timeout | **[PROPOSED]** | — |
@@ -144,8 +144,8 @@ A successful parser exploit then yields: one file's plaintext, no credentials, n
 | DD-13-09 | Files served from a dedicated content origin with sandboxed CSP, no sniffing, attachment disposition and no application cookies | **[PROPOSED]** | — |
 | DD-13-10 | Default access mode is a server-side rendered, watermarked preview; raw download is separately permissioned and logged; media is streamed from the content origin | **[PROPOSED]** | — |
 | DD-13-11 | Recently uploaded files are rescanned when malware signatures update | **[PROPOSED]** | — |
-| DD-13-12 | OCR output and every other derivative inherits the source classification, firm key and registry entry | **[PROPOSED]** | supports FR-30, NFR-01 |
-| DD-13-13 | The configured maximum file size value | **[OPEN]** | NFR-11 defers it |
+| DD-13-12 | OCR output and every other derivative inherits the source classification, firm key and registry entry | **[PROPOSED]** | supports the single WSP upload requirement, the tenant isolation requirement |
+| DD-13-13 | The configured maximum file size value | **[OPEN]** | Configurable file-size limit defers it |
 
 ## References
 
@@ -158,6 +158,6 @@ A successful parser exploit then yields: one file's plaintext, no credentials, n
 
 ## Confidence level
 
-**High** — the quarantine-scan-promote pipeline, sandboxed processing with no credentials or network, the separate content origin, and derivative handling. These are the established answers to a well-understood threat class, and FR-24's breadth makes them more necessary here than usual.
+**High** — the quarantine-scan-promote pipeline, sandboxed processing with no credentials or network, the separate content origin, and derivative handling. These are the established answers to a well-understood threat class, and the accepted evidence file type list's breadth makes them more necessary here than usual.
 
-**Medium** — the scanning and processing cost profile for the media formats FR-24 admits, and the right value for the NFR-11 size ceiling. Both need measurement against real customer file mixes.
+**Medium** — the scanning and processing cost profile for the media formats the accepted evidence file type list admits, and the right value for the configurable file-size limit size ceiling. Both need measurement against real customer file mixes.

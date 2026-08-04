@@ -8,7 +8,7 @@ Three distinct supply chains, each with its own controls:
 2. **Build and distribution** — the pipeline that turns source into a running artefact (`secure-cicd`).
 3. **Third-party services** — cloud provider, AI inference provider, email delivery, observability. These are the platform's sub-processors and the customers' fourth parties.
 
-Not named by the PRD. Everything here is **[PROPOSED]** unless marked, with one PRD-anchored point: **CC-03 assigns all platform source code and architecture 100% exclusively to the Client**, which makes dependency licensing and third-party component provenance a contractual concern, not only a security one.
+Not named by the PRD. Everything here is **[PROPOSED]** unless marked, with one PRD-anchored point: **the IP ownership term assigns all platform source code and architecture 100% exclusively to the Client**, which makes dependency licensing and third-party component provenance a contractual concern, not only a security one.
 
 ## Best practices
 
@@ -21,11 +21,11 @@ Not named by the PRD. Everything here is **[PROPOSED]** unless marked, with one 
 
 ## Regulatory implications
 
-- **GDPR Art. 28(2)/(4)** — sub-processor authorisation, advance notice of changes with a right to object, equivalent obligations flowed down. Every third-party service touching personal data is a sub-processor requiring disclosure under the NFR-06 DPA.
+- **GDPR Art. 28(2)/(4)** — sub-processor authorisation, advance notice of changes with a right to object, equivalent obligations flowed down. Every third-party service touching personal data is a sub-processor requiring disclosure under the GDPR processor requirement DPA.
 - **DORA Chapter V** (customer-side) — customers maintain a register of information listing ICT third-party providers and, where the service supports a critical or important function, their subcontractors. They will ask for accurate structured data. **Whether the platform is designated as supporting such a function is not settled** (`regulatory-obligations`). **[OPEN]**
 - **NIS2 Art. 21(2)(d)** — supply chain security, if NIS2 applies. Scope undetermined. **[OPEN — LEGAL]**
 - **CRA** — obligations attach only if an installable or embeddable artefact ships. The PRD ships none. **[OPEN, conditional]**
-- **CC-03** — licence compatibility matters because all code must be assignable exclusively to the Client. Copyleft licences that would encumber that assignment are a contractual problem, not just a legal-review checkbox.
+- **the IP ownership term** — licence compatibility matters because all code must be assignable exclusively to the Client. Copyleft licences that would encumber that assignment are a contractual problem, not just a legal-review checkbox.
 
 ## Recommended architecture
 
@@ -37,11 +37,11 @@ Not named by the PRD. Everything here is **[PROPOSED]** unless marked, with one 
 | Digest pinning | All base images and CI actions pinned to immutable digests; automated update tooling maintains them |
 | Private registry proxy | A single upstream that caches packages and blocks direct public-registry access from builds |
 | Dependency-confusion protection | Internal namespaces always resolve privately; names reserved |
-| New-dependency review | Adding a dependency requires review against a checklist: maintenance activity, maintainer count, transitive weight, **licence compatibility with CC-03**, known incidents, and whether it can be avoided |
+| New-dependency review | Adding a dependency requires review against a checklist: maintenance activity, maintainer count, transitive weight, **licence compatibility with the IP ownership term**, known incidents, and whether it can be avoided |
 | Update cadence | Automated update PRs; security updates within the `secure-sdlc` SLA; low-risk updates batched |
 | Cooldown period | New versions are not adopted for a short window unless they fix a security issue — this defeats most compromised-release attacks, which are typically detected within hours |
 | Vulnerability detection | Automated scanning on every build and continuously against already-deployed artefacts |
-| Licence compliance | Automated scan with a deny-list driven by CC-03's exclusive-assignment requirement |
+| Licence compliance | Automated scan with a deny-list driven by the IP ownership term's exclusive-assignment requirement |
 
 Commercial reachability-analysis tooling materially reduces triage noise but is a cost decision. **[OPEN]**
 
@@ -67,7 +67,7 @@ Commercial reachability-analysis tooling materially reduces triage noise but is 
 | Check | Evidence |
 |---|---|
 | Security assurance | An independent report or certification, reviewed rather than merely collected |
-| Data residency | Contractual EU-only processing and storage where personal data is involved — **required by NFR-03** |
+| Data residency | Contractual EU-only processing and storage where personal data is involved — **required by the EU residency requirement** |
 | Sub-processor position | Willing to be listed; discloses their own sub-processors |
 | Data processing agreement | GDPR Art. 28 terms; transfer tools where any transfer occurs |
 | Incident notification | A contractual notification commitment fast enough to feed the platform's own notification path to firms |
@@ -78,11 +78,11 @@ Commercial reachability-analysis tooling materially reduces triage noise but is 
 
 ### Concentration and the cloud provider
 
-**The PRD selects AWS (TI-01)**, so single-provider concentration is a Client-accepted position rather than an open architectural choice. What remains useful:
+**The PRD selects AWS (the confirmed cloud decision)**, so single-provider concentration is a Client-accepted position rather than an open architectural choice. What remains useful:
 
 - A documented concentration analysis that says plainly what depends on the provider (compute, storage, keys, backups, and possibly inference) and what the mitigations are.
 - Portability maintained as a design discipline (`data-residency`).
-- An exit plan the Client can execute, which matters more than usual because the Client owns the account and all the IP (TI-01, CC-03).
+- An exit plan the Client can execute, which matters more than usual because the Client owns the account and all the IP (the confirmed cloud decision, the IP ownership term).
 
 Multi-cloud is not proposed: running the same controls consistently across two providers roughly doubles operational surface and, in practice, degrades every control to the weaker provider's capability. Inconsistency in tenant isolation would be a larger risk than provider outage.
 
@@ -100,7 +100,7 @@ Publishing a machine-readable sub-processor list, advance notice of changes, and
 | Unsigned image deployed via a bypass path | Provenance chain broken | Admission verification with no exception path; break-glass deploys dual-approved and reviewed |
 | Third party suffers a breach affecting platform data | Cascading breach; client firms' own obligations triggered | Contractual notification commitment, per-provider playbook, data minimisation to each provider |
 | Sub-processor added without customer notice | GDPR Art. 28 and contractual breach | Vendor intake gate that updates the published list and triggers notification |
-| Dependency licence incompatible with CC-03 exclusive assignment | Contractual problem with the Client's IP ownership | Licence scanning with a deny-list; review at dependency-addition time |
+| Dependency licence incompatible with the IP ownership term exclusive assignment | Contractual problem with the Client's IP ownership | Licence scanning with a deny-list; review at dependency-addition time |
 | Bill of materials inaccurate or stale | False assurance | Build-time generation from the actual build; continuous re-evaluation |
 | Vulnerability backlog grows faster than remediation | SLA breach; audit finding | Reachability prioritisation, dependency reduction, automated updates, measured burn-down |
 
@@ -122,9 +122,9 @@ Publishing a machine-readable sub-processor list, advance notice of changes, and
 | DD-18-04 | Admission control verifies signature, provenance and attestations before any workload runs in production; no exception path | **[PROPOSED]** |
 | DD-18-05 | Machine-readable bill of materials generated at build time, stored with continuous advisory re-evaluation | **[PROPOSED]** |
 | DD-18-06 | Vulnerability prioritisation informed by reachability where tooling is funded; severity score alone does not drive the SLA clock | **[PROPOSED / OPEN]** |
-| DD-18-07 | Vendor intake gate with a defined evidence checklist, including EU-only processing where personal data is involved; no service touches client data before passing it | **[PROPOSED]** — supports NFR-03, NFR-06 |
-| DD-18-08 | Licence scanning with a deny-list derived from CC-03's exclusive-assignment requirement | **[PROPOSED]** — supports CC-03 |
-| DD-18-09 | Single cloud provider, per the PRD, with a documented concentration analysis, maintained portability and an exit plan the Client can execute | **[PRD REQUIRED (provider) / PROPOSED (analysis)]** — TI-01 |
+| DD-18-07 | Vendor intake gate with a defined evidence checklist, including EU-only processing where personal data is involved; no service touches client data before passing it | **[PROPOSED]** — supports the EU residency requirement, the GDPR processor requirement |
+| DD-18-08 | Licence scanning with a deny-list derived from the IP ownership term's exclusive-assignment requirement | **[PROPOSED]** — supports the IP ownership term |
+| DD-18-09 | Single cloud provider, per the PRD, with a documented concentration analysis, maintained portability and an exit plan the Client can execute | **[PRD REQUIRED (provider) / PROPOSED (analysis)]** — The confirmed cloud decision |
 | DD-18-10 | Published sub-processor list with advance notice of changes | **[PROPOSED]** — GDPR Art. 28 |
 | DD-18-11 | Structured customer register-of-information extract | **[FUTURE]** |
 

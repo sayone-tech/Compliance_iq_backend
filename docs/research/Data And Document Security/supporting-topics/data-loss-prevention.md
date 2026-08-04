@@ -4,7 +4,7 @@
 
 Data loss prevention has a poor reputation because it is usually deployed as a content-inspection product bolted onto an architecture that already permits exfiltration. The effective approach inverts this: **architectural controls that make exfiltration paths not exist, with content inspection as a detective backstop on the few paths that must remain open.**
 
-Not named by the PRD. Everything here is **[PROPOSED]** unless marked, in service of NFR-01 and NFR-03.
+Not named by the PRD. Everything here is **[PROPOSED]** unless marked, in service of the tenant isolation requirement and the EU residency requirement.
 
 ## Best practices
 
@@ -20,7 +20,7 @@ Not named by the PRD. Everything here is **[PROPOSED]** unless marked, in servic
 - **GDPR Art. 32** — a security-of-processing measure; **Art. 5(1)(f)** confidentiality; **Art. 33/34** — an exfiltration event is a notifiable breach, and this telemetry determines whether the scope can be characterised in 72 hours.
 - **GDPR Art. 25** — data protection by default: personal data should not be extractable beyond what the purpose requires.
 - **Delegated Reg. (EU) 2024/1774** — measures to prevent data leakage and control data flows. *(Design reference.)*
-- **NFR-03** — egress control is also a residency control: an unlogged outbound path is a potential route out of the EU boundary.
+- **the EU residency requirement** — egress control is also a residency control: an unlogged outbound path is a potential route out of the EU boundary.
 - **Employee monitoring constraint** — endpoint controls and content inspection process employee personal data. Lawful basis, transparency, proportionality, and in several member states consultation. Inspecting employee email or chat content is legally sensitive. Design accordingly rather than assuming. **[OPEN — LEGAL]**
 
 ## Recommended architecture
@@ -43,9 +43,9 @@ Not named by the PRD. Everything here is **[PROPOSED]** unless marked, in servic
 ### Layer 2 — egress inspection and control
 
 - **Network egress:** domain-allowlisted egress firewall; every denied connection alerts (`network-security`). Volume anomaly detection on allowed destinations catches abuse of a legitimate channel.
-- **Application egress:** all outbound integrations — report distribution email (FR-59), notification email (PRD §12), the inference call (FR-31), the Portal's regulatory feed fetches (SA-03) — go through a single egress service that enforces destination allowlists, applies size limits, logs the transfer with classification metadata, and applies content policy.
+- **Application egress:** all outbound integrations — report distribution email (the report distribution requirement), notification email (the PRD's notifications section), the inference call (the advisory AI mapping requirement), the Portal's regulatory feed fetches (the regulatory monitoring requirement) — go through a single egress service that enforces destination allowlists, applies size limits, logs the transfer with classification metadata, and applies content policy.
 
-  **Report distribution deserves specific attention:** FR-59 automatically emails a signed-off report to configured distribution lists, and PRD §10.6 defines six lists including ones that fire on regulator requests. That is a legitimate, PRD-required outbound path carrying `CONFIDENTIAL` content. Recommendation: send a notification with an authenticated link rather than the report as an attachment, so the content stays inside the platform boundary and every access is logged under FR-13. **[PROPOSED — needs product agreement]** **[OPEN]**
+  **Report distribution deserves specific attention:** The report distribution requirement automatically emails a signed-off report to configured distribution lists, and the PRD's distribution list section defines six lists including ones that fire on regulator requests. That is a legitimate, PRD-required outbound path carrying `CONFIDENTIAL` content. Recommendation: send a notification with an authenticated link rather than the report as an attachment, so the content stays inside the platform boundary and every access is logged under the permanent audit log requirement. **[PROPOSED — needs product agreement]** **[OPEN]**
 - **DNS:** query logging and resolver firewall detect tunnelling (`network-security`).
 
 ### Layer 3 — application-layer controls (the highest-signal layer for this product)
@@ -99,10 +99,10 @@ Response is graduated: alert → step-up challenge → session termination → a
 | Determined insider photographs the screen | Undetectable exfiltration | Accepted as residual; watermarks aid attribution; limit what is displayed at once; rate-limit views |
 | Endpoint controls deployed without a lawful basis or required consultation | Regulatory and employment-law exposure | Legal review; transparency notice; proportionality assessment; narrow scope |
 | Exfiltration via an allowlisted destination | Slow leak through a legitimate channel | Per-destination volume anomaly detection; a single application egress service logging and classifying every transfer |
-| Report content emailed as an attachment leaves the audited boundary | Confidential content outside FR-13's reach; a residency question if the mail path is not EU-only | Prefer authenticated links; EU-only mail infrastructure; resolve as a product decision |
+| Report content emailed as an attachment leaves the audited boundary | Confidential content outside the permanent audit log requirement's reach; a residency question if the mail path is not EU-only | Prefer authenticated links; EU-only mail infrastructure; resolve as a product decision |
 | Watermarks cropped | Attribution lost | Vary placement per render; accept as partial |
 | Detection telemetry itself becomes a sensitive store | Secondary exposure | Alerts store hashes and metadata, never matched content |
-| Over-blocking degrades a legitimate bulk workflow — for example a genuine regulator request for hundreds of documents (PRD §10.6) | Customer dissatisfaction; workaround behaviour | Approval workflow rather than a hard block; make the legitimate path fast and documented |
+| Over-blocking degrades a legitimate bulk workflow — for example a genuine regulator request for hundreds of documents (the PRD's distribution list section) | Customer dissatisfaction; workaround behaviour | Approval workflow rather than a hard block; make the legitimate path fast and documented |
 | Content inspection prioritised while an architectural path remains open | False assurance | Prioritise Layer 1; review exfiltration paths in every threat model |
 
 ## Trade-offs
@@ -121,8 +121,8 @@ Response is graduated: alert → step-up challenge → session termination → a
 | DD-23-02 | Per-role data-access baselines with graduated response: alert, then approval, then hard block, per rolling hour | **[PROPOSED]** |
 | DD-23-03 | Bulk export requires step-up authentication, a stated purpose, approval above a threshold, watermarking, and an audit event | **[PROPOSED]** |
 | DD-23-04 | Per-user watermarks on all previews and exports | **[PROPOSED]** |
-| DD-23-05 | All outbound integrations route through a single egress service enforcing destination allowlists, size limits, classification policy and full logging | **[PROPOSED]** — supports NFR-03 |
-| DD-23-06 | Report and alert distribution prefers an authenticated link over attaching confidential content to email | **[PROPOSED / OPEN]** — affects FR-59 |
+| DD-23-05 | All outbound integrations route through a single egress service enforcing destination allowlists, size limits, classification policy and full logging | **[PROPOSED]** — supports the EU residency requirement |
+| DD-23-06 | Report and alert distribution prefers an authenticated link over attaching confidential content to email | **[PROPOSED / OPEN]** — affects the report distribution requirement |
 | DD-23-07 | Endpoint controls scoped narrowly to removable media, personal cloud sync, unmanaged browsers, and blocking paste of client-data patterns into AI tooling. Broad email and chat inspection is out of scope | **[PROPOSED]** |
 | DD-23-08 | All employee monitoring is transparent, supported by a documented balancing test, and subject to locally required consultation | **[PROPOSED / OPEN — LEGAL]** |
 | DD-23-09 | Scheduled scanning of object storage for misplaced sensitive data, including non-production accounts to enforce the synthetic-only rule | **[PROPOSED]** |
@@ -144,4 +144,4 @@ Response is graduated: alert → step-up challenge → session termination → a
 
 **Medium** — the correct calibration of access baselines, which must be derived from real usage after launch; initial thresholds will be wrong.
 
-**Open** — whether report distribution (FR-59) sends content or a link, and the employment-law constraints in each jurisdiction where staff are employed.
+**Open** — whether report distribution (the report distribution requirement) sends content or a link, and the employment-law constraints in each jurisdiction where staff are employed.

@@ -2,7 +2,7 @@
 
 > **Baseline:** PRD v4.0. **[PRD REQUIRED]** · **[PROPOSED]** · **[OPEN]** · **[FUTURE]** — see [Future and Optional Scope](future-scope/future-and-optional-scope.md).
 
-Not named by the PRD. Everything here is **[PROPOSED]**: credential hygiene is what stops a single leaked secret from defeating NFR-01 (isolation), NFR-02 (encryption) and NFR-04 (audit integrity) at once.
+Not named by the PRD. Everything here is **[PROPOSED]**: credential hygiene is what stops a single leaked secret from defeating the tenant isolation requirement (isolation), the encryption requirement (encryption) and the immutable audit requirement (audit integrity) at once.
 
 ## Best practices
 
@@ -40,7 +40,7 @@ Irreducible secrets: third-party API keys (email delivery, the AI inference prov
 - A **managed secret store** with native rotation, encryption under a dedicated key (`key-management`), identity-scoped access and audited reads.
 - **Mount secrets as ephemeral files rather than environment variables.** Environment variables leak via crash dumps, process listings, child processes, debug endpoints, error pages and observability agents.
 - **Per-environment isolation:** development, pre-production and production secrets live in separate accounts with no cross-account path. A compromised development secret must be worthless in production.
-- **Customer-supplied credentials** — if any integration ever requires them — are encrypted with the **firm's key** (NFR-02), stored in the application data plane rather than the platform secret store, and are not readable by operators.
+- **Customer-supplied credentials** — if any integration ever requires them — are encrypted with the **firm's key** (the encryption requirement), stored in the application data plane rather than the platform secret store, and are not readable by operators.
 
 ### Rotation
 
