@@ -3,6 +3,8 @@
 Source reviewed: `docs/requirement-specification/PRD.md` (791 lines, PRD v4.0 + 25 Jun call + Sosinna Drive comments layered in)
 Date: 2026-07-29
 
+> **Recommended resolutions for all 88 findings: [`PRD-gap-resolutions.md`](PRD-gap-resolutions.md).** One entry per gap, each classified as an implementation recommendation, a scope addition, an open Client or legal decision, a stated limitation, or already answered by the security research set. Nothing there is approved; it is the decision agenda, not the decision.
+
 ## How to read this
 
 These are findings the PRD does **not** already track. Section 15 (open questions) and

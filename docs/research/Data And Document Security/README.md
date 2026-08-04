@@ -56,6 +56,8 @@ Everything outside that list has been moved, not deleted:
 | **[executive-summary.md](executive-summary.md)** | Everyone. What the PRD fixes, the load-bearing points, regulatory position, top risks, what needs deciding |
 | **[REVIEW-TRACEABILITY.md](REVIEW-TRACEABILITY.md)** | Reviewers. PRD traceability table, what was kept, deferred, removed or corrected, and the questions the PRD cannot answer |
 
+**Related, outside this set:** [`PRD-gap-analysis.md`](../../requirement-specification/PRD-gap-analysis.md) and its companion [`PRD-gap-resolutions.md`](../../requirement-specification/PRD-gap-resolutions.md) cover the whole product, not just security. Roughly a fifth of those gaps are answered by the designs in this folder and are marked **ALREADY DESIGNED** there, with links back here.
+
 ## Topic documents
 
 Each states what the PRD requires, what is proposed to implement it, what stays open, risks, trade-offs, design decisions (`DD-nn-nn`), references and confidence.
