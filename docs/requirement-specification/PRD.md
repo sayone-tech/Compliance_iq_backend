@@ -14,6 +14,8 @@
     blue italic   -> trailing `[25 Jun FRD call]` tag
     orange italic -> trailing `[Sosinna's Drive comment]` tag
     purple italic -> trailing `[Aug 2026 client MOM]` tag
+    teal italic   -> trailing `[11 Aug 2026 MOM]` tag
+    brown italic  -> trailing `[Aug 2026 onboarding flow]` tag
     grey           -> trailing `[status note]` tag
     green box      -> blockquote headed **CONFIRMED**
     amber box      -> blockquote headed **OPEN QUESTION**
@@ -22,6 +24,16 @@
   v4.0 body verified lossless at word level against the .docx: 12,998 tokens, all 94 feature IDs.
   v5.0 adds the Aug 2026 client MOM: new IDs SA-09..SA-12, FR-78..FR-95, MOM-tagged edits
   to Sections 3, 5, 7, 8, 9, 10, 12, 15, 16.
+  v6.0 adds the 11 Aug 2026 Compliance Testing Workflow Review MOM: new IDs SA-15,
+  FR-104..FR-116, new Section 7.5, teal-tagged edits to Sections 4, 5, 7, 9, 10, 12, 15, 16.
+  The 11 Aug minutes largely CONFIRM the v5.0 reading of the earlier August meeting —
+  where they only confirm, the existing text is left standing and marked confirmed rather
+  than rewritten. Only genuinely new material carries a new ID.
+  v7.0 adds the client-specified firm onboarding flow (enquiry -> offline agreement ->
+  onboarding link -> wizard -> call tree gap review -> payment -> first login): new IDs
+  SA-16..SA-21, FR-117..FR-128, NFR-12, restructured Section 5, edits to Sections 1.3, 2,
+  10, 12, 13, 14, 15, 16, 18. Payment is net-new and contradicts MKT-02 and CC-06 as
+  previously written — see GAP-18, GAP-19, ON-01.
 -->
 
 **ControlIQ**
@@ -32,22 +44,24 @@
 
 | **Field** | **Value** |
 |---|---|
-| Document | ControlIQ — Product Requirements Document (PRD v5.0) |
-| Version | 5.0 · August 2026 |
+| Document | ControlIQ — Product Requirements Document (PRD v7.0) |
+| Version | 7.0 · August 2026 |
 | Prepared by | Jomin Johnson, Delivery Head — SayOne Technologies |
 | Prepared for | Sosinna Degefu, Synergy Consulting Group / FinTech House Lisbon |
-| Status | v5.0 — client MOM (Aug 2026) incorporated. **Product renamed ComplianceIQ → ControlIQ.** Scheduling model revised from auto-scheduled calendar entries to a pending-item pool. New Records Request workflow. New priority configuration in the Admin Portal. |
+| Status | v7.0 — the firm onboarding flow specified end to end, from enquiry to first login. Section 5 restructured. **Adds in-platform payment**, which is net-new scope and contradicts MKT-02 and CC-06 as previously written. Adds enquiry management and the onboarding link in the Admin Portal, and call tree gap review during onboarding. |
 | Product name | ControlIQ (renamed from ComplianceIQ, August 2026) |
-| Supersedes | v4.0 (June 2026), which remains the last .docx-signed baseline and was issued under the ComplianceIQ name |
+| Supersedes | v6.0 (August 2026). v4.0 (June 2026) remains the last .docx-signed baseline and was issued under the ComplianceIQ name |
 | Regulations covered | MiCA (EU 2023/1114) and DORA (EU 2022/2554) |
 | Built for | Crypto Asset Service Providers (CASPs) licensed in the EU |
 
 > **NOTE** *(blue)*
 >
-> **🗂 Annotation Legend — added 3 Jul 2026, extended 10 Aug 2026**
+> **🗂 Annotation Legend — added 3 Jul 2026, extended 10 Aug 2026, extended again 12 Aug 2026**
 > - **Blue italic text** = answer sourced from the 25 Jun 2026 FRD Review call (Fathom recording). `[25 Jun FRD call]`
 > - **Orange italic text** = answer or addition sourced from Sosinna's comments on the Google Doc. `[Sosinna's Drive comment]`
 > - ***Purple italic text = decision or new requirement sourced from the August 2026 client meeting minutes (MOM). This is the material that turns v4.0 into v5.0.*** `[Aug 2026 client MOM]`
+> - ***Teal italic text = decision, confirmation or new requirement sourced from the Compliance Testing Workflow Review of 11 August 2026. This is the material that turns v5.0 into v6.0.*** `[11 Aug 2026 MOM]`
+> - ***Brown italic text = the client-specified firm onboarding flow, received August 2026. This is the material that turns v6.0 into v7.0 and it is concentrated in Section 5.*** `[Aug 2026 onboarding flow]`
 > - Existing green (agreed) / amber (open question) / grey (note) boxes are unchanged conventions from earlier versions.
 > - Where the MOM changes an earlier decision, the earlier text is kept and marked *superseded* rather than deleted — the same convention used for CC-01 and the Section 6.2 accuracy note.
 >
@@ -71,7 +85,46 @@ This document describes everything ControlIQ is being built to do. It is written
 > - Confirmed decisions are shown in green boxes. Open questions are in yellow boxes. Everything else is agreed and in scope.
 > - Feature IDs like [FR-24] or [SA-02] are reference tags for the development team. They do not affect the reading.
 > - New: blue text marks answers from the 25 Jun call; orange text marks answers from Sosinna's Drive comments. See the legend on the title page.
-> - ***New in v5.0: purple text marks decisions from the August 2026 client meeting. If you read only one thing in this revision, read Section 7.2 — the way tests get scheduled has changed.*** `[Aug 2026 client MOM]`
+> - ***New in v5.0: purple text marks decisions from the August 2026 client meeting. If you read only one thing in that revision, read Section 7.2 — the way tests get scheduled has changed.*** `[Aug 2026 client MOM]`
+> - ***New in v6.0: teal text marks decisions from the 11 August 2026 Compliance Testing Workflow Review. Most of that meeting confirmed v5.0 rather than changing it. If you read only one thing in that revision, read Section 7.2 — one test can now be split across several testers by article.*** `[11 Aug 2026 MOM]`
+> - ***New in v7.0: brown text marks the client-specified onboarding flow. If you read only one thing in this revision, read Section 5 — it is restructured, and stages 7 to 9 put payment inside the platform for the first time.*** `[Aug 2026 onboarding flow]`
+
+## What Changed in v7.0
+
+***The client specified the firm onboarding journey end to end. Section 5 is restructured around it: what was a description of the setup wizard is now the whole path from enquiry to first login. Two capabilities are genuinely new to the product — managing enquiries for firms that are not yet customers, and taking payment.*** `[Aug 2026 onboarding flow]`
+
+| **Change** | **Where** | **Why it matters** |
+|---|---|---|
+| Enquiries are received by the platform and worked from a list on Sosinna's dashboard | Section 5.2 — SA-16 to SA-18 | The Portal now holds records for firms that are not customers and may never be. A new data class with its own retention question (ON-08) |
+| The legal agreement stays offline; the platform records only that it happened | Section 5.3 — SA-19 | Explicitly excludes contract management and e-signature from scope. The record is what authorises the link and sets the amount payable |
+| Entry is by an emailed onboarding link generated by Sosinna's team | Section 5.4 — SA-20, SA-21 | Supersedes MKT-03. The firm creates its own account from the link; there is no self-registration and no admin-created password |
+| The firm's first administrator account is created from the link, with MFA, and a second admin must be invited before completion | Section 5.5 — FR-117 | Satisfies the two-admin rule in FR-15 before first login instead of warning about it afterwards |
+| Onboarding is resumable and validates each step | Section 5.5 — FR-118, FR-119 | A firm gathering financial reports and staff data will not finish in one sitting |
+| Staff, reporting lines and the call tree are captured during onboarding and reviewed for gaps | Section 5.6 — FR-120 to FR-122 | Every employee needs a call contact and a reporting manager. Also closes a real dependency: FR-82 tags tests to business owners drawn from these records |
+| **Payment happens in the platform, after the details and before first login** | Section 5.7 — FR-123 to FR-126 | The largest net-new build in this revision, and the first time money moves through the product. Contradicts MKT-02 and CC-06 as written — see GAP-18, GAP-19, ON-01 |
+| A failed payment can be retried with nothing lost | Section 5.7 — FR-126 | A firm stuck at payment has already done all the work and cannot get in |
+| Login is gated on activation; no partial or read-only access before payment | Section 5.8 — FR-127 | Makes the tenant's billing state a hard access control, not a banner |
+| "Onboarded" is defined as a checklist the Portal reports against | Section 5.8 — FR-128 | Sosinna's team can see exactly where a stalled firm stopped |
+| Card data never touches the platform | Section 13.1 — NFR-12 | Keeps PCI obligations at the lightest tier and keeps card data out of the six-year retention regime, where it must not be |
+
+## What Changed in v6.0
+
+***The 11 August 2026 Compliance Testing Workflow Review walked the end-to-end workflow and the wireframes. Its main effect is confirmation: the pending-item pool, the records-request workflow, the AI document check, the priority configuration, the business-owner tagging, the N/A rules and the org chart analytics were all restated by the client in the same shape v5.0 records them. Where the minutes only confirm, this document says so and leaves the requirement standing. The table below lists what is genuinely new or changed.*** `[11 Aug 2026 MOM]`
+
+| **Change** | **Where** | **Why it matters** |
+|---|---|---|
+| One test can be split by article across several testers — the CCO "fans out" a large regulation | Section 7.2 — FR-106 | A DORA-scale test finishes faster, but it breaks the v5.0 one-Lead-Tester-per-test rule and needs an accountability answer (GAP-15) |
+| Scope is now explicitly two-dimensional: a date range **and** a named subset of articles | Section 7.2 — FR-105 | FR-80 already fixed the date range; the minutes added article scoping for regulations too big to test whole |
+| A two-week response window is the default turnaround for a records request | Section 7.4 — FR-109 | Gives the delay analytics in FR-85 to FR-87 an expected baseline to measure against. Resolves EV-04 |
+| Evidence must be uploaded to the platform — email and WhatsApp are not acceptable channels | Section 7.4 — FR-108 | Stated as an audit-trail requirement, not a preference. Was implied by FR-83; now explicit |
+| The AI document check is justified as cost control as well as quality control | Section 7.4 — FR-110 | A mismatched file must not be allowed to consume a full AI test run. Changes where the check sits in the pipeline |
+| Gap identification after evidence review: firm policy vs. regulatory requirement | New Section 7.5 — FR-112 | The testing module produces gaps of its own; previously only the WSP module (FR-34) did |
+| N/A requires an uploaded justification **file**, not only written text | Section 7.2 — FR-107 | Tightens FR-94. The file is what goes in the report appendix |
+| Wireframes reviewed and accepted in principle: CCO Kanban board, calendar of scheduled reviews, remediation dashboards | Section 9.1 — FR-113 to FR-115 | Confirms a calendar survives the pool model — for assigned work only |
+| A follow-up "request portal" for back-and-forth on missing or incorrect documents was proposed | Section 7.4 — FR-111 | Explicitly **not yet approved** — the client asked for a development-effort assessment first |
+| Onboarding derives applicable **regulations** as well as service lines | Section 5 — FR-104 | The wizard's output is the firm's regulatory perimeter, not just its test set |
+| The org chart doubles as an employee directory that highlights compliance staff | Section 10.6 — FR-116 | The analytics dashboard in FR-102 counted; the directory is the list behind the counts |
+| Super Admin is notified in the dashboard when MiCA or DORA is updated | Section 4.5 — SA-15 | Names the trigger that restarts the SA-13 review-edit-tag-publish cycle |
 
 ## What Changed in v5.0
 
@@ -134,7 +187,13 @@ This was not part of earlier versions of this document. It surfaced as a gap dur
 
 **[MKT-02]** The marketing site does not process payment or plan selection directly. There is no self-serve checkout. **📞 From the 25 Jun FRD Review call:** *Confirmed on the call — pricing is sales-assisted, not self-serve. Every prospective firm goes through a demo and scoping conversation with Sosinna's team before an account is created (see Section 14, CC-01). The site's job is lead capture — a 'request a demo' flow — not a shopping cart.* `[25 Jun FRD call]`
 
-**[MKT-03]** Once a firm is qualified and a plan is agreed off-platform, Sosinna's team (or Jomin's team during onboarding support) creates the account and the firm proceeds through the Section 5 setup wizard.
+**[MKT-03]** Once a firm is qualified and a plan is agreed off-platform, Sosinna's team (or Jomin's team during onboarding support) creates the account and the firm proceeds through the Section 5 setup wizard. ***REVISED in v7.0: Sosinna's team no longer creates the account. They record that the offline agreement is complete (SA-19) and generate an onboarding link, which is emailed to the firm; the firm then creates its own first administrator account from that link (FR-117). The sales-assisted principle is unchanged — a firm still cannot get in without Sosinna's team acting — but the mechanism is an invitation, not an admin-provisioned login.*** `[Aug 2026 onboarding flow]`
+
+> **NOTE** *(brown — new in v7.0)*
+>
+> ***⚠ MKT-02 needs restating. It says the marketing site does not process payment and there is no self-serve checkout. That remains true of the **marketing site** — enquiries there are still lead capture only, and the demo-and-scoping conversation still happens before anything else. What changed is that payment now happens **inside the platform**, at the end of onboarding (FR-123), against a price agreed offline rather than chosen from a public tier. Whether that counts as the "self-serve checkout" MKT-02 rules out is a commercial judgement, not a technical one — logged as GAP-18.*** `[Aug 2026 onboarding flow]`
+>
+> ***The enquiry submitted on this site is now received by the platform under SA-16, which makes MKT-04 (static site vs. CMS) more consequential than it was: the site needs a route to post enquiries into ControlIQ, or Sosinna's team re-keys them by hand. See ON-07.*** `[Aug 2026 onboarding flow]`
 
 > **OPEN QUESTION** *(amber — unresolved)*
 >
@@ -163,6 +222,8 @@ Here is what the platform stores, and for how long:
 | Staff records | The firm's employee list, their roles, their qualifications, their hardware, their place in the emergency contact chain. | Kept for the duration of employment plus retention period |
 | Audit log | A complete, tamper-proof record of every action any user takes in the platform: what they did, when, from which device. | Minimum 6 years, cannot be modified by anyone |
 | Notification log | A record of every alert the platform sent, to whom, and whether it was acknowledged. | Minimum 6 years |
+| ***Enquiries*** `[Aug 2026 onboarding flow]` | ***Firms that approached the business: contact details, status history, the record that the offline agreement was completed, and every onboarding link issued or revoked. This is the record of who approached the business and what happened.*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0. Retention is deliberately NOT set here — see ON-08. This is prospect data, including data from firms that never became clients, and the six-year never-delete rule was written for the compliance records of paying clients. It needs its own rule, decided against GDPR data minimisation.*** `[Aug 2026 onboarding flow]` |
+| ***Payment records*** `[Aug 2026 onboarding flow]` | ***Every payment attempt against a firm: date, amount, outcome, and the payment provider's transaction reference. This is what the tenant's active status is derived from.*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0. Retention follows the applicable financial record-keeping period. **No card details are stored** — see NFR-12. The platform holds provider tokens and references only.*** `[Aug 2026 onboarding flow]` |
 
 > **🔧 For the development team**
 > - All data encrypted at rest using AES-256 (a standard military-grade encryption method) and in transit using TLS 1.3. Evidence files stored in encrypted object storage with per-tenant encryption keys.
@@ -202,6 +263,8 @@ This means a firm can call their roles whatever they like, but the underlying ac
 > ***The other four roles keep their existing purpose: Platform Super Admin (Sosinna's team, separate portal), Firm Super Admin (account setup and user administration, not a workflow participant), IT / Systems Admin (the DORA module in Section 11), and Staff / Employee (a governance record with no login).*** `[Aug 2026 client MOM]`
 >
 > ***Developer implication: the four operational roles are the ones that need complete, polished end-to-end journeys for MVP. Firm Super Admin and IT / Systems Admin remain in scope but are narrower surfaces.*** `[Aug 2026 client MOM]`
+>
+> ***CONFIRMED on 11 Aug 2026: the client restated the same four primary platform roles — CCO, Tester, Remediation Owner, Senior Management — in the same order and with the same scope. No change to this section; the reading above is correct.*** `[11 Aug 2026 MOM]`
 
 ## 3.2 How Firms Create Their Own Role Names
 
@@ -310,6 +373,15 @@ SA-03 already commits the platform to watching official publication sources for 
 
 **[SA-14]** Every fetched item retains its provenance: source API, retrieval timestamp, effective date, and the identity of the reviewer who published it. An item that is fetched and then rejected is retained in the queue history with the rejection reason — it is not deleted. `[Aug 2026 client MOM]`
 
+**[SA-15]** ***When a regulation the platform already carries is updated — the examples named on 11 Aug were MiCA and DORA — the Platform Super Admin receives a notification on the Portal dashboard and the affected content re-enters the SA-13 draft queue for the same review, edit, tag and publish cycle. An update is not a change alert to be read and dismissed: it re-opens the content pipeline, and the administrator repeats the review process before anything reaches a firm. This dashboard notification is the Portal-side counterpart of the firm-side FR-35 alert; both fire from the same detection event.*** `[11 Aug 2026 MOM]`
+
+> **CONFIRMED** *(green — agreed 11 Aug 2026)*
+>
+> **✅ What we have agreed**
+> - ***The pipeline sequence is confirmed as: fetch from the European Union API → format for review → the system administrator reviews, tags (priority, high / low risk) and edits → clicking **publish** is what makes the regulation visible to client firms.*** `[11 Aug 2026 MOM]`
+> - ***Nothing reaches a firm without that publish action. There is no automatic passthrough.*** `[11 Aug 2026 MOM]`
+> - ***Priority tagging (SA-10) happens during this review, not as a separate later pass — one pass over the content sets both the house format and the risk tag.*** `[11 Aug 2026 MOM]`
+
 > **DEVELOPER NOTE** *(grey — new in v5.0)*
 >
 > **📌 Note**
@@ -317,9 +389,68 @@ SA-03 already commits the platform to watching official publication sources for 
 > - ***"Format it for the client to review" means a deterministic transform into the platform's article structure — not an AI rewrite of legal text. If any AI assistance is used here it is for tagging and mapping suggestions only, with the same human-confirmation pattern as FR-31.*** `[Aug 2026 client MOM]`
 > - ***EUR-Lex, EBA and ESMA API coverage, rate limits, and content licensing need to be validated in the first sprint. This is on the critical path for Section 4.5 and interacts with the unresolved RE-05 sourcing question in Section 15.*** `[Aug 2026 client MOM]`
 
-# 5. Setting Up a New Firm on the Platform
+# 5. From Enquiry to First Login — Firm Onboarding
+
+***RESTRUCTURED in v7.0. Up to v6.0 this section described only what the setup wizard collects. The client has now specified the whole journey — from the moment a firm enquires to the moment it can log in — including two things the platform did not previously do at all: managing enquiries before a firm exists, and taking payment. Read 5.1 first; the old wizard content is intact in 5.5.*** `[Aug 2026 onboarding flow]`
+
+A firm does not simply appear on the platform. It enquires, it is qualified and contracted offline by Sosinna's team, it is invited in by a link, it completes its own setup, it pays, and only then can it log in. Six of those nine stages are new to this document.
+
+## 5.1 The End-to-End Flow
+
+| **#** | **Who** | **What happens** | **Where** |
+|---|---|---|---|
+| 1 | Prospective firm | The firm submits an enquiry. The platform receives it — this is the far end of the "request a demo" lead capture on the marketing site (MKT-02). | 5.2 — SA-16 |
+| 2 | Sosinna's team | The enquiry appears in a list on the Portal dashboard, with its status. Nothing is created for the firm yet. | 5.2 — SA-17, SA-18 |
+| 3 | Sosinna's team | The team contacts the firm and completes the commercial and legal agreement **offline and outside the system**. The platform does not run the negotiation, the contract, or the signature. | 5.3 — SA-19 |
+| 4 | Sosinna's team | Once agreement is reached, the team generates an onboarding link, which is emailed to the firm. Generating the link is the act that authorises the firm to enter. | 5.4 — SA-20, SA-21 |
+| 5 | Firm | The firm clicks the link, creates its first administrator account, and works through the onboarding wizard — firm details, licence, jurisdictions, revenue template, financial reports, service line and regulation confirmation, client base. | 5.5 — FR-117 to FR-119, plus the existing FR-01 to FR-08 |
+| 6 | Firm / Platform | During onboarding the firm also provides its people: staff records, reporting lines and the business continuity call tree. The platform reviews this for gaps — every employee needs a call-tree contact and a reporting manager — and shows the firm what is missing. | 5.6 — FR-120 to FR-122 |
+| 7 | Firm | With the details complete, the firm proceeds to payment. | 5.7 — FR-123, FR-124 |
+| 8 | Firm | On successful payment the account is activated and the firm can log in to its dashboard. | 5.8 — FR-125, FR-127 |
+| 9 | Firm | On failed payment the firm can retry. Nothing entered so far is lost. | 5.7 — FR-126 |
+
+> **DEVELOPER NOTE** *(grey — new in v7.0)*
+>
+> **📌 Note**
+> - ***Stage 3 is deliberately outside the platform. Do not build contract management, e-signature, or quote generation. The only thing the platform records about stage 3 is that it happened and who confirmed it — see SA-19.*** `[Aug 2026 onboarding flow]`
+> - ***Stages 7 to 9 are the largest piece of net-new engineering in this section: a payment integration, a billing state on the tenant, and a login gate that reads it. This is the first time money moves through the platform in any version of this document. See the flags in 5.7, and GAP-18 and GAP-19 in Section 16 before estimating it.*** `[Aug 2026 onboarding flow]`
+> - ***Stages 1 to 4 mean the Portal now holds records for firms that are not customers and may never become customers. That is a new data class — see the note added to Section 2 and the retention question ON-08.*** `[Aug 2026 onboarding flow]`
+
+## 5.2 Enquiries
+
+**[SA-16]** ***The platform receives enquiries from prospective firms. An enquiry captures at minimum the firm name, the contact person and their email, the jurisdiction, and whatever the enquiry form collected — including the free-text message. Enquiries arrive from the marketing site's demo-request form (MKT-02) and can also be entered by hand by Sosinna's team for a firm that made contact some other way, so that every prospect sits in one list regardless of how it arrived.*** `[Aug 2026 onboarding flow]`
+
+**[SA-17]** ***The Portal dashboard shows the list of enquiries: who enquired, when, from where, current status, and who on Sosinna's team owns it. It is sortable and filterable, and an ageing enquiry is visible as such — this is a work queue, in the same spirit as the CCO's pending-item pool in Section 7.2.*** `[Aug 2026 onboarding flow]`
+
+**[SA-18]** ***Each enquiry carries a status through its life: **New → Contacted → Qualified → Agreement Signed → Link Issued → Onboarding In Progress → Active** — or **Declined / Lost** at any point, with a reason. Status changes are timestamped and attributed. An enquiry is never deleted; a lost one is closed with its reason and retained, because it is the record of who approached the business and what happened.*** `[Aug 2026 onboarding flow]`
+
+## 5.3 The Legal Agreement — Handled Offline
+
+The commercial conversation, the pricing agreement, and the contract signature all happen outside ControlIQ. Sosinna's team meets the firm, agrees the plan and the seat count, and executes the paperwork by their normal means. This is consistent with the sales-assisted model already confirmed in CC-01 and MKT-02: there is no self-serve path from the marketing site into a live account.
+
+**[SA-19]** ***Before an onboarding link can be generated, a member of Sosinna's team records against the enquiry that the legal agreement is complete: who confirmed it, the date, the agreed plan type and seat count, and optionally an uploaded copy of the executed agreement for reference. The platform does not manage, generate or sign the agreement — it records that the gate has been passed, because that record is what authorises everything downstream, including the amount the firm will be asked to pay.*** `[Aug 2026 onboarding flow]`
+
+## 5.4 The Onboarding Link
+
+**[SA-20]** ***Sosinna's team generates an onboarding link for a qualified, agreed firm and the platform emails it to the named contact. The link is unique to that one enquiry, carries no credentials, and is the only route into the onboarding wizard — a firm cannot self-register. Generating it moves the enquiry to Link Issued and creates the firm's tenant in a pre-activation state.*** `[Aug 2026 onboarding flow]`
+
+**[SA-21]** ***The link expires after a configurable period and can be re-sent or revoked by Sosinna's team at any time. Every issue, re-issue and revocation is recorded against the enquiry with who did it and when. An expired or revoked link cannot be used; the firm sees a plain message telling them to contact Sosinna's team rather than an error.*** `[Aug 2026 onboarding flow]`
+
+> **DEVELOPER NOTE** *(grey — new in v7.0)*
+>
+> **📌 Note**
+> - ***The link is an invitation token, not an authentication mechanism. Clicking it proves the recipient has the email, nothing more. It grants exactly one capability: creating the firm's first administrator account under FR-117, which is where real identity and MFA are established. It must be single-purpose and consumed on use — treat it as a security control, since it is the sole entry point to the platform.*** `[Aug 2026 onboarding flow]`
+> - ***This supersedes MKT-03, which said Sosinna's team creates the account directly. They now create the invitation; the firm creates its own account. Section 1.3 has been updated.*** `[Aug 2026 onboarding flow]`
+
+## 5.5 What the Wizard Collects
 
 When a new crypto company joins ControlIQ, they go through a guided setup process — called a wizard — that walks them through everything the platform needs to know about their business. This setup is critical: the answers determine which compliance tests the firm needs to run. Getting it wrong means the wrong tests get loaded.
+
+**[FR-117]** ***The firm's first Firm Super Admin account is created from the onboarding link: the named contact sets their own password and enrols in MFA under FR-11 before any onboarding data is entered. This is the account that completes the wizard. FR-15 requires every firm to hold at least two Firm Super Admins, so the wizard requires a second administrator to be invited before onboarding can be marked complete — a firm must not reach its first login with a single point of administrative failure.*** `[Aug 2026 onboarding flow]`
+
+**[FR-118]** ***Onboarding is resumable. Progress is saved at each step, the firm can leave and return via the same link, and a progress indicator shows which steps are done and what remains. A firm gathering financial reports and staff data will not finish in one sitting, and must not lose entered data when they stop.*** `[Aug 2026 onboarding flow]`
+
+**[FR-119]** ***Each step validates its own input before the firm moves on — a licence number in the expected format, a revenue file matching the platform's template, financial reports in an accepted file type. Where a file cannot be read, the firm is told which file and why, and can re-upload without restarting. Onboarding cannot be marked complete while any mandatory step is unvalidated.*** `[Aug 2026 onboarding flow]`
 
 The wizard takes the firm through these steps in order:
 
@@ -333,6 +464,8 @@ The wizard takes the firm through these steps in order:
 | ***Financial reports*** `[Aug 2026 client MOM]` | ***The firm's financial statements / regulatory financial reports, uploaded as files*** `[Aug 2026 client MOM]` | ***NEW in v5.0: the platform reads these to help identify the firm's service lines automatically, alongside the revenue template. See FR-92.*** `[Aug 2026 client MOM]` |
 | Service line confirmation | A review screen showing the service lines the platform derived from the revenue file | The CCO confirms the derived service lines before tests are loaded |
 | Client base | Whether the firm serves retail clients, institutional clients, or both | Relevant to the suitability and appropriateness tests and the AML risk approach |
+| ***Staff, reporting lines and call tree*** `[Aug 2026 onboarding flow]` | ***The firm's people, who reports to whom, and each person's next contact in the business continuity call tree — by CSV upload or entered by hand*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0: the org chart and call tree are built during onboarding, not after. The platform reviews them for gaps in the same step. Tests are tagged to business owners drawn from these records (FR-82), so testing cannot start without them. See 5.6.*** `[Aug 2026 onboarding flow]` |
+| ***Second administrator*** `[Aug 2026 onboarding flow]` | ***An invitation to a second Firm Super Admin*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0: FR-15 requires at least two. Collected here so the requirement is satisfied before first login rather than warned about afterwards. See FR-117.*** `[Aug 2026 onboarding flow]` |
 
 > **📌 Note**
 > - The firm does not manually tick a list of service lines. The platform reads the revenue source Excel file they upload and works out the service lines from that. The firm then confirms the result looks correct.
@@ -361,6 +494,14 @@ The wizard takes the firm through these steps in order:
 
 **[FR-93]** ***Where the financial reports and the revenue template imply different service lines, the platform shows both derivations side by side on the FR-05 confirmation screen and flags the discrepancy. The CCO resolves it; the resolution and its rationale are recorded.*** `[Aug 2026 client MOM]`
 
+**[FR-104]** ***The onboarding flow is a step-by-step wizard whose output is the firm's regulatory perimeter, not only its service lines: from the firm details and the uploaded financial reports the platform determines both the applicable **service lines** and the **applicable regulations** — which of the regulations published under Section 4.5 the firm is subject to, and therefore which Requirement IDs load under FR-07. The regulation set is presented on the same FR-05 confirmation screen as the service lines and is confirmed by the CCO in the same step.*** `[11 Aug 2026 MOM]`
+
+> **DEVELOPER NOTE** *(grey — new in v6.0)*
+>
+> **📌 Note**
+> - ***FR-104 is not a new derivation engine. Service line → Requirement ID mapping already exists in SA-07, and every Requirement ID already carries its regulation. The new part is presenting the regulation set explicitly as a confirmed onboarding output rather than leaving it implicit in the loaded test list — a firm needs to be told "you are in scope for MiCA and DORA" in words, at onboarding.*** `[11 Aug 2026 MOM]`
+> - ***For MVP the published regulation set is MiCA and DORA only, so the derived set will be one or both. The requirement is written generically because Section 4.5 makes the regulation library extensible.*** `[11 Aug 2026 MOM]`
+
 > **DEVELOPER NOTE** *(grey — new in v5.0)*
 >
 > **📌 Note**
@@ -370,7 +511,74 @@ The wizard takes the firm through these steps in order:
 |   |
 |---|
 | **✅ What we have agreed** <br> • Service lines are derived from the revenue source Excel file — not from a manual selection screen. <br> • NCA licence: the firm provides both the licence number (text) and optionally the licence document (file upload). <br> • The onboarding flow is a step-by-step wizard. <br> • Branch jurisdictions are captured and affect which local regulatory rules apply. |
-| **💬 Questions still to confirm** <br> • Client type (FO-02): Should this be a simple set of checkboxes (tick: Retail, Institutional, Non-Profit) or should the firm enter a percentage split (e.g. 60% Retail, 40% Institutional)? <br> • Who completes the setup (FO-07): Can any Firm Super Admin complete the onboarding, or should this be restricted to the CCO? <br> • Multi-entity firms (FO-08): If a company has multiple regulated subsidiaries (e.g. a parent group with separate CASPs in Ireland and France), do they get separate logins for each entity, or one group login with a consolidated view? [Deferred — not needed for the first version] |
+| **💬 Questions still to confirm** <br> • Client type (FO-02): Should this be a simple set of checkboxes (tick: Retail, Institutional, Non-Profit) or should the firm enter a percentage split (e.g. 60% Retail, 40% Institutional)? <br> • Who completes the setup (FO-07): Can any Firm Super Admin complete the onboarding, or should this be restricted to the CCO? ***v7.0 note: FR-117 partly answers this — the person who receives the onboarding link creates the first Firm Super Admin account and therefore completes the wizard. What is still undecided is whether that person must hold the CCO role.*** `[Aug 2026 onboarding flow]` <br> • Multi-entity firms (FO-08): If a company has multiple regulated subsidiaries (e.g. a parent group with separate CASPs in Ireland and France), do they get separate logins for each entity, or one group login with a consolidated view? [Deferred — not needed for the first version] |
+
+## 5.6 Call Tree and Organisation Gap Review
+
+***NEW in v7.0.*** `[Aug 2026 onboarding flow]`
+
+The business continuity call tree — the chain by which the firm reaches everyone in an emergency — is captured during onboarding rather than left to be filled in later. It is reviewed for gaps at the same time, because a call tree with a break in it is not a call tree, and a firm that discovers this during an incident discovers it too late.
+
+**[FR-120]** ***Onboarding captures the firm's staff records, their reporting lines, and each person's next contact in the business continuity call tree. These are the same records described in Section 10 and are created here, by CSV upload against the platform's template (FR-62) or by manual entry. Onboarding is where the org chart and call tree first come into existence.*** `[Aug 2026 onboarding flow]`
+
+**[FR-121]** ***The platform evaluates the captured data for gaps and shows the firm the result before onboarding completes. Two checks are mandatory and were named by the client: every employee must have a call-tree contact, and every employee must have a reporting manager. The platform lists the specific people failing each check — a count alone is not actionable — and the firm corrects them in place.*** `[Aug 2026 onboarding flow]`
+
+**[FR-122]** ***Where a gap is legitimate rather than an oversight — the chief executive has no reporting manager, the last person in a call-tree branch has no next contact — the firm marks it as such with a written reason instead of inventing data to satisfy a validation rule. Acknowledged exceptions are recorded, are visible in the Section 10.6 analytics as exceptions rather than as gaps, and are re-surfaced at the next annual review.*** `[Aug 2026 onboarding flow]`
+
+> **DEVELOPER NOTE** *(grey — new in v7.0)*
+>
+> **📌 Note**
+> - ***FR-121 introduces no new rules. The same two checks already exist as FR-70 (call tree link missing) and FR-102 (employees with no reporting manager) — the change is that they now run at onboarding, when the data is first entered, instead of only appearing later on the analytics dashboard. One implementation, two entry points.*** `[Aug 2026 onboarding flow]`
+> - ***This closes a real dependency, not just a nicety: FR-82 tags every test to a business owner drawn from these staff records, and Section 7.4 sends the announcement letter and request list to that person. Without staff data captured at onboarding, the first test a firm runs has nobody to send its request list to.*** `[Aug 2026 onboarding flow]`
+> - ***Whether an unresolved gap blocks completion or merely warns is not settled — the requirement above is written as a soft gate with mandatory acknowledgement. See ON-05.*** `[Aug 2026 onboarding flow]`
+
+## 5.7 Payment
+
+***NEW in v7.0. This is the first version of this document in which money moves through the platform. Read the flags below before estimating.*** `[Aug 2026 onboarding flow]`
+
+**[FR-123]** ***Once every mandatory onboarding step is complete and validated, the firm proceeds to payment. The amount and plan are not chosen by the firm on screen — they are read from the agreed plan type and seat count recorded against the enquiry under SA-19, so what the firm sees is what Sosinna's team agreed with them offline. Payment is the final step of onboarding, not an earlier gate: a firm enters all of its details first.*** `[Aug 2026 onboarding flow]`
+
+**[FR-124]** ***Every payment attempt is recorded against the firm — when, how much, the outcome, and the provider's transaction reference — whether it succeeds or fails. This record is what the tenant's active status is derived from and what any billing question is answered from.*** `[Aug 2026 onboarding flow]`
+
+**[FR-125]** ***On successful payment the firm's tenant is activated: the account moves from pre-activation to active, the Requirement IDs derived at FR-07 are loaded into the pending-item pool (FR-78), and the enquiry moves to Active under SA-18. Sosinna's team is notified that the firm is live.*** `[Aug 2026 onboarding flow]`
+
+**[FR-126]** ***A failed payment does not end the onboarding and does not discard anything. The firm is shown a plain explanation, everything they entered is retained exactly as it was, and they can retry — immediately, or by returning later through the same link. Repeated failures are visible to Sosinna's team on the enquiry so they can intervene, since a firm stuck at payment is a firm that has already done all of the work and cannot get in.*** `[Aug 2026 onboarding flow]`
+
+> **DEVELOPER NOTE** *(grey — new in v7.0)*
+>
+> **📌 Note**
+> - ***Card data must never touch ControlIQ's servers or database. Use a payment provider's hosted fields or hosted checkout so the platform handles only a provider token and a transaction reference. This keeps PCI DSS obligations at the lightest tier and keeps card data out of Section 2's six-year retention regime, where it must not be. See NFR-12.*** `[Aug 2026 onboarding flow]`
+> - ***Activation must be driven by the provider's confirmation — its server-to-server webhook — not by the browser returning to a success page. A user closing the tab after paying must still end up activated, and a user reaching the success URL without paying must not.*** `[Aug 2026 onboarding flow]`
+> - ***Two commercial contradictions have to be resolved before this is built, and neither is a developer's to decide. MKT-02 states there is no self-serve checkout; CC-06 states Synergy is the reseller and bills firms directly. If the firm now pays through the platform, who is the merchant of record, who issues the invoice, who handles VAT, refunds and chasing a failed renewal? Logged as GAP-18 and GAP-19, and as ON-01 in Section 15. Do not resolve these by writing code.*** `[Aug 2026 onboarding flow]`
+> - ***Recurrence is undefined. The flow above describes the first payment that unlocks the account. Whether the subscription then renews in-platform, and whether a failed renewal re-locks a firm that already holds six years of compliance evidence, is ON-02 — and the re-locking question is a serious one, because a regulated firm losing access to its own audit trail over a card expiry is not an acceptable outcome.*** `[Aug 2026 onboarding flow]`
+
+## 5.8 First Login and What "Onboarded" Means
+
+**[FR-127]** ***A firm can log in once, and only once, its tenant is active under FR-125. Before that the onboarding link is the only thing that works — there is no partial or read-only access to the platform for an unpaid firm. After activation the normal login applies: email, password and MFA under FR-11.*** `[Aug 2026 onboarding flow]`
+
+**[FR-128]** ***A firm is "onboarded" when all of the following hold: firm details and licence captured (FR-01 to FR-03); revenue template and financial reports accepted (FR-04, FR-92); service lines and applicable regulations confirmed by the firm (FR-05, FR-104); client base captured (FR-06); staff, reporting lines and call tree captured with gaps resolved or acknowledged (FR-120 to FR-122); a second Firm Super Admin invited (FR-117); and payment successful (FR-125). The Portal shows each firm's position against this checklist, so Sosinna's team can see exactly where a stalled firm has stopped.*** `[Aug 2026 onboarding flow]`
+
+> **CONFIRMED** *(green — agreed August 2026)*
+>
+> **✅ What we have agreed**
+> - ***Firms arrive by enquiry. The platform receives enquiries and Sosinna's team works them from a list in the Portal.*** `[Aug 2026 onboarding flow]`
+> - ***The legal agreement is done offline, outside the system. The platform records only that it happened.*** `[Aug 2026 onboarding flow]`
+> - ***Entry is by an emailed onboarding link generated by Sosinna's team. No self-registration.*** `[Aug 2026 onboarding flow]`
+> - ***The call tree is captured during onboarding and reviewed for gaps — every employee needs a call contact and a reporting manager.*** `[Aug 2026 onboarding flow]`
+> - ***Payment comes after the onboarding details, and login comes after payment.*** `[Aug 2026 onboarding flow]`
+> - ***A failed payment can be retried without losing the work already done.*** `[Aug 2026 onboarding flow]`
+
+> **OPEN QUESTION** *(amber — new in v7.0)*
+>
+> **💬 Questions still to confirm**
+> - ***Merchant of record (ON-01): CC-06 makes Synergy the reseller who bills firms directly, but the firm now pays through the platform. Who receives the money, issues the invoice, and handles VAT and refunds? This is a contract question with a direct build consequence and it blocks the Section 5.7 estimate.*** `[Aug 2026 onboarding flow]`
+> - ***Recurrence and renewal (ON-02): is the onboarding payment a one-off unlock, or the first instalment of a subscription the platform then manages? If the latter — what happens on a failed renewal? Re-locking a regulated firm out of its own evidence is not obviously acceptable.*** `[Aug 2026 onboarding flow]`
+> - ***Payment provider and currency (ON-03): which provider, which currencies, and does the firm pay by card, SEPA transfer, or invoice? An invoice-and-transfer model would mean no in-platform card payment at all and a much smaller build — worth deciding before assuming a checkout.*** `[Aug 2026 onboarding flow]`
+> - ***Link lifetime (ON-04): what is the default expiry on an onboarding link, and can a firm that lets it lapse be re-invited automatically or only by Sosinna's team?*** `[Aug 2026 onboarding flow]`
+> - ***Call tree gaps — block or warn (ON-05): can a firm finish onboarding with unresolved call-tree or reporting-manager gaps if it acknowledges them, or is a complete chain mandatory before payment? FR-122 assumes acknowledgement is enough.*** `[Aug 2026 onboarding flow]`
+> - ***Staff data volume at onboarding (ON-06): must the firm load its entire headcount before it can pay, or only the compliance-relevant staff, with the rest added later? The client's worked example was 42 staff for 9 platform users — a real ask to complete before a firm has access to anything.*** `[Aug 2026 onboarding flow]`
+> - ***Enquiry intake route (ON-07): does the marketing site post enquiries into the platform through an API, or does Sosinna's team re-key them? MKT-04's unresolved hosting/CMS question decides what is even possible here.*** `[Aug 2026 onboarding flow]`
+> - ***Retention of dead enquiries and abandoned onboardings (ON-08): SA-18 says an enquiry is never deleted, and abandoned onboardings hold real firm data — licence numbers, financial reports, staff names. Section 2's never-delete rule was written for the compliance record of paying clients, not for prospects who walked away. GDPR data minimisation points the other way. Needs a retention rule of its own.*** `[Aug 2026 onboarding flow]`
 
 # 6. Written Supervisory Procedures (WSP)
 
@@ -438,7 +646,7 @@ Here is the complete sequence of events from the moment a test is due to the mom
 | **#** | **Who** | **What happens** |
 |---|---|---|
 | 1 | Platform | ***REVISED in v5.0.*** The platform derives every test the firm owes from its active Requirement IDs and their required frequencies — some monthly, some quarterly, some annual — and places them in a **pending-item pool** rather than writing each one into the calendar as its own scheduled entry. The CCO can also manually create additional one-off reviews at any time. *Superseded text, kept for context: "The platform's testing calendar automatically schedules all regulatory tests…" — see Section 7.2 for why this changed.* `[Aug 2026 client MOM]` |
-| 2 | CCO | ***REVISED in v5.0.*** The CCO works the pending pool: selects a specific article or requirement, sets its scope period, and assigns it to a Compliance Officer — their Lead Tester. This is a formal step. The Lead Tester receives a notification and cannot start the test without this assignment. `[Aug 2026 client MOM]` |
+| 2 | CCO | ***REVISED in v5.0.*** The CCO works the pending pool: selects a specific article or requirement, sets its scope period, and assigns it to a Compliance Officer — their Lead Tester. This is a formal step. The Lead Tester receives a notification and cannot start the test without this assignment. `[Aug 2026 client MOM]` <br> ***REVISED again in v6.0: where a regulation is large enough that one tester would be slow, the CCO can assign different articles of the same test to different testers instead — see FR-106.*** `[11 Aug 2026 MOM]` |
 | 2a | CCO / Platform | ***NEW in v5.0.*** Before testing begins, the business unit owner receives an **announcement letter** and an **initial request list** — the documents and records the tester will need. The date each item is requested is recorded from this moment. See Section 7.4. `[Aug 2026 client MOM]` |
 | 2b | Business unit | ***NEW in v5.0.*** The business side uploads the requested documents. Each upload is checked — initially by AI — to confirm it matches the item that was actually requested, and the date received is recorded against the request. See Section 7.4. `[Aug 2026 client MOM]` |
 | 3 | Lead Tester | The Lead Tester opens the assigned test and works through it step by step. Each step shows what to do and what evidence to collect. The Lead Tester records their observation at each step and uploads the relevant files. Other team members (for example, the IT manager) can upload specialist evidence to specific steps, but only the Lead Tester records the formal findings. |
@@ -494,6 +702,12 @@ In v4.0 the platform auto-scheduled every applicable test as its own dated calen
 
 **[FR-94]** ***Marking a test Not Applicable requires (a) the CCO's authority — no other role can set the final N/A status, (b) a mandatory written justification, and (c) automatic inclusion of the item and its justification in an appendix to the final report for the period. N/A is a documented, reviewable decision, not a way to make an obligation disappear quietly.*** `[Aug 2026 client MOM]`
 
+**[FR-105]** ***Scope is two-dimensional. In addition to the FR-80 date range, a test can be scoped to a named subset of **articles** within a regulation. The client's own examples: KYC tested only for accounts opened between January and August (a date range), and a DORA test limited to specified articles rather than the whole regulation (an article subset). Both dimensions are recorded at assignment, are shown to the tester throughout execution, and are stated in the report under FR-100. The stated purpose is to keep the scope of any one test small enough that a firm is not overwhelmed by it.*** `[11 Aug 2026 MOM]`
+
+**[FR-106]** ***The CCO can fan out a single test across several testers by assigning different articles within its scope to different Compliance Officers. Each tester sees only the articles assigned to them and works those articles to completion; the platform tracks per-article progress and rolls it up to the test. Fan-out is a CCO decision taken at assignment time, its stated purpose is to complete a large review faster, and it does not change who approves the result — the CCO still reviews and approves the test as a whole under step 10 of Section 7.1.*** `[11 Aug 2026 MOM]`
+
+**[FR-107]** ***Marking an item Not Applicable requires a justification **file**, not only free text. The uploaded file is stored against the N/A decision under the same non-deletable evidence rules as any other upload, and it is the artefact reproduced in the report appendix under FR-99. This tightens FR-94(b): written text alone is no longer sufficient.*** `[11 Aug 2026 MOM]`
+
 **[FR-21c]** If the sample selection needs to be changed after it has been documented and locked at the start of a test, the change requires approval from one other senior team member and a written reason. The original selection is immutably retained in the audit log alongside the change.
 
 > **CONFIRMED** *(green — agreed decision, August 2026)*
@@ -505,6 +719,21 @@ In v4.0 the platform auto-scheduled every applicable test as its own dated calen
 > - ***The CCO gets a holistic cross-tester, cross-pillar progress view.*** `[Aug 2026 client MOM]`
 > - ***Tests are tagged to a business owner for accountability.*** `[Aug 2026 client MOM]`
 > - ***Not Applicable is a CCO decision, justified in writing, and surfaced in a report appendix.*** `[Aug 2026 client MOM]`
+
+> **CONFIRMED** *(green — agreed 11 Aug 2026)*
+>
+> **✅ What we have agreed**
+> - ***Scoping exists to stop firms being overwhelmed. Tests are deliberately scoped down by date range and by article — the client's examples were KYC for accounts opened January to August, and specified articles within DORA rather than the whole regulation.*** `[11 Aug 2026 MOM]`
+> - ***The CCO can split a complex test across multiple testers by article, so the review completes faster.*** `[11 Aug 2026 MOM]`
+> - ***A tester may mark items Not Applicable, but the decision needs a justification file and lands in the report appendix. Confirms FR-94 and tightens it — the justification is a document, not a text box.*** `[11 Aug 2026 MOM]`
+> - ***Tests are tagged to specific business units — the client's example was the CTO owning system-related tests rather than everything defaulting to the CEO — so the right person is accountable for producing evidence. Confirms FR-82 unchanged.*** `[11 Aug 2026 MOM]`
+
+> **OPEN QUESTION** *(amber — new in v6.0)*
+>
+> **💬 Questions still to confirm**
+> - ***Fan-out and result ownership (TS-05): FR-21 says each test has one Lead Tester who owns the formal result. FR-106 splits a test across several. Who records the overall Pass / Fail / Observation when four testers each worked three articles — a nominated lead among them, the CCO, or one result per article that rolls up? This needs answering before the testing data model is built. Tracked as GAP-15 in Section 16.*** `[11 Aug 2026 MOM]`
+> - ***Fan-out and findings (TS-06): if two testers on the same test each raise a finding on adjacent articles, are they two findings or one? FR-39 allows many findings per test, so two is the default reading, but repeat-finding detection (FR-46) and the risk-rating calculation both count findings per test and would be affected.*** `[11 Aug 2026 MOM]`
+> - ***Article catalogue (TS-07): article-level scoping and fan-out both assume the platform holds regulations broken down to article level as selectable objects. SA-12 renders fetched content to article and paragraph, so the structure exists — confirm that every Requirement ID is mapped to its constituent articles, since without that mapping neither FR-105 nor FR-106 can be built.*** `[11 Aug 2026 MOM]`
 
 > **OPEN QUESTION** *(amber — new in v5.0)*
 >
@@ -540,9 +769,21 @@ Before a tester can test anything, somebody on the business side has to hand ove
 
 **[FR-85]** ***Every request item records, at minimum: what was requested, who it was requested from, the **date requested**, the **date evidence was received**, and the elapsed time between the two. These dates are set by the platform, not typed in by a user.*** `[Aug 2026 client MOM]`
 
+**[FR-109]** ***The default response window on a request item is **two weeks** from the date requested. This is the turnaround business units are normally given, and it is the baseline the FR-86 delay analytics measure against. The window is a platform default that the CCO can shorten or extend per request at issue time; any deviation from the default is recorded with the item so the analytics can distinguish a genuinely slow response from a deliberately short deadline. This resolves EV-04.*** `[11 Aug 2026 MOM]`
+
 **[FR-86]** ***Turnaround time is reportable, not just visible on a single record. The CCO can see, across a testing period: which requests are still outstanding and how long they have been open, average turnaround by business unit and by business owner, and which items were chased. This is the evidence base for the client's point that collection delays indicate weak internal control.*** `[Aug 2026 client MOM]`
 
 **[FR-87]** ***Outstanding request items surface on the CCO dashboard and drive the weekly outstanding-items digest already agreed in Section 12. A request that passes its due date escalates to the business owner and the CCO.*** `[Aug 2026 client MOM]`
+
+### The platform is the only evidence channel
+
+**[FR-108]** ***All requested files are uploaded directly to the platform. Email attachments and messaging apps — WhatsApp was named explicitly — are not acceptable channels for evidence, because a file that arrives that way has no recorded request date, no recorded receipt date, no verification status and no place in the audit trail. The platform is the evidence repository of record: an item is only satisfied when the file exists against the request item inside ControlIQ. Where a business unit sends something by email anyway, the recipient uploads it to the request item, and the upload date — not the email date — is the recorded date received.*** `[11 Aug 2026 MOM]`
+
+> **DEVELOPER NOTE** *(grey — new in v6.0)*
+>
+> **📌 Note**
+> - ***FR-108 is an audit-trail requirement, not a preference, and it is the reason the EV-03 upload-surface question is on the critical path: telling business units "do not email it" only works if there is a route into the platform for someone who has no login. A rule with no usable alternative route will be ignored, and the evidence will go back to email.*** `[11 Aug 2026 MOM]`
+> - ***No email-ingestion mailbox is in scope for MVP. If one is ever added it must create a request-item upload with the same date, status and verification handling as a direct upload — not a parallel evidence store.*** `[11 Aug 2026 MOM]`
 
 ### Checking that the right document arrived
 
@@ -553,6 +794,18 @@ Before a tester can test anything, somebody on the business side has to hand ove
 **[FR-90]** ***Human verification remains mandatory. AI screening does not replace a person: for evidence relating to financial systems and critical controls, a named human must verify the document before it counts as accepted evidence. The client was explicit that this holds until a high level of comfort with the automated check has been reached — so the requirement is written as a configurable control, with mandatory human verification switched on for financial systems and critical controls at launch and the scope adjustable later without a code change.*** `[Aug 2026 client MOM]`
 
 **[FR-91]** ***Each request item carries a status: Requested → Received → Verified (or Mismatch Flagged / Rejected with reason). Only Verified items satisfy the evidence checklist for the test. Every transition is timestamped and attributed, and the whole request register is retained for the same minimum six years as the test it belongs to.*** `[Aug 2026 client MOM]`
+
+**[FR-110]** ***The FR-88 match check runs **as files are uploaded** and gates the expensive downstream processing. The client's stated rationale on 11 Aug was cost as much as quality: running a full AI test over a document that turns out to be the wrong document burns AI tokens for nothing. So the cheap classification check runs first, at the point of upload, and only an item that passes it — or that a human confirms after a mismatch flag under FR-89 — is submitted for full AI-assisted analysis. The platform records, per request item, whether full processing was run, so the token cost of a test is attributable.*** `[11 Aug 2026 MOM]`
+
+### Following up on missing or incorrect documents
+
+**[FR-111]** ***PROPOSED — NOT YET APPROVED FOR SCOPE. The meeting proposed a "request portal": a surface for structured back-and-forth between the tester and the business unit about a document that is missing, incomplete or incorrect — a thread against the request item where the tester states what is wrong, the business side responds or re-uploads, and the exchange is retained with the item. It would replace the email round-trip that FR-108 otherwise pushes people back into. The client asked for a development-effort assessment before committing to it, so it is recorded here as a candidate, not as agreed scope. It must not be estimated as a confirmed line item until that assessment is returned and a decision is taken — see EV-07.*** `[11 Aug 2026 MOM]`
+
+> **DEVELOPER NOTE** *(grey — new in v6.0)*
+>
+> **📌 Note**
+> - ***FR-111 overlaps three things that already exist: the FR-89 mismatch notification, the FR-84 supplementary request, and the EV-03 upload surface. A cheap version is a comment thread on the request item reusing whatever access route EV-03 settles on; an expensive version is a separate portal with its own identity, inbox and notification model. The effort assessment the client asked for should price both, because the answer to EV-03 largely determines which one is even possible. Tracked as GAP-16.*** `[11 Aug 2026 MOM]`
+> - ***If FR-111 is declined, FR-84 and FR-89 remain the mechanism for chasing a bad document, and the exchange happens as a new request item rather than a conversation. That is a workable fallback and should be stated as such in the decision.*** `[11 Aug 2026 MOM]`
 
 > **DEVELOPER NOTE** *(grey — new in v5.0)*
 >
@@ -565,9 +818,34 @@ Before a tester can test anything, somebody on the business side has to hand ove
 > **OPEN QUESTION** *(amber — new in v5.0)*
 >
 > **💬 Questions still to confirm**
-> - ***Request due dates (EV-04): who sets the deadline on a request item — a platform default per test type, or the CCO at issue time? Delay measurement is only meaningful against an expected turnaround.*** `[Aug 2026 client MOM]`
+> - ***Request due dates (EV-04) — RESOLVED 11 Aug 2026: a two-week platform default, adjustable by the CCO per request, with any deviation recorded. See FR-109.*** `[11 Aug 2026 MOM]`
 > - ***Announcement letter content (EV-05): is the letter a fixed platform template, a per-firm configurable template, or free text the CCO writes each time? A template is assumed above.*** `[Aug 2026 client MOM]`
 > - ***Delay as a finding (EV-06): if a business unit is persistently late, does that automatically become a Finding under Section 8, or does it stay a management-information metric the CCO acts on by judgement? The client called delays an indicator of control failure, which points at the former, but it was not decided.*** `[Aug 2026 client MOM]`
+> - ***Request portal (EV-07 — new in v6.0): is the FR-111 follow-up portal in scope? The client asked for a development-effort assessment first. This is a scope decision, not a design question, and it needs an answer before the Section 7.4 estimate is final.*** `[11 Aug 2026 MOM]`
+
+> **CONFIRMED** *(green — agreed 11 Aug 2026)*
+>
+> **✅ What we have agreed**
+> - ***Testing opens with an announcement letter and an initial request list to the relevant business unit. Confirms FR-83 unchanged.*** `[11 Aug 2026 MOM]`
+> - ***Business units are normally given a two-week window to upload the requested files (FR-109).*** `[11 Aug 2026 MOM]`
+> - ***The platform tags both the date requested and the date received, and that pairing exists to give the CCO an accountability layer. Confirms FR-85 to FR-87 — the client independently restated the accountability purpose, which is the reason the delay analytics are in scope at all.*** `[11 Aug 2026 MOM]`
+> - ***All files are uploaded to the platform, not sent by email or WhatsApp, to keep a secure audit trail (FR-108).*** `[11 Aug 2026 MOM]`
+> - ***AI checks each upload against what was requested as files arrive — the lunch-receipt-instead-of-call-tree case — which also avoids spending AI tokens on a full test of the wrong document (FR-88, FR-110).*** `[11 Aug 2026 MOM]`
+
+## 7.5 Identifying Gaps Between Firm Policy and Regulation
+
+***NEW in v6.0 — from the 11 August 2026 meeting.*** `[11 Aug 2026 MOM]`
+
+Once the evidence for a test has been collected and reviewed, the platform does not simply wait for the tester to write down a conclusion. It compares what the firm's own policies and evidence actually show against what the regulation requires for the articles in scope, and surfaces the places where the two do not meet.
+
+**[FR-112]** ***After the evidence for a test has been reviewed, the platform identifies gaps: points where the firm's policies, procedures or produced evidence do not map to a requirement of the regulation articles in the test's scope. Each gap names the article it fails against, what was expected, and what was found or missing. Gaps are presented to the Lead Tester as candidates — the tester confirms, dismisses with a reason, or edits each one. A confirmed gap is what becomes a Finding under Section 8, carrying its article reference into FR-40. Dismissals are retained with their reason.*** `[11 Aug 2026 MOM]`
+
+> **DEVELOPER NOTE** *(grey — new in v6.0)*
+>
+> **📌 Note**
+> - ***FR-112 is closely related to the WSP gap analysis in FR-34 but is not the same feature and must not be silently merged with it. FR-34 asks a static question at the document level — does the firm's manual have a section mapped to every Requirement ID it needs. FR-112 asks a per-test question against the evidence actually produced for a specific scope period. The same underlying article-to-policy mapping serves both, which is where the reuse is; the trigger, the inputs and the output are different. Tracked as GAP-17.*** `[11 Aug 2026 MOM]`
+> - ***This is AI-assisted analysis over evidence and policy text, and it inherits the FR-31 pattern without exception: suggestions to a human, never an automatic determination. The tester's confirmation is what creates the Finding. It also inherits FR-110's ordering — it runs on verified evidence, after the cheap match check has passed.*** `[11 Aug 2026 MOM]`
+> - ***No accuracy threshold has been agreed for this feature. As with EV-01, do not assume the Section 6.2 85% WSP-mapping figure carries across — different inputs, different verification vectors. Logged as EV-08.*** `[11 Aug 2026 MOM]`
 
 # 8. Findings and Fixing Problems
 
@@ -633,7 +911,7 @@ The dashboard is the first thing a user sees when they log in. It is designed to
 
 **[FR-48]** The home screen shows a set of at-a-glance metric cards. These include, at minimum: how many tests are due this quarter, how many High-rated Findings are still open, how many remediation deadlines have been missed, and how many compliance manual gaps have been detected. More metrics can be added based on the CCO's preferences.
 
-**[FR-49]** The compliance testing section shows all tests in three columns: Planned (not started), Ongoing (in progress), and Completed. Each test card shows the test name, the assigned Lead Tester, the due date, and a progress indicator. The CCO can filter by risk level, regulatory body, or test type. **📞 From the 25 Jun FRD Review call:** *Sosinna specifically wants a visual (pie chart or bar graph) showing counts of tests planned vs. ongoing vs. completed, so the admin can see review status at a glance without opening the calendar.* `[25 Jun FRD call]`
+**[FR-49]** The compliance testing section shows all tests in three columns: Planned (not started), Ongoing (in progress), and Completed. Each test card shows the test name, the assigned Lead Tester, the due date, and a progress indicator. The CCO can filter by risk level, regulatory body, or test type. **📞 From the 25 Jun FRD Review call:** *Sosinna specifically wants a visual (pie chart or bar graph) showing counts of tests planned vs. ongoing vs. completed, so the admin can see review status at a glance without opening the calendar.* `[25 Jun FRD call]` ***v6.0: the wireframe reviewed on 11 Aug renders this as a Kanban board. Everything in this requirement stands — see FR-113 for the presentation.*** `[11 Aug 2026 MOM]`
 
 **[FR-50]** The Regulatory Requirements section shows all the Requirement IDs the firm is subject to and their current compliance status — Compliant, Non-Compliant, Pending Review, or Not Applicable. Each rule shows its version history and links to the official regulation document.
 
@@ -649,6 +927,20 @@ The dashboard is the first thing a user sees when they log in. It is designed to
 
 **[FR-97]** ***The CCO's holistic tester-progress view (FR-81) is reachable from the dashboard: all testers, their assigned articles, and progress per pillar of the regulation.*** `[Aug 2026 client MOM]`
 
+***The 11 August meeting reviewed wireframes for the three views below and accepted them in principle. They are recorded here as requirements so the layouts that were shown are not lost between the review and the build.*** `[11 Aug 2026 MOM]`
+
+**[FR-113]** ***The CCO's testing view is a Kanban board with columns for pending, ongoing and completed tests, cards moving left to right as work progresses. This is the same three-state model as FR-49 and replaces the earlier column-list description of it — FR-49's filters, card contents (test name, assigned tester, due date, progress) and the planned-vs-ongoing-vs-completed chart all carry over onto the board unchanged. Under the pool model, "pending" here means assigned but not started; genuinely unassigned work stays in the FR-78 pool view, which is a separate screen.*** `[11 Aug 2026 MOM]`
+
+**[FR-114]** ***A calendar view shows scheduled reviews on a date grid. The pool model removed auto-generated calendar entries (FR-78), not the calendar: this view shows tests that have been assigned and dated, plus remediation milestone dates and any recurring obligations the CCO has already scheduled. It is a view over assigned work, never a list of everything the firm theoretically owes.*** `[11 Aug 2026 MOM]`
+
+**[FR-115]** ***Remediation dashboards were reviewed and are confirmed as a distinct surface from the testing views: open action items by owner, by due date and by finding severity, with overdue items and their age called out. This is the CCO-facing roll-up of the Section 8.3 remediation data; the Remediation Owner's own personal list (FR-52) is a separate, narrower view.*** `[11 Aug 2026 MOM]`
+
+> **OPEN QUESTION** *(amber — new in v6.0)*
+>
+> **💬 Questions still to confirm**
+> - ***Wireframe status (UI-01): the wireframes were reviewed and accepted in principle, but it was not recorded whether they are frozen as the design baseline or still open to revision during UI design. This matters for what the UI phase is estimated against.*** `[11 Aug 2026 MOM]`
+> - ***Calendar authority (UI-02): can the CCO drag a test to a new date on the FR-114 calendar and have that change the test's dates, or is the calendar read-only with dates changed only from the test record? A writable calendar re-opens part of the scheduling model the pool was meant to simplify.*** `[11 Aug 2026 MOM]`
+
 **[FR-53]** The platform keeps a history of test results by period. The CCO can compare this quarter's results to last quarter's, or last year's, to see whether the firm's compliance position is improving, stable, or getting worse.
 
 **[FR-54]** A live news feed shows recent regulatory announcements, enforcement actions, and fines from sources including the EBA, ESMA, and national regulators — giving the compliance team early visibility of what regulators are currently focusing on. **💬 Sosinna's comment:** *Public regulator sites can seed this — e.g. Banco de Portugal is the primary CASP licensing and AML/CFT supervisor in Portugal, publishing CASP registration updates, internal control reports, and DORA major-incident notifications on its official portal. Useful as a first source, but doesn't fully settle RE-05 (manual curation vs. automated vs. commercial feed) below.* `[Sosinna's Drive comment]`
@@ -661,7 +953,7 @@ At the end of a testing cycle, the CCO generates a formal risk-based testing rep
 
 **[FR-56]** The report contains these sections in this order: (1) Cover page with the firm's details and the testing period. (2) Why this review was conducted and what was in scope. (3) What the compliance team was looking to verify in each test. (4) What was reviewed — records, systems, documents, communications. (5) The tests performed — for each test, the sampling methodology used, how many records were checked, and what was found step by step. (6) A summary of all Findings with their seriousness ratings and regulation article references. (7) The complete remediation plan with all milestone dates and owners. (8) The senior management sign-off block.
 
-**[FR-98]** ***Revised report contents for v5.0. The August 2026 meeting restated what the final report must contain, and two items need adding to the FR-56 structure: (a) the calculated risk rating for the period, derived from the gaps identified during testing — the platform calculates it, the compliance officer confirms it, consistent with the existing Section 8 decision; and (b) the current remediation status of every finding at the point of report generation, not just the agreed plan. The report therefore reads: findings → calculated risk ratings → remediation plan and status.*** `[Aug 2026 client MOM]`
+**[FR-98]** ***Revised report contents for v5.0. The August 2026 meeting restated what the final report must contain, and two items need adding to the FR-56 structure: (a) the calculated risk rating for the period, derived from the gaps identified during testing — the platform calculates it, the compliance officer confirms it, consistent with the existing Section 8 decision; and (b) the current remediation status of every finding at the point of report generation, not just the agreed plan. The report therefore reads: findings → calculated risk ratings → remediation plan and status.*** `[Aug 2026 client MOM]` ***v6.0: "the gaps identified during testing" now has a defined source — the FR-112 gap identification in Section 7.5, as confirmed by the tester. The risk rating is calculated from confirmed gaps, not from candidate ones.*** `[11 Aug 2026 MOM]`
 
 **[FR-99]** ***The report carries an appendix listing every test marked Not Applicable for the period, with the CCO's written justification for each (see FR-94). N/A decisions are visible in the formal record, not only in the platform.*** `[Aug 2026 client MOM]`
 
@@ -718,7 +1010,7 @@ There are two types of records here. The first is Platform Users — team member
 
 **[FR-69]** Each staff member's issued hardware is recorded — device type, serial number, and asset tag. This is required for DORA IT risk management.
 
-**[FR-70]** Each staff member is assigned one 'next contact' in the Business Continuity call tree — meaning if an emergency occurs and the firm needs to reach everyone, there is a clear, unbroken chain of contacts. The platform flags if any link in the chain is missing.
+**[FR-70]** Each staff member is assigned one 'next contact' in the Business Continuity call tree — meaning if an emergency occurs and the firm needs to reach everyone, there is a clear, unbroken chain of contacts. The platform flags if any link in the chain is missing. ***v7.0: the call tree is now first captured during onboarding, and this check runs there too — see Section 5.6, FR-120 to FR-122. Same rule, one implementation, two entry points. A gap the firm acknowledged as legitimate at onboarding (FR-122) shows here as an acknowledged exception rather than an open flag.*** `[Aug 2026 onboarding flow]`
 
 ## 10.6 Organisation Chart Analytics
 
@@ -729,6 +1021,15 @@ The org chart is not only a picture of who reports to whom. The meeting asked fo
 **[FR-102]** ***The organisation chart has its own analytics dashboard tracking, at minimum: total headcount; how many of those hold system entitlements (FR-101); employees with no reporting manager assigned; staff records with no approved communication channel assigned (the FR-68 gap, counted rather than only flagged per record); and total hardware assigned across the firm (FR-69). Each metric is clickable through to the list of records behind it, so the number is actionable rather than decorative.*** `[Aug 2026 client MOM]`
 
 **[FR-103]** ***The existing per-record governance flags feed these counts: the FR-66 CCO independence red flag, the FR-67 expired-certification flag, the FR-68 missing-channel flag, and the FR-70 broken call-tree link. The dashboard is a roll-up of checks the platform already runs — it does not introduce a second, separate rule set.*** `[Aug 2026 client MOM]`
+
+**[FR-116]** ***Alongside the counts, the dashboard carries a directory of every employee on record, with the compliance-specific staff visually distinguished from the rest of the workforce — the people holding a compliance function under MiCA or DORA, not merely the people with a login. The directory is filterable and is the list the FR-102 metrics click through into, so a count and the names behind it are the same object viewed two ways.*** `[11 Aug 2026 MOM]`
+
+> **CONFIRMED** *(green — agreed 11 Aug 2026)*
+>
+> **✅ What we have agreed**
+> - ***The dashboard shows a directory of all employees, highlighting compliance-specific staff (FR-116).*** `[11 Aug 2026 MOM]`
+> - ***Analytics on that directory include employees missing a reporting manager and employees missing a communication channel. Confirms FR-102 unchanged — the client named the same two defects.*** `[11 Aug 2026 MOM]`
+> - ***v7.0: the missing-reporting-manager and broken-call-tree checks now also run at onboarding (FR-121), so a firm arrives at its first login having already seen and dealt with them. This dashboard reports the ongoing position; onboarding is where the baseline is set. Gaps the firm acknowledged as legitimate under FR-122 are counted as exceptions here, separately from unresolved gaps — a chief executive with no reporting manager should not sit in the same number as an oversight.*** `[Aug 2026 onboarding flow]`
 
 ## 10.7 Distribution Lists
 
@@ -799,6 +1100,14 @@ ControlIQ is designed to be proactive — it tells people what they need to know
 | ***Document mismatch flagged*** `[Aug 2026 client MOM]` | ***The uploader and the Lead Tester*** `[Aug 2026 client MOM]` | ***NEW in v5.0: when the FR-88 check suggests an uploaded file does not match the item requested (FR-89).*** `[Aug 2026 client MOM]` |
 | ***Human verification required*** `[Aug 2026 client MOM]` | ***Lead Tester*** `[Aug 2026 client MOM]` | ***NEW in v5.0: when evidence for a financial system or critical control is received and awaits mandatory human verification (FR-90).*** `[Aug 2026 client MOM]` |
 | ***Pending pool item unassigned*** `[Aug 2026 client MOM]` | ***CCO*** `[Aug 2026 client MOM]` | ***NEW in v5.0: when an item in the FR-78 pool approaches the end of the period it is owed for without being assigned to a tester. This is the pool-model form of the "required test not scheduled" alert above.*** `[Aug 2026 client MOM]` |
+| ***Regulation updated — review required*** `[11 Aug 2026 MOM]` | ***Platform Super Admin, on the Portal dashboard*** `[11 Aug 2026 MOM]` | ***NEW in v6.0: when a regulation the platform already carries (MiCA, DORA) is updated at source and re-enters the draft review queue (SA-15). This is the Portal-side twin of the firm-side "Regulation update published" row above — that one fires on publish, this one fires on detection.*** `[11 Aug 2026 MOM]` |
+| ***Article assignment*** `[11 Aug 2026 MOM]` | ***Each assigned tester*** `[11 Aug 2026 MOM]` | ***NEW in v6.0: when the CCO fans a test out across several testers, each receives their own notification naming the articles they own rather than the test as a whole (FR-106).*** `[11 Aug 2026 MOM]` |
+| ***Gaps identified for review*** `[11 Aug 2026 MOM]` | ***Lead Tester*** `[11 Aug 2026 MOM]` | ***NEW in v6.0: when the platform finishes its policy-to-regulation gap analysis on reviewed evidence and has candidate gaps awaiting the tester's confirmation (FR-112).*** `[11 Aug 2026 MOM]` |
+| ***New enquiry received*** `[Aug 2026 onboarding flow]` | ***Sosinna's team, on the Portal dashboard*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0: when a firm submits an enquiry (SA-16). A prospect waiting for a reply is a lead going cold.*** `[Aug 2026 onboarding flow]` |
+| ***Onboarding link issued*** `[Aug 2026 onboarding flow]` | ***The firm's named contact, by email*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0: when Sosinna's team generates the link (SA-20). This email is the firm's only route in, so delivery failure must be visible to the sender.*** `[Aug 2026 onboarding flow]` |
+| ***Onboarding stalled*** `[Aug 2026 onboarding flow]` | ***Sosinna's team*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0: when a firm has started onboarding but not completed it, or its link is approaching expiry (SA-21, FR-128).*** `[Aug 2026 onboarding flow]` |
+| ***Payment failed*** `[Aug 2026 onboarding flow]` | ***The firm, and Sosinna's team after repeated failures*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0: when a payment attempt fails (FR-126). The firm is told plainly and can retry; the team is told so they can intervene.*** `[Aug 2026 onboarding flow]` |
+| ***Firm activated*** `[Aug 2026 onboarding flow]` | ***Sosinna's team, and the firm's administrators*** `[Aug 2026 onboarding flow]` | ***NEW in v7.0: on successful payment and tenant activation (FR-125). The firm's welcome-and-log-in message; the team's confirmation that a sale closed.*** `[Aug 2026 onboarding flow]` |
 
 > **💬 Questions still to confirm**
 > - **Channels (NT-01) — RESOLVED on the 25 Jun call:** *email and in-platform only, confirmed as the baseline and the ceiling for MVP. No SMS. Slack/Teams integration wasn't explicitly ruled out but wasn't raised as a requirement either — treat as out of scope for MVP unless it resurfaces.* `[25 Jun FRD call]`
@@ -820,6 +1129,14 @@ This section is primarily for the development team. It describes the non-negotia
 **[NFR-04]** Every action in the platform is permanently recorded in a tamper-proof audit log. Not even the system administrators at SayOne can modify or delete this log. It exists to provide irrefutable proof to a regulator that the compliance process was followed correctly.
 
 **[NFR-06]** The platform is GDPR-compliant as a data processor — meaning SayOne processes personal data on behalf of client firms, under a Data Processing Agreement.
+
+**[NFR-12]** ***Card and bank details are never stored, processed or logged by ControlIQ. Payment is taken through a payment provider's hosted checkout or hosted input fields, so card data passes from the payer's browser directly to the provider and the platform holds only a provider token and a transaction reference. This keeps the platform at the lightest PCI DSS tier and keeps card data out of the Section 2 retention regime entirely. Tenant activation is driven by the provider's server-to-server confirmation, never by the browser returning to a success page.*** `[Aug 2026 onboarding flow]`
+
+> **DEVELOPER NOTE** *(grey — new in v7.0)*
+>
+> **📌 Note**
+> - ***NFR-12 is not negotiable for cost or convenience. Accepting a card number into the application, even in transit, moves the platform into a PCI assessment tier that the project is not scoped or budgeted for and that a fixed-fee milestone contract cannot absorb.*** `[Aug 2026 onboarding flow]`
+> - ***The provider must have EU processing to sit alongside NFR-03, and a Data Processing Agreement under NFR-06. Provider selection is ON-03 and is a prerequisite for the Section 5.7 estimate.*** `[Aug 2026 onboarding flow]`
 
 ## 13.2 Performance and Availability
 
@@ -855,6 +1172,8 @@ How will clients be charged?
 ***Earlier note (Sosinna's Drive comment, 15 Jun):*** *~~a flat monthly SaaS subscription model per tenant.~~* `[status note]`
 
 **📞 Superseded by the 25 Jun FRD Review call — decided by Jomin (3 Jul 2026): go with the call version.** *Not a fixed or self-serve tier. Two plan structures: an Enterprise plan (org-chart based, any number of users) and a smaller seat-based plan (e.g. 1–5, 5–10 users). No price is published to prospects — every signup goes through a demo and scoping conversation with Sosinna's team first, similar to how SumSub sells. The Super Admin portal configures pricing per seat count at onboarding (explicitly not by firm headcount — a firm like KPMG could have thousands of employees but only a handful of platform seats). No fixed number exists yet — Sosinna said directly on the call she doesn't have a definitive figure. The model is confirmed; the exact price points are not.* `[25 Jun FRD call]`
+
+***v7.0: the "Super Admin portal configures pricing per seat count at onboarding" line above now has a concrete home — SA-19, where the agreed plan type and seat count are recorded against the enquiry after the offline agreement. That record is what FR-123 charges against, so the firm never picks a price on screen. Still pending: the price points themselves, and whether the charge recurs (ON-02).*** `[Aug 2026 onboarding flow]`
 
 ### CC-02 — Platform branding
 
@@ -893,6 +1212,8 @@ When a CASP firm subscribes to ControlIQ, does Sosinna / Synergy act as the rese
 
 **💬 Sosinna's comment — confirmed:** *Sosinna / Synergy is the reseller, owning the client relationship and billing them directly. The CASP firm does not contract directly with SayOne.* `[Sosinna's Drive comment]`
 
+***⚠ v7.0 re-opens part of this. The onboarding flow has the firm paying through the platform before it can log in (FR-123). "Synergy bills them directly" and "the firm pays through ControlIQ" can both be true — the platform can collect into a Synergy-owned merchant account — but that has to be stated, not assumed, because it decides which entity's payment provider account is integrated, whose name appears on the receipt, who issues the VAT invoice, and who the firm contacts when a payment fails. The contracting answer above is unchanged; the collection mechanism is the new question. Logged as ON-01 and GAP-19.*** `[Aug 2026 onboarding flow]`
+
 > **CONFIRMED** *(green — agreed decision)*
 >
 > **✅ What we have agreed**
@@ -905,7 +1226,7 @@ When a CASP firm subscribes to ControlIQ, does Sosinna / Synergy act as the rese
 
 Every open question from the sections above is listed here in one place. The questions marked as 'Needed before estimation' must be resolved before the development team can produce a reliable project estimate. All others can be resolved during the build.
 
-| **Ref** | **Topic** | **Question** | **Needed before estimation?** | **Status (updated 3 Jul 2026)** |
+| **Ref** | **Topic** | **Question** | **Needed before estimation?** | **Status (updated 12 Aug 2026)** |
 |---|---|---|---|---|
 | FO-02 | Setup | Client type: checkboxes or percentage split? | No | ***Open — no update*** `[status note]` |
 | FO-07 | Setup | Who completes the setup wizard — any Firm Super Admin or CCO only? | No | ***Open — no update*** `[status note]` |
@@ -941,15 +1262,34 @@ Every open question from the sections above is listed here in one place. The que
 | ***EV-01*** | ***Evidence*** | ***What accuracy threshold applies to the AI document-match check, and how is it verified at UAT?*** | ***Yes*** | ***New in v5.0 — see Section 7.4. Do not assume the Section 6.2 85% figure carries over.*** `[Aug 2026 client MOM]` |
 | ***EV-02*** | ***Evidence*** | ***What defines a "critical control" for the purpose of mandatory human verification — the DORA Critical/Important classification, the SA-10 priority, or a separate list?*** | ***Yes*** | ***New in v5.0 — see Section 7.4*** `[Aug 2026 client MOM]` |
 | ***EV-03*** | ***Evidence*** | ***How does a business unit owner without a platform login upload evidence — new login-bearing role, or scoped expiring upload link?*** | ***Yes*** | ***New in v5.0 — see Section 7.4. Security decision.*** `[Aug 2026 client MOM]` |
-| ***EV-04*** | ***Evidence*** | ***Who sets the due date on a request item — platform default per test type, or the CCO at issue?*** | ***No*** | ***New in v5.0 — see Section 7.4*** `[Aug 2026 client MOM]` |
+| ***EV-04*** | ***Evidence*** | ***Who sets the due date on a request item — platform default per test type, or the CCO at issue?*** | ***No*** | ***RESOLVED 11 Aug 2026 — two-week default, CCO-adjustable, deviations recorded. See Section 7.4, FR-109*** `[11 Aug 2026 MOM]` |
 | ***EV-05*** | ***Evidence*** | ***Is the announcement letter a fixed template, per-firm configurable, or free text?*** | ***No*** | ***New in v5.0 — see Section 7.4*** `[Aug 2026 client MOM]` |
 | ***EV-06*** | ***Evidence*** | ***Does persistent evidence-collection delay automatically raise a Finding, or stay a management metric?*** | ***No*** | ***New in v5.0 — see Section 7.4*** `[Aug 2026 client MOM]` |
+| ***TS-05*** | ***Testing*** | ***Under article fan-out, who records the formal test result — a nominated lead among the testers, the CCO, or one result per article rolled up?*** | ***Yes*** | ***New in v6.0 — see Section 7.2, FR-106; resolve with GAP-15*** `[11 Aug 2026 MOM]` |
+| ***TS-06*** | ***Testing*** | ***Two testers on adjacent articles of one test each raise a finding — one finding or two? Affects repeat-finding detection and risk rating.*** | ***No*** | ***New in v6.0 — see Section 7.2*** `[11 Aug 2026 MOM]` |
+| ***TS-07*** | ***Testing*** | ***Is every Requirement ID mapped down to its constituent articles? Article scoping and fan-out both depend on it.*** | ***Yes*** | ***New in v6.0 — see Section 7.2*** `[11 Aug 2026 MOM]` |
+| ***EV-07*** | ***Evidence*** | ***Is the follow-up request portal in scope? The client asked for a development-effort assessment before deciding.*** | ***Yes*** | ***New in v6.0 — see Section 7.4, FR-111. Scope decision, not a design question*** `[11 Aug 2026 MOM]` |
+| ***EV-08*** | ***Evidence*** | ***What accuracy threshold applies to the FR-112 policy-to-regulation gap identification, and how is it verified at UAT?*** | ***Yes*** | ***New in v6.0 — see Section 7.5. As with EV-01, the Section 6.2 85% figure does not automatically carry over*** `[11 Aug 2026 MOM]` |
+| ***UI-01*** | ***Design*** | ***Are the wireframes reviewed on 11 Aug frozen as the design baseline, or still open to revision during UI design?*** | ***No*** | ***New in v6.0 — see Section 9.1*** `[11 Aug 2026 MOM]` |
+| ***UI-02*** | ***Design*** | ***Is the calendar view writable (drag to reschedule) or read-only?*** | ***No*** | ***New in v6.0 — see Section 9.1, FR-114*** `[11 Aug 2026 MOM]` |
+| ***ON-01*** | ***Onboarding*** | ***Who is the merchant of record when a firm pays through the platform — Synergy or SayOne? Who invoices, handles VAT, and issues refunds? CC-06 makes Synergy the direct biller.*** | ***Yes*** | ***New in v7.0 — see Section 5.7 and Section 14, CC-06. Contract question, blocks the payment estimate*** `[Aug 2026 onboarding flow]` |
+| ***ON-02*** | ***Onboarding*** | ***Is the onboarding payment a one-off unlock or the first instalment of a subscription the platform manages? What happens on a failed renewal — does a regulated firm lose access to its own evidence?*** | ***Yes*** | ***New in v7.0 — see Section 5.7*** `[Aug 2026 onboarding flow]` |
+| ***ON-03*** | ***Onboarding*** | ***Which payment provider and currencies? Card, SEPA transfer, or invoice-and-transfer? An invoice model means no in-platform checkout and a much smaller build.*** | ***Yes*** | ***New in v7.0 — see Section 5.7 and NFR-12*** `[Aug 2026 onboarding flow]` |
+| ***ON-04*** | ***Onboarding*** | ***Default expiry on an onboarding link, and can a lapsed firm be re-invited automatically or only by Sosinna's team?*** | ***No*** | ***New in v7.0 — see Section 5.4, SA-21*** `[Aug 2026 onboarding flow]` |
+| ***ON-05*** | ***Onboarding*** | ***Can a firm complete onboarding with acknowledged call-tree or reporting-manager gaps, or is a complete chain mandatory before payment?*** | ***No*** | ***New in v7.0 — see Section 5.6, FR-122*** `[Aug 2026 onboarding flow]` |
+| ***ON-06*** | ***Onboarding*** | ***Must the firm load its entire headcount before it can pay, or only compliance-relevant staff with the rest added later?*** | ***No*** | ***New in v7.0 — see Section 5.6*** `[Aug 2026 onboarding flow]` |
+| ***ON-07*** | ***Onboarding*** | ***Does the marketing site post enquiries into the platform through an API, or does Sosinna's team re-key them? Depends on MKT-04.*** | ***No*** | ***New in v7.0 — see Section 5.2, SA-16*** `[Aug 2026 onboarding flow]` |
+| ***ON-08*** | ***Onboarding*** | ***What is the retention rule for dead enquiries and abandoned onboardings? They hold licence numbers, financial reports and staff names for firms that never became clients.*** | ***No*** | ***New in v7.0 — see Section 2 and Section 5.8. GDPR minimisation pulls against the never-delete rule*** `[Aug 2026 onboarding flow]` |
 
 > **DEVELOPER NOTE** *(grey)*
 >
 > **📌 Note**
 > - Four of the six original 'needed before estimation' items are still open after the July round: RE-01, RE-04, TI-02, and (with only partial movement) TI-05 / TI-06 / RE-05. CC-01's model is confirmed but the number isn't — worth deciding whether that's enough to estimate against or whether it still blocks a final number.
 > - ***v5.0 adds six new estimation-blocking items: FO-09, PR-03, TS-01, EV-01, EV-02, EV-03. Five of the six sit in the two features the August meeting introduced — the records-request workflow and the AI document check. Both are new scope, so this is expected, but it means the estimate cannot be finalised on the v4.0 answers alone. Recommend a single working session covering FO-09 + the EV block, and folding TS-01 into the GAP-01 scheduler session.*** `[Aug 2026 client MOM]`
+> - ***v6.0 adds four more estimation blockers — TS-05, TS-07, EV-07, EV-08 — and closes one (EV-04). Running total of open estimation blockers: RE-01, RE-04, RE-05, TI-02, TI-05, TI-06, FO-09, PR-03, TS-01, TS-05, TS-07, EV-01, EV-02, EV-03, EV-07, EV-08.*** `[11 Aug 2026 MOM]`
+> - ***EV-07 is different in kind from the rest: it is not a question the client owes SayOne an answer to, it is an effort assessment SayOne owes the client. It should be produced and returned rather than waited on.*** `[11 Aug 2026 MOM]`
+> - ***TS-07 is the cheapest to close and the most structural — article-level decomposition of every Requirement ID underpins FR-105, FR-106 and FR-112. Answer it first; it may make TS-05 and TS-06 easier to decide.*** `[11 Aug 2026 MOM]`
+> - ***v7.0 adds three more estimation blockers, all in the payment step: ON-01, ON-02 and ON-03. They are a single conversation, not three — decide the commercial model (who collects, whether it recurs, by what instrument) and all three close together. Until they do, Section 5.7 cannot be estimated at all, because an invoice-and-bank-transfer model and a recurring card subscription differ by an order of magnitude in build. Everything else in the onboarding flow — enquiries, the link, the wizard, the call tree review — is estimable today.*** `[Aug 2026 onboarding flow]`
 
 # 16. Gaps to Resolve Before Project Execution
 
@@ -963,7 +1303,7 @@ None of these are blockers for producing a project estimate — the estimator ca
 > - Items marked with ⚠ have a direct impact on a workflow that touches multiple roles or multiple modules. These should be prioritised for resolution.
 > - Items marked with ✏ are smaller UX or edge-case decisions that can be resolved in a short working session.
 
-| **Ref** | **Module** | **Gap** | **Status (updated 3 Jul 2026)** |
+| **Ref** | **Module** | **Gap** | **Status (updated 12 Aug 2026)** |
 |---|---|---|---|
 | GAP-01 | Testing — Scheduling | ⚠ The calendar shows when tests are due, but the exact anchor-date logic (calendar quarter vs. 90 days from onboarding; mid-quarter onboarding handling; missed-test shifting) is not yet defined. <br> **💬 Partial answer:** *Sosinna's guidance is that each test area should be covered within the year, with firms free to prioritise sequencing based on their own risk controls. The specific anchor-date mechanics are still undefined.* `[Sosinna's Drive comment]` <br> ***v5.0 update: the pool model (FR-78) removes most of this gap. There is no auto-generated dated entry to anchor, so calendar-quarter vs. 90-days-from-onboarding no longer needs deciding — the CCO sets dates at assignment via the FR-80 scope period. What remains is the period an item is *owed* for, which is what TS-01 asks about.*** `[Aug 2026 client MOM]` | ***Largely superseded by the pool model — residual question is TS-01*** `[Aug 2026 client MOM]` |
 | GAP-02 | Testing — Scheduling | ✏ RES-01 (annual pen test + quarterly vulnerability scan) and BCP-01 (annual BCP drill + semi-annual DR failover) have split frequencies — one ID, two obligations. <br> **💬 RESOLVED:** *treat as different/separate test entries, grouped by ID family (RES-xx = resilience, BCP-xx = business continuity, AML-xx = anti-money laundering, etc.). The scheduler tells the tester which recurrence (annual vs. quarterly) is currently due.* `[Sosinna's Drive comment]` | Resolved |
@@ -978,7 +1318,13 @@ None of these are blockers for producing a project estimate — the estimator ca
 | GAP-11 | User Management | ✏ When a user is deactivated, does the platform prompt the CCO to reassign their open items, or leave reassignment as a manual task? <br> **💬 Partial answer:** *any reassignment must be documented with reasoning (e.g. termination, transfer) and kept in an immutable audit trail. Doesn't specify whether the platform force-prompts reassignment or leaves it manual.* `[Sosinna's Drive comment]` | Still partially open |
 | ***GAP-12*** | ***Testing — Evidence*** | ***⚠ FR-25 already provides an exportable document checklist the Lead Tester shares with IT, Finance, or Legal. The v5.0 request register (Section 7.4) covers the same ground with dates, statuses, and verification. It is not defined whether the register replaces that checklist or whether the checklist survives as the offline/PDF form of the register. Building both as separate features would be duplicated scope.*** `[Aug 2026 client MOM]` | ***New in v5.0 — open*** |
 | ***GAP-13*** | ***Testing — Evidence*** | ***⚠ Business-side uploads enter the platform before a tester has looked at them (FR-88 to FR-91). GAP-05 established that non-assigned users get view-only and that only entitled senior personnel can view a test at all. It is not defined who can see a business-side upload between receipt and verification, or whether an unverified upload appears on the test record at all. Touches the request workflow, the test record, and the audit trail.*** `[Aug 2026 client MOM]` | ***New in v5.0 — open*** |
-| ***GAP-14*** | ***Testing — Scheduling*** | ***✏ Under the pool model the CCO assigns items one at a time. For a firm with a large test set that is a lot of manual work each period. It is not defined whether bulk assignment, saved assignment patterns, or carry-forward of the previous period's tester allocation is in scope — the stated goal was reducing UI clutter, not increasing CCO clicks.*** `[Aug 2026 client MOM]` | ***New in v5.0 — open*** |
+| ***GAP-14*** | ***Testing — Scheduling*** | ***✏ Under the pool model the CCO assigns items one at a time. For a firm with a large test set that is a lot of manual work each period. It is not defined whether bulk assignment, saved assignment patterns, or carry-forward of the previous period's tester allocation is in scope — the stated goal was reducing UI clutter, not increasing CCO clicks.*** `[Aug 2026 client MOM]` <br> ***v6.0 note: FR-106 fan-out makes this worse, not better — splitting one test across four testers multiplies the assignment actions. Resolve GAP-14 and GAP-15 together.*** `[11 Aug 2026 MOM]` | ***New in v5.0 — open, widened in v6.0*** |
+| ***GAP-15*** | ***Testing — Execution*** | ***⚠ FR-106 lets the CCO split one test across several testers by article. FR-21 says each test has exactly one Lead Tester who owns the formal result, and step 7 of Section 7.1 has that person record a single Pass / Fail / Observation. These cannot both hold. The workflow needs defining end to end: who records the result, what happens when one tester finishes their articles and another has not, whether a partially-complete test can be submitted, and how the AML sign-off in step 11 works when the AML-relevant articles were only one tester's share. Touches the test data model, the approval chain and the report.*** `[11 Aug 2026 MOM]` | ***New in v6.0 — open, highest priority of the three*** |
+| ***GAP-16*** | ***Testing — Evidence*** | ***⚠ The FR-111 request portal overlaps the FR-89 mismatch notification, the FR-84 supplementary request, and the EV-03 upload surface. Before the effort assessment the client asked for can be produced, it has to be decided what the portal is: a comment thread on an existing request item, or a separate destination with its own identity and inbox. The answer depends on EV-03 — a business owner with no login cannot hold a conversation in a place they cannot reach.*** `[11 Aug 2026 MOM]` | ***New in v6.0 — open, blocks the EV-07 estimate*** |
+| ***GAP-17*** | ***Testing / WSP*** | ***✏ FR-112 (gap identification against evidence, per test) and FR-34 (gap analysis of the WSP against Requirement IDs) both answer "where does this firm not meet the rules" and both rely on an article-to-policy mapping. It is not defined whether they share one mapping and one gap register with two views, or are built as two features. Building two is duplicated scope; merging them naively loses the distinction between a documentation gap and an evidence gap, which matters to the tester.*** `[11 Aug 2026 MOM]` | ***New in v6.0 — open*** |
+| ***GAP-18*** | ***Onboarding — Commercial*** | ***⚠ MKT-02 states the platform has no self-serve checkout and does not process payment; FR-123 has the firm paying in-platform before first login. These are reconcilable — the price is agreed offline and merely collected on screen — but the document must say so in one voice before it is signed as a baseline, because "no checkout" and "a checkout" are what a fixed-fee dispute is made of. Needs a single agreed statement of what is and is not self-serve.*** `[Aug 2026 onboarding flow]` | ***New in v7.0 — open, resolve before signature*** |
+| ***GAP-19*** | ***Onboarding — Commercial*** | ***⚠ CC-06 makes Synergy the reseller billing firms directly, while FR-123 collects payment through the platform. Undefined: whose merchant account receives the money, whose name is on the receipt, who issues the VAT invoice, who handles refunds and chargebacks, and who the firm contacts when payment fails. Each answer changes what gets built. Blocks the Section 5.7 estimate together with ON-01.*** `[Aug 2026 onboarding flow]` | ***New in v7.0 — open, estimation blocker*** |
+| ***GAP-20*** | ***Onboarding — Data*** | ***✏ An abandoned onboarding leaves real firm data in the platform — licence number, financial reports, staff names and reporting lines — for a firm that never became a client and never paid. Section 2 says the platform does not delete; GDPR data minimisation says do not keep what you do not need. Neither position was written with prospects in mind. Needs a retention and deletion rule specific to enquiries and incomplete onboardings, plus a decision on what a firm can ask to have erased. Tracked as ON-08.*** `[Aug 2026 onboarding flow]` | ***New in v7.0 — open*** |
 
 > **DEVELOPER NOTE** *(grey)*
 >
@@ -988,6 +1334,8 @@ None of these are blockers for producing a project estimate — the estimator ca
 > - GAP-10 is the smallest gap here and can likely be resolved by the UI designer without a client session.
 > - ***6 of 11 gaps are now resolved or mostly resolved. GAP-03, GAP-10, and the remaining pieces of GAP-01/09/11 are what's left before Section 16 can be closed out entirely.*** `[25 Jun FRD call]`
 > - ***v5.0 tally: the August meeting closed GAP-04 outright and largely superseded GAP-01 with the pool model, but added three: GAP-12, GAP-13, and GAP-14. Net 14 gaps, 7 resolved or mostly resolved. GAP-12, GAP-13, and GAP-14 all sit in the records-request workflow and should be resolved in one session together with the EV block in Section 15.*** `[Aug 2026 client MOM]`
+> - ***v6.0 tally: the 11 Aug meeting closed none and added three — GAP-15, GAP-16, GAP-17. Net 17 gaps, 7 resolved or mostly resolved. Recommended grouping: GAP-14 + GAP-15 in one session (both are about how assignment works once a test can be split); GAP-12, GAP-13 and GAP-16 in a second (all records-request, and GAP-16 blocks an estimate); GAP-17 with the WSP module owner alone.*** `[11 Aug 2026 MOM]`
+> - ***v7.0 tally: the onboarding flow closed none and added three — GAP-18, GAP-19, GAP-20. Net 20 gaps, 7 resolved or mostly resolved. GAP-18 and GAP-19 are commercial, not technical: they belong in a conversation between Jomin and Sosinna, not in a design session, and both must close before Section 18 is signed. GAP-20 needs a data protection view alongside the product one.*** `[Aug 2026 onboarding flow]`
 
 > **NOTE** *(orange)*
 >
@@ -997,6 +1345,8 @@ None of these are blockers for producing a project estimate — the estimator ca
 > - **Baseline freeze:** *upon formal sign-off of Section 18, this document is completely frozen. No further modifications, workflow adjustments, or structural changes may be initiated by the Contractor without an executed amendment to the master contract. Practical implication: this review needs to be finished and folded in before signature — not after.* `[Sosinna's Drive comment]`
 > - ***v5.0 status against the freeze clause: Section 18 has not been signed. This revision is therefore pre-signature and does not require a contract amendment. It is also client-initiated — every change in v5.0 originates from the client's own meeting minutes, not from a Contractor-initiated scope adjustment. Version supremacy transfers to v5.0: this document, not v4.0, is now the baseline, and v4.0 joins the superseded list alongside the BRD, RED, SRS, and Narrative.*** `[Aug 2026 client MOM]`
 > - ***Scope impact to flag before signature: v5.0 adds the records-request workflow, the AI document-match check, the priority configuration surface, the EU regulation ingest-and-publish pipeline, and the org chart analytics dashboard. These are net-new build items, not clarifications of v4.0 text. If the fixed fee was quoted against v4.0, it needs re-basing against this version before Section 18 is signed.*** `[Aug 2026 client MOM]`
+> - ***v6.0 status against the freeze clause: Section 18 is still unsigned, so this revision is likewise pre-signature and needs no contract amendment. It is client-initiated — it comes from the client's own 11 Aug meeting minutes. Version supremacy transfers again: v6.0 is the baseline and v5.0 joins the superseded list.*** `[11 Aug 2026 MOM]`
+> - ***Scope impact of v6.0, smaller than v5.0's but not zero. Net-new build: article-level test fan-out across multiple testers (FR-106), post-evidence gap identification (FR-112 — a second AI-assisted analysis feature with its own accuracy bar), the employee directory (FR-116), and the calendar and remediation dashboard views if they were not already priced (FR-114, FR-115). Deliberately excluded from scope pending a decision: the FR-111 request portal. Everything else in v6.0 confirms or tightens v5.0 and should not move the number.*** `[11 Aug 2026 MOM]`
 
 # 17. Document History
 
@@ -1011,22 +1361,32 @@ None of these are blockers for producing a project estimate — the estimator ca
 | v7.0 — PRD v3.0 | Jun 2026 | Full rewrite in plain English for a non-technical audience. Feature descriptions explain what each feature does and why. All confirmed decisions and open questions retained. Technical terms explained on first use. FR-XX reference tags retained for development team. |
 | v8.0 — PRD v4.0 | Jun 2026 | Cross-document gap audit completed. 11 workflow design gaps identified and documented in new Section 16 (Gaps to Resolve Before Execution). Finding closure corrected: now requires CCO + one Senior Management sign-off (was CCO-only — contradiction with Narrative v3 resolved). Two confirmed decisions added from Narrative v3: Not Applicable test process (documented reason required, immutable) and sample change approval flow (senior team member approval + written reason, original selection retained). Risk rating confirmed as auto-calculated by platform — compliance officer confirms, does not manually enter. |
 | v9.0 — PRD v5.0 | Aug 2026 | ***Product renamed from ComplianceIQ to ControlIQ; the name is applied document-wide, and earlier documents keep the old name as historical records. Client meeting minutes (August 2026) incorporated. Scheduling model revised: auto-scheduled per-test calendar entries replaced by a pending-item pool the CCO assigns from manually, at article level (FR-78 to FR-80) — closes GAP-04, largely supersedes GAP-01. Mandatory scope period on every test. New Records Request workflow (Section 7.4, FR-83 to FR-91): announcement letter and initial request list to the business owner, request/receipt date tracking, delay analytics, AI document-match check with mandatory human verification for financial systems and critical controls. New Admin Portal priority configuration (SA-09 to SA-11) and EU API regulation ingest-review-edit-tag-publish pipeline (SA-12 to SA-14). Tests tagged to business owners. CCO cross-tester, cross-pillar oversight view. Not Applicable confirmed as a CCO authority with mandatory justification and a report appendix. Financial reports added to onboarding as a service-line input. Org chart analytics dashboard and headcount-vs-entitlements tracking. Six new notification types. 14 new open questions (FO-09, PR-01–03, TS-01–04, EV-01–06) and three new workflow gaps (GAP-12–14).*** |
+| v10.0 — PRD v6.0 | Aug 2026 | ***Minutes of the Compliance Testing Workflow Review, 11 August 2026, incorporated. Mostly a confirmation pass: the pending-item pool, records-request workflow, AI document check, priority configuration, business-owner tagging, N/A rules, four primary roles and org chart analytics were all restated by the client in the shape v5.0 records them, and are now marked confirmed rather than rewritten. Net-new: article-level scoping alongside the date range (FR-105); CCO fan-out of one test across several testers by article (FR-106) — which conflicts with the single-Lead-Tester rule in FR-21 and is logged as GAP-15; N/A now requires a justification file, not just text (FR-107); the platform is the only acceptable evidence channel, no email or WhatsApp (FR-108); a two-week default response window on records requests, resolving EV-04 (FR-109); the AI match check re-framed as a cost gate ahead of full AI processing (FR-110); a proposed but NOT-yet-approved follow-up request portal, pending a development-effort assessment (FR-111, EV-07); post-evidence policy-to-regulation gap identification as a new Section 7.5 (FR-112); the reviewed wireframe set recorded as requirements — CCO Kanban board, calendar of scheduled reviews, remediation dashboards (FR-113 to FR-115); an employee directory highlighting compliance staff (FR-116); onboarding derives applicable regulations as well as service lines (FR-104); Super Admin dashboard notification restarting the regulation review cycle on a MiCA or DORA update (SA-15). Three new notification types. Nine new open questions (TS-05–07, EV-07, EV-08, UI-01, UI-02) with EV-04 resolved, and three new workflow gaps (GAP-15–17).*** |
+| v11.0 — PRD v7.0 | Aug 2026 | ***The firm onboarding flow specified end to end by the client and Section 5 restructured around it — from "Setting Up a New Firm" (a description of the wizard) to "From Enquiry to First Login" (the whole journey). Net-new to the product: enquiry capture and an enquiry work queue on the Portal dashboard (SA-16 to SA-18); a record that the offline legal agreement is complete, carrying the agreed plan and seat count, which gates everything downstream (SA-19); onboarding by emailed link generated by Sosinna's team, expiring and revocable, superseding the admin-created account in MKT-03 (SA-20, SA-21); the firm creating its own first Firm Super Admin account with MFA and inviting a second before completion (FR-117); resumable, per-step-validated onboarding (FR-118, FR-119); staff, reporting lines and business continuity call tree captured during onboarding with a mandatory gap review — every employee needs a call contact and a reporting manager — and legitimate exceptions acknowledged rather than faked (FR-120 to FR-122); **in-platform payment after the details and before first login, charged against the offline-agreed plan** (FR-123 to FR-125); retry on failure with nothing lost (FR-126); login gated on activation with no pre-payment access (FR-127); and a definition of "onboarded" the Portal reports against (FR-128). NFR-12 keeps card data off the platform entirely. Section 2 gains enquiry and payment record classes. Five new notification types. Payment contradicts MKT-02 and CC-06 as previously written — flagged, not silently resolved. Eight new open questions (ON-01 to ON-08, three of them estimation blockers) and three new gaps (GAP-18 to GAP-20, two of them commercial and both blocking signature).*** |
 
 > **DEVELOPER NOTE** *(grey)*
 >
 > **📌 Note**
 > - *Superseded — kept for context: "Per instruction, the version label stays at v4.0 — this document history table is unchanged. All edits from the 25 Jun call and Sosinna's Drive comments are layered into the sections above in colour, not recorded as a new version row here."*
 > - ***v5.0 changes that instruction. The August 2026 meeting introduced net-new functional scope rather than answers to existing questions, so it is recorded as a version. The 25 Jun call and Drive comment edits, which were previously unversioned, are absorbed into the v5.0 baseline — they no longer sit outside the version record. Their blue and orange tags remain so the provenance of each decision stays traceable.*** `[Aug 2026 client MOM]`
+> - ***v6.0 follows the same rule. The 11 Aug review is largely confirmatory, which on its own would not justify a version bump — but it also introduces fan-out, gap identification and the wireframe view set, which are net-new functional scope. Recording it as a version also preserves the confirmations themselves, which have their own value: they are the evidence that v5.0 read the earlier meeting correctly, and that matters when this document is the frozen baseline a fixed-price contract is written against.*** `[11 Aug 2026 MOM]`
+> - ***v7.0 is a whole version rather than a point release for the same reason, and more strongly: it adds a capability the product did not have in any previous version — taking money — and it restructures a numbered section. It also revises two previously agreed positions (MKT-03 outright, MKT-02 and CC-06 in tension), which is exactly the kind of change the version record exists to make visible.*** `[Aug 2026 onboarding flow]`
 
 # 18. Sign-Off
 
-This document represents the agreed product baseline as of August 2026. Development estimation proceeds from this version — v5.0, not v4.0. Open questions marked 'Needed before estimation' in Section 15 must be resolved first; note that v5.0 adds six new ones (FO-09, PR-03, TS-01, EV-01, EV-02, EV-03). Workflow gaps in Section 16 must be resolved before the relevant development sprint begins.
+This document represents the agreed product baseline as of August 2026. Development estimation proceeds from this version — v7.0, not v6.0 and not v4.0. Open questions marked 'Needed before estimation' in Section 15 must be resolved first; v5.0 added six (FO-09, PR-03, TS-01, EV-01, EV-02, EV-03), v6.0 added four (TS-05, TS-07, EV-07, EV-08) while closing EV-04, and v7.0 adds three more (ON-01, ON-02, ON-03 — all in the payment step). Workflow gaps in Section 16 must be resolved before the relevant development sprint begins.
 
 ***Signing this section freezes the baseline under the clause in Section 16. Before signing, confirm that the net-new scope introduced in v5.0 — the records-request workflow, the AI document-match check, the priority configuration surface, the EU regulation ingest pipeline, and the org chart analytics dashboard — is reflected in the fixed fee.*** `[Aug 2026 client MOM]`
+
+***And that the v6.0 additions are too: article-level test fan-out (FR-106), post-evidence gap identification (FR-112), the employee directory (FR-116), and the calendar and remediation dashboard views (FR-114, FR-115). One item is deliberately outside the fee at signature: the FR-111 follow-up request portal, which stays a proposal until the development-effort assessment the client asked for on 11 August is returned and a scope decision is taken. If it is approved after signature it is an amendment, not a clarification.*** `[11 Aug 2026 MOM]`
+
+***v7.0 adds a further block of net-new scope that must be reflected in the fee: enquiry management in the Portal (SA-16 to SA-19), the onboarding link mechanism (SA-20, SA-21), self-service account creation and a resumable, validated wizard (FR-117 to FR-119), call tree capture and gap review at onboarding (FR-120 to FR-122), and the payment step with activation and retry (FR-123 to FR-127).*** `[Aug 2026 onboarding flow]`
+
+***Two items must be settled before this section is signed, and neither is a development decision. GAP-18: MKT-02 says there is no self-serve checkout while FR-123 puts a payment step in the product — the document needs one agreed statement of what is and is not self-serve. GAP-19: CC-06 makes Synergy the direct biller while the platform now collects the payment — whose merchant account, whose invoice, whose refund. Signing with these open freezes a baseline that contradicts itself on the commercial terms, which is the worst place for a fixed-price contract to be ambiguous. Note also that the payment step cannot be estimated at all until ON-01 to ON-03 are answered — an invoice-and-transfer model and a recurring card subscription are not the same build.*** `[Aug 2026 onboarding flow]`
 
 | **Role** | **Name** | **Organisation** | **Signature / Date** |
 |---|---|---|---|
 | Delivery Head | Jomin Johnson | SayOne Technologies |   |
 | Client — Domain Expert | Sosinna Degefu | Synergy Consulting Group |   |
 
-*ControlIQ · Product Requirements Document v5.0 · SayOne Technologies · Confidential · August 2026* `[status note]`
+*ControlIQ · Product Requirements Document v7.0 · SayOne Technologies · Confidential · August 2026* `[status note]`
