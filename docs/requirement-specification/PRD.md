@@ -4,9 +4,11 @@
   in PRD.docx and in the pre-v5.0 git history).
   Up to v4.0 this file was a rendering of
   PRD.docx (same directory) and the .docx won any disagreement. As of v5.0 that is
-  reversed: PRD.docx is frozen at the signed v4.0 baseline and this Markdown file is
-  the authoritative source. Regenerate the .docx from this file before the next
-  signature round (scripts/docx2md.py records the original conversion direction).
+  reversed: this Markdown file is the authoritative source and PRD.docx is
+  regenerated from it (scripts/md2docx.py; scripts/docx2md.py records the original
+  conversion direction). The signed v4.0 .docx baseline is preserved in git history
+  (last at commit ada0dbe and earlier); since v8.0 the working PRD.docx tracks this
+  file. Regenerate it after every revision and before each signature round.
   This file carries no version in its name — see the version field below, and
   git history for the revision record.
 
