@@ -1,0 +1,27 @@
+flowchart TD
+    CTRL["Control<br/>requirement + expected evidence"] --> QT["Query templates<br/>+ synonym expansion FINRA-EU"]
+    QT --> DQ["Dense query<br/>BGE-M3 embedding"]
+    QT --> LQ["Lexical query<br/>terms of art, article numbers"]
+    DQ --> VEC["pgvector HNSW<br/>filtered to wsp_version"]
+    LQ --> BM["BM25 / tsvector<br/>same filter"]
+    VEC --> RRF["Reciprocal Rank Fusion<br/>50-150 candidates"]
+    BM --> RRF
+    RRF --> RER["BGE-reranker-v2-m3<br/>top 10-20 chunks"]
+    RER --> PAR["Parent-section expansion<br/>child chunk to subsection"]
+    PAR --> PROMPT["Prompt assembly<br/>static prefix: system+control+regulation<br/>variable: firm evidence chunks"]
+    PROMPT --> LLM["LLM, schema-constrained JSON<br/>decision, confidence, chunk_ids,<br/>quoted_span, gaps"]
+    LLM --> FILL["System fills page+section<br/>from chunk metadata<br/>never model-invented"]
+    FILL --> V1{"Span existence<br/>verbatim match at offsets?"}
+    V1 -->|"no"| REGEN["Regenerate once"] --> LLM
+    V1 -->|"yes"| V2{"Citation integrity<br/>chunk in right doc version?"}
+    V2 -->|"no"| HR["NEEDS_HUMAN_REVIEW"]
+    V2 -->|"yes"| V3{"Groundedness judge<br/>claim-level entailment"}
+    V3 -->|"score < 0.7"| HR
+    V3 -->|"0.7-0.8"| FLAG["Flagged, human sample"] --> CONF
+    V3 -->|">= 0.8"| CONF["Composite confidence<br/>retrieval + groundedness + self-consistency"]
+    CONF --> POLICY{"Threshold policy"}
+    POLICY -->|"conf < 0.6"| HR
+    POLICY -->|"0.6-0.8 FAIL/PARTIAL"| HC["Human confirmation"]
+    POLICY -->|"auto"| OUT["Evidence-backed finding<br/>persisted append-only"]
+    HC --> OUT
+    HR --> OUT

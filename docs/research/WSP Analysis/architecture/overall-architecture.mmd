@@ -1,0 +1,39 @@
+flowchart TD
+    subgraph FIRM["Firm side"]
+        U["WSP upload<br/>150-200pp PDF"]
+    end
+
+    subgraph PLATFORM["Compliance Validation Platform"]
+        ING["Ingestion & extraction<br/>section tree + chunks + embeddings"]
+        APP["Applicability filter<br/>entity class / services / microenterprise"]
+        subgraph REG["Regulatory knowledge base (global)"]
+            MICA["MiCA controls<br/>MICA-WSP-001..024"]
+            DORA["DORA controls<br/>DORA-WSP-001..015"]
+        end
+        CTRL["Control versions<br/>deterministic / semantic / hybrid"]
+        EVID["Evidence retrieval<br/>hybrid RAG, page+section cited"]
+        EVAL["Evaluation engine<br/>PASS / PARTIAL / FAIL / NA / REVIEW"]
+        VER["Verification gate<br/>span check + groundedness"]
+        FIND["Findings<br/>evidence-backed, severity"]
+        RISK["Risk scoring<br/>severity + confidence"]
+        ALERT["Alerts<br/>NEW_GAP / WORSENED only"]
+        REM["Remediation tracking<br/>assignee, due date, trail"]
+    end
+
+    subgraph MON["Regulatory monitor"]
+        SRC["EUR-Lex / ESMA / EBA feeds"]
+        CHG["Change detection + impact map"]
+        GATE["Human review gate"]
+    end
+
+    U --> ING --> APP
+    APP --> CTRL
+    MICA --> CTRL
+    DORA --> CTRL
+    CTRL --> EVID --> EVAL --> VER --> FIND --> RISK --> ALERT
+    FIND --> REM
+    REM -->|"new WSP version"| U
+
+    SRC --> CHG --> GATE
+    GATE -->|"approved control versions"| CTRL
+    GATE -->|"incremental revalidation"| EVAL

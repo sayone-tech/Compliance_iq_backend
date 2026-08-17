@@ -1,0 +1,26 @@
+flowchart TD
+    subgraph SOURCES["Official sources"]
+        OJ["EUR-Lex / CELLAR<br/>OJ metadata + SPARQL + RSS"]
+        CONS["Consolidated texts<br/>ELI point-in-time, Formex XML"]
+        ESMA["ESMA guidelines / Q&As<br/>HTML watch"]
+        EBA["EBA rulebook / Q&As<br/>HTML watch"]
+    end
+
+    OJ --> FETCH["Fetcher<br/>daily poll, domain allowlist"]
+    CONS --> FETCH
+    ESMA --> HASHW["HTML content-hash monitor"]
+    EBA --> HASHW
+    HASHW --> FETCH
+
+    FETCH --> PARSE["Parse Formex/XHTML<br/>article/paragraph/point nodes"]
+    PARSE --> EID["Stable eIds + normalized SHA-256<br/>per paragraph node"]
+    EID --> DIFF["Tree diff vs stored version<br/>modified / added / deleted / renumbered"]
+    DIFF --> CS["ChangeSet<br/>ELI URI + eId refs only"]
+    CS --> IMPACT["Impact mapping<br/>control-to-article inverted index<br/>+ blast radius config"]
+    IMPACT --> GATE{"Human review gate<br/>mandatory"}
+    GATE -->|"approve"| CV["New immutable control_version<br/>tied to ChangeSet id"]
+    GATE -->|"interpretation-only change<br/>e.g. ESMA Q&A"| INV["change_impacts = invalidates<br/>forbids hash reuse"]
+    GATE -->|"reject / no impact"| LOG["Audit log only"]
+    CV --> REVAL["Trigger incremental revalidation<br/>mapped WSP sections only"]
+    INV --> REVAL
+    PARSE -. "untrusted input<br/>injection handling" .-> SAFE["Data-only treatment in LLM stages"]

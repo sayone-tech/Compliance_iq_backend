@@ -1,0 +1,31 @@
+stateDiagram-v2
+    [*] --> Detected : evaluation verdict gap/contradiction
+    Detected --> NeedsHumanReview : low confidence / contradiction / span mismatch
+    NeedsHumanReview --> Open : analyst confirms
+    NeedsHumanReview --> Dismissed : analyst rejects (false positive)
+    Detected --> Open : auto-confirmed (verification gate passed)
+
+    Open --> Acknowledged : firm acknowledges
+    Acknowledged --> InRemediation : remediation item assigned
+    InRemediation --> InRemediation : remediation_events appended
+    InRemediation --> Resolved : re-evaluation verdict pass
+    Open --> Waived : risk accepted (documented, audited)
+    Acknowledged --> Waived : risk accepted
+
+    Resolved --> Open : regression on later run (NEW_GAP)
+    Waived --> Open : waiver expired / reg change invalidates
+    Open --> Worsened : severity rank increased on rerun
+    Worsened --> InRemediation : remediation re-prioritized
+
+    Dismissed --> [*]
+    Resolved --> [*] : retained append-only for audit
+
+    note right of Worsened
+        NEW_GAP / WORSENED emit real-time
+        alerts with dedupe_key.
+        IMPROVED / RESOLVED go to digest.
+    end note
+    note right of Resolved
+        Status transitions journaled;
+        evaluations never mutated.
+    end note

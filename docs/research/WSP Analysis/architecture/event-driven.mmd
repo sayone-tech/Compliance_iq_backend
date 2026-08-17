@@ -1,0 +1,38 @@
+flowchart LR
+    subgraph TX["Postgres transaction (system of record)"]
+        DOM["Domain write<br/>e.g. wsp_version inserted"]
+        OB["Outbox / jobs row<br/>same transaction"]
+    end
+    DOM --- OB
+
+    OB --> DRAIN["Workers drain queue<br/>FOR UPDATE SKIP LOCKED<br/>idempotency keys"]
+
+    subgraph PIPE["Pipelines (durable workflows)"]
+        P1["wsp.uploaded to wsp.embedded<br/>extract, section, embed"]
+        P2["evaluation.run.requested<br/>to run.completed"]
+        P3["revalidation.fanout.requested<br/>RegulatoryChangeWorkflow"]
+    end
+
+    subgraph INT["Integration events (fire-and-forget)"]
+        N1["notification.requested<br/>alerts, digests, webhooks"]
+        N2["audit.recorded"]
+        N3["finding.created / worsened"]
+    end
+
+    DRAIN --> P1
+    DRAIN --> P2
+    DRAIN --> P3
+    P2 --> N3
+    P3 --> N3
+    N3 --> N1
+
+    subgraph MVP["MVP (<=1k firms)"]
+        M1["Outbox + Postgres job queue only<br/>no broker"]
+    end
+    subgraph ENT["Enterprise (10k-100k firms)"]
+        E1["Temporal EU<br/>pipelines + fan-out, signals, cost brake"]
+        E2["SNS/SQS EU<br/>notifications, DLQ"]
+        E3["Kafka only if replayable<br/>event log becomes a feature"]
+    end
+    PIPE -. "migrates to" .-> E1
+    INT -. "migrates to" .-> E2

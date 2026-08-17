@@ -1,0 +1,109 @@
+erDiagram
+    firms ||--o{ wsp_documents : owns
+    wsp_documents ||--o{ wsp_versions : versioned_as
+    wsp_versions ||--o{ wsp_sections : contains
+    wsp_sections ||--o{ wsp_sections : parent_of
+    wsp_sections ||--o{ wsp_chunks : chunked_into
+    wsp_sections ||--o{ wsp_evidence : anchors
+
+    regulations ||--o{ regulation_versions : versioned_as
+    regulation_versions ||--o{ articles : contains
+    articles ||--o{ paragraphs : contains
+    paragraphs ||--o{ requirements : yields
+    controls ||--o{ control_versions : versioned_as
+    control_versions ||--o{ control_requirement_map : maps
+    requirements ||--o{ control_requirement_map : mapped_by
+    control_versions ||--o{ expected_evidence : specifies
+
+    firms ||--o{ evaluation_runs : triggers
+    wsp_versions ||--o{ evaluation_runs : evaluated_in
+    evaluation_runs ||--o{ evaluations : produces
+    control_versions ||--o{ evaluations : judged_by
+    evaluations ||--o{ findings : surfaces
+    evaluations ||--o{ control_section_dependency : depends_on
+    wsp_sections ||--o{ control_section_dependency : consulted_in
+    findings ||--o{ remediation_items : remediated_by
+    remediation_items ||--o{ remediation_events : journaled_by
+
+    regulations ||--o{ regulatory_changes : changed_by
+    regulatory_changes ||--o{ change_impacts : impacts
+    control_versions ||--o{ change_impacts : impacted
+    firms ||--o{ notifications : notified
+
+    firms {
+        uuid id PK
+        text name
+        text lei
+        text jurisdiction
+        text tier
+    }
+    wsp_versions {
+        uuid id PK
+        uuid wsp_document_id FK
+        int version_no
+        text sha256
+        text status
+        uuid supersedes_id FK
+    }
+    wsp_sections {
+        uuid id PK
+        uuid wsp_version_id FK
+        uuid parent_section_id FK
+        text section_number
+        ltree path
+        int page_start
+        text text_sha256
+    }
+    wsp_chunks {
+        uuid id PK
+        uuid wsp_section_id FK
+        uuid firm_id FK
+        vector embedding
+        tsvector tsv
+        text text_sha256
+    }
+    requirements {
+        uuid id PK
+        uuid paragraph_id FK
+        text summary
+        jsonb applicability_expr
+    }
+    control_versions {
+        uuid id PK
+        uuid control_id FK
+        jsonb logic
+        text model_id
+        text prompt_sha256
+        date effective_from
+    }
+    evaluations {
+        uuid id PK
+        uuid evaluation_run_id FK
+        uuid control_version_id FK
+        enum verdict
+        enum severity
+        text input_sha256
+        jsonb raw_output
+    }
+    findings {
+        uuid id PK
+        uuid evaluation_id FK
+        uuid firm_id FK
+        enum severity
+        jsonb evidence_refs
+        enum status
+    }
+    control_section_dependency {
+        uuid evaluation_id PK
+        uuid wsp_section_id PK
+        text section_text_sha256
+        text reg_text_sha256
+        text prompt_sha256
+    }
+    regulatory_changes {
+        uuid id PK
+        uuid regulation_id FK
+        enum change_kind
+        text source_url
+        date effective_at
+    }

@@ -1,0 +1,23 @@
+flowchart TD
+    UP["Upload WSP PDF"] --> VAL["Validate<br/>type / size / malware / encryption"]
+    VAL --> STORE["Object storage (EU region)<br/>sha256 pinned, wsp_version row"]
+    STORE --> DET{"Tagged PDF?"}
+    DET -->|"yes (structure tree)"| TAGGED["Structure-tree extraction<br/>e.g. WSP Sample.pdf"]
+    DET -->|"no"| HEUR["Font/numbering heuristics<br/>e.g. Sample WSP.pdf"]
+    DET -->|"<100 chars/page"| OCR["OCR fallback<br/>OCRmyPDF / Tesseract"]
+    TAGGED --> NORM
+    HEUR --> NORM
+    OCR --> NORM
+    NORM["Unicode normalization<br/>smart quotes, dashes, footnote merge"]
+    NORM --> SECT["Section tree build<br/>TOC match, ltree path 2.4.7"]
+    SECT --> HASH["Per-section text_sha256<br/>reuse keys for revalidation"]
+    SECT --> CLAIMS["Claim extraction<br/>roles, frequencies, thresholds"]
+    HASH --> CHUNK["Section-aware chunking<br/>400-800 tok, no cross-section overlap"]
+    CHUNK --> CTX["Contextual enrichment<br/>50-100 tok generated prefix"]
+    CTX --> EMB["Embed BGE-M3<br/>cache by (model, text_sha256)"]
+    CTX --> FTS["BM25 / tsvector index"]
+    EMB --> IDX["pgvector HNSW"]
+    IDX --> READY["wsp.embedded event<br/>ready for evaluation"]
+    FTS --> READY
+    CLAIMS --> READY
+    NORM -. "untrusted data:<br/>hidden-text / injection scan" .-> SEC["Render-vs-extract diff<br/>flag injection candidates"]

@@ -1,0 +1,34 @@
+sequenceDiagram
+    autonumber
+    actor Firm
+    participant API as Platform API
+    participant Pipe as Ingestion Pipeline
+    participant Eval as Evaluation Engine
+    participant LLM as LLM Gateway (EU)
+    participant Mon as Regulatory Monitor
+    participant Rev as Reviewer (human)
+
+    Firm->>API: Upload WSP PDF
+    API->>Pipe: wsp.uploaded (outbox)
+    Pipe->>Pipe: extract, section tree, hash, chunk, embed
+    Pipe->>Eval: evaluation.run.requested
+    Eval->>Eval: applicability filter + deterministic controls
+    Eval->>LLM: semantic controls (hybrid retrieval evidence)
+    LLM-->>Eval: structured JSON verdicts + citations
+    Eval->>Eval: span check + groundedness gate
+    Eval->>Rev: NEEDS_HUMAN_REVIEW subset
+    Rev-->>Eval: confirmed / overridden
+    Eval-->>API: findings with page+section evidence
+    API-->>Firm: report + alerts (critical gaps)
+    Firm->>API: remediation plan / new WSP version
+
+    Note over Mon: continuous, independent of uploads
+    Mon->>Mon: poll EUR-Lex / ESMA / EBA, diff eIds
+    Mon->>Rev: ChangeSet + impact proposal
+    Rev-->>Mon: approve control_version / mark invalidates
+    Mon->>Eval: revalidation.fanout.requested
+    Eval->>Eval: blast radius via dependency index, hash reuse
+    Eval->>LLM: Batch API residue only
+    LLM-->>Eval: verdicts
+    Eval->>Eval: diff vs previous run
+    Eval-->>Firm: alert only on NEW_GAP / WORSENED

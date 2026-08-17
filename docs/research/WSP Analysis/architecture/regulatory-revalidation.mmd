@@ -1,0 +1,23 @@
+flowchart TD
+    CHG["regulation.change.detected<br/>affected_paragraph_ids"] --> ICV["Impacted control_versions<br/>SQL join via control_requirement_map"]
+    CHG --> CIMP["change_impacts curated<br/>invalidates / review / none"]
+    CIMP --> ICV
+    ICV --> BLAST["Firm-side blast radius<br/>control_section_dependency<br/>latest evaluations only"]
+    BLAST --> WF["RegulatoryChangeWorkflow<br/>Temporal, continue-as-new batches"]
+
+    WF --> BATCH["RevalidateBatch child workflow<br/>~500 firms per batch"]
+    BATCH --> STALE{"Stale?<br/>any input hash mismatch"}
+    STALE -->|"no + reuse allowed"| REUSE["Carry forward verdict<br/>zero LLM cost"]
+    STALE -->|"invalidates flag"| RESID["LLM residue<br/>reuse forbidden: interpretation changed"]
+    STALE -->|"yes"| RESID
+    RESID --> GROUP["Group by (model, prompt_sha256)<br/>provider prompt-cache hot"]
+    GROUP --> BAPI["Batch API submit + poll<br/>50% price, cost-brake signal"]
+    BAPI --> PERSIST["Append evaluations<br/>+ new dependency rows"]
+    REUSE --> PERSIST
+    PERSIST --> DIFF["Diff vs previous run<br/>per control lineage"]
+    DIFF -->|"NEW_GAP / WORSENED"| ALERT["Real-time alert<br/>dedupe_key firm:control:verdict:sev"]
+    DIFF -->|"IMPROVED / RESOLVED"| DIG["Daily/weekly digest"]
+    DIFF -->|"UNCHANGED"| SILENT["Silent"]
+    ALERT --> DONE["Run completed<br/>visible in workflow UI"]
+    DIG --> DONE
+    SILENT --> DONE

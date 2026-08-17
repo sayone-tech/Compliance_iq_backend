@@ -1,0 +1,34 @@
+flowchart TD
+    START["Evaluation run<br/>(wsp_version x control set)"] --> APPL{"Applicability check<br/>applicability_expr vs firm profile"}
+    APPL -->|"out of scope"| NA["NOT_APPLICABLE<br/>reason recorded"]
+    APPL -->|"in scope"| KIND{"Control kind"}
+
+    subgraph L1["Layer 1 — Deterministic (no LLM)"]
+        DETC["Regex / keyword / structural checks<br/>TOC completeness, retention periods,<br/>thresholds, stale citations"]
+        DCACHE["Cache by<br/>(control_version, section_text_sha256)"]
+    end
+
+    subgraph L2["Layer 2 — Retrieval"]
+        QRY["Control query templates<br/>+ FINRA-EU synonym bridge"]
+        HYB["Hybrid: pgvector + BM25<br/>RRF fusion, 50-150 candidates"]
+        RER["Cross-encoder rerank<br/>top 10-20 chunks"]
+        FLOOR{"Relevance below floor?"}
+    end
+
+    subgraph L3["Layer 3 — LLM judgment"]
+        REUSE{"input_sha256<br/>exact match?"}
+        PROMPT["Assemble prompt<br/>cached static prefix + evidence"]
+        LLM["LLM structured JSON<br/>decision + citations + confidence"]
+        VER["Verification gate<br/>span match + groundedness judge"]
+    end
+
+    KIND -->|"deterministic"| DETC --> DCACHE --> PERSIST
+    KIND -->|"semantic / hybrid"| QRY --> HYB --> RER --> FLOOR
+    FLOOR -->|"yes"| NEG["Candidate FAIL<br/>absence of evidence, low confidence"] --> VER
+    FLOOR -->|"no"| REUSE
+    REUSE -->|"hit + reuse allowed"| CARRY["Reuse prior verdict<br/>reused_from_evaluation_id"] --> PERSIST
+    REUSE -->|"miss or invalidated"| PROMPT --> LLM --> VER
+    VER -->|"verified"| PERSIST["Append-only evaluation<br/>+ dependency rows"]
+    VER -->|"span mismatch / low groundedness"| HR["NEEDS_HUMAN_REVIEW"]
+    PERSIST --> DIFFP["Diff vs previous run<br/>NEW_GAP / WORSENED / IMPROVED"]
+    NA --> PERSIST
