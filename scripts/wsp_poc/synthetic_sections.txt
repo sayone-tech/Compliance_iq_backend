@@ -1,0 +1,100 @@
+APPENDIX Z - EU DIGITAL OPERATIONAL RESILIENCE AND CLIENT ASSET SAFEKEEPING
+
+(SYNTHETIC TEST FIXTURE - not part of the source manual. Drafted for the
+ControlIQ WSP validation POC as known true positives for DORA Art. 11,
+DORA Art. 17 and MiCA Art. 70. Appended by scripts/wsp_poc/extract_wsp.py
+--with-synthetic.)
+
+Z.1 ICT BUSINESS CONTINUITY AND RECOVERY
+
+The Firm maintains a written ICT business continuity policy, approved by the
+management body and reviewed at least annually, that forms an integral part of
+the Firm's operational business continuity policy. The policy is implemented
+through documented ICT response and recovery plans covering each critical or
+important function.
+
+The Firm's continuity arrangements are designed to ensure the continuity of
+critical functions, to respond promptly and appropriately to all ICT-related
+incidents so as to limit damage and prioritise the resumption of activities and
+recovery actions, and to activate dedicated plans without delay that enable
+containment measures, processes and technologies appropriate to each type of
+ICT-related incident.
+
+Recovery time objectives and recovery point objectives are set per function and
+recorded in the continuity register. The Chief Information Security Officer
+maintains an estimate of the aggregated annual costs and losses caused by
+ICT-related disruptions, which is reported to the management body annually.
+
+The Firm operates a dedicated crisis management function which, on activation,
+sets out clear roles and responsibilities and coordinates internal and external
+crisis communication, including with clients, counterparties, staff, and the
+competent authority, in accordance with the Firm's communication plan.
+
+Business continuity plans and ICT response and recovery plans are tested at
+least yearly, and after every substantive change to ICT systems supporting
+critical or important functions. Testing includes switchover to redundant
+capacity and restoration from backup. Internal audit reviews the test results
+and the Firm documents and remediates every deficiency identified. Crisis
+communication procedures are included in the scope of testing.
+
+The Firm maintains redundant ICT capacity with resources, capabilities and
+functions adequate to its business needs, and maintains backup systems in a
+physically and logically segregated environment from the primary systems.
+
+Z.2 ICT-RELATED INCIDENT MANAGEMENT PROCESS
+
+The Firm defines, establishes and implements an ICT-related incident management
+process to detect, manage and notify ICT-related incidents. All ICT-related
+incidents and all significant cyber threats are recorded in the incident
+register, which is retained for five years.
+
+The process sets out early warning indicators derived from monitoring
+thresholds, and procedures to identify, track, log, categorise and classify
+ICT-related incidents according to their priority, severity and the criticality
+of the services affected.
+
+Roles and responsibilities are assigned in advance for each incident type and
+scenario, covering detection, triage, containment, eradication, recovery and
+post-incident review. The Head of Technology Operations is the designated
+incident manager; the Chief Compliance Officer is responsible for regulatory
+notification.
+
+Communication plans are established for staff, external stakeholders, the
+media, affected clients, counterparties and, where required, the competent
+authority. All ICT-related incidents classified as major are reported to senior
+management and to the management body, together with an explanation of the
+impact, the response and the remediation actions taken.
+
+The Firm establishes and documents incident response procedures to mitigate
+impacts and ensure that services become operational and secure in a timely
+manner. Every major ICT-related incident is subject to a documented root cause
+analysis, the findings of which are used to improve the Firm's ICT risk
+management framework.
+
+Z.3 SAFEKEEPING OF CLIENTS' CRYPTO-ASSETS AND FUNDS
+
+Where the Firm holds crypto-assets belonging to clients, or the means of access
+to such crypto-assets, the Firm makes adequate arrangements to safeguard the
+ownership rights of clients, in particular in the event of the Firm's
+insolvency, and to prevent the use of clients' crypto-assets on the Firm's own
+account.
+
+Client crypto-assets held on a distributed ledger are held at addresses
+segregated from the addresses on which the Firm's own crypto-assets are held.
+Client holdings are recorded in the Firm's books and records separately from
+the Firm's own holdings, and positions are reconciled to the ledger daily.
+
+Client funds are placed with a central bank or a credit institution by the end
+of the business day following the day on which they were received. The Firm
+takes all necessary steps to ensure that client funds so held are identifiable
+separately from the Firm's own funds and from the funds of any other client.
+The Firm does not use client funds on its own account under any circumstances.
+
+Where the Firm provides payment services in relation to the crypto-asset
+services it offers, it applies the safeguarding requirements applicable to
+payment service providers to the funds concerned.
+
+The means of access to client crypto-assets, including private keys and seed
+phrases, are held under dual control with geographically distributed backups,
+and the Firm's private key management procedure is reviewed annually by
+internal audit.

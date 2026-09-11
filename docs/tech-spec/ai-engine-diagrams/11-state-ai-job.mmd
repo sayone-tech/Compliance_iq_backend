@@ -1,0 +1,20 @@
+stateDiagram-v2
+    [*] --> queued : ai_job created (outbox event drained)
+    queued --> processing : worker claims (idempotency key)
+    processing --> completed : result_payload written
+    processing --> failed : unrecoverable error
+    processing --> quarantined : 3.11 injection candidate
+    failed --> queued : retry (retry_count++, capped)
+    failed --> [*] : retries exhausted — surfaced to Portal
+    quarantined --> [*] : analyst decision, document not processed
+    completed --> [*]
+
+    note right of quarantined
+        Document is not deleted and not processed.
+        Notification, not silent drop.
+    end note
+    note right of completed
+        ai_job rows have no delete grant —
+        result_payload is part of the evidentiary
+        trail for how a suggestion was produced.
+    end note

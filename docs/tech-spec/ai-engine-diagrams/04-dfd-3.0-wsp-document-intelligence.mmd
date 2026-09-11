@@ -1,0 +1,60 @@
+flowchart TB
+    S3["Object Store (EU)"]
+    DJ["Core Platform (Django)"]
+    PROV["Embedding Provider (EU)"]
+
+    P31("3.1<br/>Intake &amp; Classification<br/>WSP / evidence / licence")
+    P32("3.2<br/>Structured Parse<br/>Docling — text + layout")
+    P33("3.3<br/>OCR Fallback<br/>AWS Textract")
+    P34("3.4<br/>Normalisation<br/>Unicode, quotes, footnotes")
+    P35("3.5<br/>Section Tree Build<br/>TOC match, ltree path 2.4.7")
+    P36("3.6<br/>Section Hashing<br/>section_text_sha256")
+    P37("3.7<br/>Section-Aware Chunking<br/>400–800 tok, no cross-section overlap")
+    P38("3.8<br/>Contextual Enrichment<br/>50–100 tok generated prefix")
+    P39("3.9<br/>Embedding<br/>cache by (model, text_sha256)")
+    P310("3.10<br/>Index Write<br/>HNSW + tsvector, via Django")
+    P311("3.11<br/>Injection &amp; Integrity Scan<br/>render-vs-extract diff")
+
+    D3[("D3 | WSP Version &amp; Section Store")]
+    D4[("D4 | Chunk &amp; Vector Index")]
+    D5[("D5 | AI Job Store")]
+    D10[("D10 | Result Cache")]
+
+    DJ -->|"ai_job: wsp_version_id + S3 ref"| P31
+    S3 -->|"PDF bytes"| P31
+    P31 -->|"WSP manual → full pipeline"| P32
+    P31 -->|"evidence file → parse only"| P34
+    P32 -->|"tagged PDF: structure tree"| P34
+    P32 -->|"untagged: font/numbering heuristics"| P34
+    P32 -->|"&lt; 100 chars/page → scanned"| P33
+    P33 -->|"OCR text merged into<br/>the same stream"| P34
+    P34 -->|"normalised text blocks<br/>+ (page, bbox, style)"| P35
+    P34 -.->|"extracted-vs-rendered delta"| P311
+    P311 -->|"injection candidate flag<br/>(quarantine, notify)"| D5
+    P35 -->|"section rows: number, path,<br/>page_start, page_end, parent"| D3
+    P35 --> P36
+    P36 -->|"per-section hash<br/>(the reuse key)"| D3
+    P36 --> P37
+    P37 -->|"chunk text + offsets + section_id"| P38
+    P38 -->|"context prefix request"| PROV
+    PROV -->|"context sentence"| P38
+    P38 --> P39
+    D10 -->|"cached vector for<br/>(model, text_sha256)"| P39
+    P39 -->|"embed request (tenant content —<br/>EU routing enforced)"| PROV
+    PROV -->|"1024-d vectors"| P39
+    P39 -->|"new vectors"| D10
+    P39 --> P310
+    P310 -->|"chunk rows + vectors + tsvector"| D4
+    P310 -->|"status: completed"| D5
+    P310 ==>|"wsp.embedded"| P4OUT(["to 4.0 Evidence Retrieval"])
+
+    classDef ext fill:#F2F2F2,stroke:#555555,stroke-width:1.5px,color:#111111
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    classDef store fill:#FDF3E3,stroke:#B26B00,stroke-width:1.5px,color:#111111
+    classDef prov fill:#EDE7F6,stroke:#5B3FA0,stroke-width:2px,color:#111111
+    classDef port fill:#FFFFFF,stroke:#1F3B63,stroke-width:1px,stroke-dasharray:4 3,color:#111111
+    class S3,DJ ext
+    class PROV prov
+    class P31,P32,P33,P34,P35,P36,P37,P38,P39,P310,P311 proc
+    class D3,D4,D10 store
+    class P4OUT port

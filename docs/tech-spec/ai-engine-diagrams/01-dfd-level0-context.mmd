@@ -1,0 +1,31 @@
+flowchart TB
+    EUR["EUR-Lex / CELLAR<br/>Publications Office<br/>(Formex XML, SPARQL, RSS)"]
+    ESA["ESMA / EBA<br/>RSS + published feeds<br/>(L2/L3 material)"]
+    DJ["ComplianceIQ Core Platform<br/>(Django · DRF · Celery)<br/>system of record"]
+    S3["Object Store (S3, EU region)<br/>WSP PDFs + evidence files"]
+    PROV["AI Providers (EU region only)<br/>embedding · completion · rerank"]
+    ANA["Regulatory Analyst<br/>(Platform Admin Portal)"]
+    CCO["Compliance Officer / CCO<br/>(Firm Application)"]
+
+    ENG("0<br/>ComplianceIQ AI Engine")
+
+    EUR -->|"act manifestations (Formex XML zip)<br/>CDM metadata, amends/corrects relations"| ENG
+    ESA -->|"guidance + Q&amp;A change signals"| ENG
+    S3 -->|"WSP PDF bytes (by signed reference)"| ENG
+    DJ -->|"AI job request: document ref, firm profile,<br/>control set, tenant context"| ENG
+    ENG -->|"section tree, chunks, embeddings,<br/>mapping suggestions, verdicts + citations,<br/>ChangeSets, impact reports — all pending_review"| DJ
+    ENG -->|"prompt + evidence (tenant content)"| PROV
+    PROV -->|"embeddings, structured JSON verdicts,<br/>rerank scores"| ENG
+    DJ -->|"regulatory review queue"| ANA
+    ANA -->|"approve / edit / reject control version;<br/>publish regulation update"| DJ
+    DJ -->|"mapping + finding review queue"| CCO
+    CCO -->|"confirm / override / dismiss;<br/>upload new WSP version"| DJ
+
+    classDef ext fill:#F2F2F2,stroke:#555555,stroke-width:1.5px,color:#111111
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    classDef prov fill:#EDE7F6,stroke:#5B3FA0,stroke-width:2px,color:#111111
+    classDef human fill:#FDE8E8,stroke:#A32020,stroke-width:2px,color:#111111
+    class EUR,ESA,DJ,S3 ext
+    class PROV prov
+    class ANA,CCO human
+    class ENG proc

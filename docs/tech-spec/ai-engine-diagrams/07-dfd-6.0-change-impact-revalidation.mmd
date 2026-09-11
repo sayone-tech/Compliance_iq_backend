@@ -1,0 +1,64 @@
+flowchart TB
+    ANA["Regulatory Analyst<br/>(Platform Admin Portal)"]
+    DJ["Core Platform (Django)<br/>alert + digest delivery"]
+
+    D1[("D1 | Regulation Version Store")]
+    D9[("D9 | Dependency Index")]
+    D2[("D2 | Control Catalogue")]
+    D6[("D6 | Evaluation &amp; Finding Store")]
+    LOG[("audit log only")]
+
+    P61("6.1<br/>Impact Mapping<br/>ChangeSet eId → control_versions")
+    P62("6.2<br/>Blast Radius Configuration<br/>exact eId · parent article · cross-refs")
+    P63("6.3<br/>Impact Report Assembly<br/>severity heuristic + affected firms")
+    P64{"6.4<br/>Human Review Gate<br/>MANDATORY"}
+    P65("6.5<br/>Control Version Issue<br/>immutable, tied to ChangeSet id")
+    P66("6.6<br/>Invalidation Marking<br/>interpretation-only change")
+    P67("6.7<br/>Firm Fan-Out<br/>batched, continue-as-new")
+    P68{"6.8<br/>Stale?<br/>any input hash mismatch"}
+    P69("6.9<br/>Carry-Forward Verdict<br/>reused_from_evaluation_id")
+    P610("6.10<br/>Residue Batching<br/>group by (model, prompt_sha256)")
+    RUN(["to 4.0 / 5.0 — re-evaluate residue only"])
+    P611("6.11<br/>Run Diff<br/>vs previous verdict per control lineage")
+    P612("6.12<br/>Alert Classification<br/>dedupe_key firm:control:verdict:sev")
+    SIL(["no notification"])
+
+    D1 -->|"ChangeSet: changed eIds + hash pairs"| P61
+    D9 -->|"control → article inverted index"| P61
+    P61 --> P62
+    P62 -->|"first ring: exact eId<br/>second ring: citing provisions"| P63
+    D9 -->|"firms and sections consulted<br/>by the impacted controls"| P63
+    P63 -->|"impact report → regulatory review queue"| P64
+    ANA -->|"analyst decision"| P64
+    P64 -->|"reject / no impact"| LOG
+    P64 -->|"approve — text obligation changed"| P65
+    P64 -->|"interpretation-only (e.g. ESMA Q&amp;A)"| P66
+    P65 -->|"new immutable control_version"| D2
+    P65 --> P67
+    P66 -->|"forbids hash reuse even when text unchanged"| P67
+    P67 --> P68
+    D9 -.->|"prior input hashes per (firm, control)"| P68
+    P68 -->|"unchanged and reuse permitted"| P69
+    P68 -->|"changed, or invalidates flag set"| P610
+    P610 ==>|"batch API submit, cost brake armed"| RUN
+    RUN --> P611
+    P69 --> P611
+    D6 -.->|"previous verdict per lineage"| P611
+    P611 -->|"append new evaluations"| D6
+    P611 --> P612
+    P612 -->|"NEW_GAP / WORSENED → real-time alert"| DJ
+    P612 -->|"IMPROVED / RESOLVED → digest"| DJ
+    P612 -->|"UNCHANGED"| SIL
+
+    classDef ext fill:#F2F2F2,stroke:#555555,stroke-width:1.5px,color:#111111
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    classDef store fill:#FDF3E3,stroke:#B26B00,stroke-width:1.5px,color:#111111
+    classDef gate fill:#FFF9E6,stroke:#8A6D00,stroke-width:2px,color:#111111
+    classDef human fill:#FDE8E8,stroke:#A32020,stroke-width:2px,color:#111111
+    classDef port fill:#FFFFFF,stroke:#1F3B63,stroke-width:1px,stroke-dasharray:4 3,color:#111111
+    class DJ ext
+    class ANA,P64 human
+    class P61,P62,P63,P65,P66,P67,P69,P610,P611,P612 proc
+    class P68 gate
+    class D1,D2,D6,D9,LOG store
+    class RUN,SIL port

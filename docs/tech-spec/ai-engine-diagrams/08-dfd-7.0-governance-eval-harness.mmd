@@ -1,0 +1,45 @@
+flowchart TB
+    ENG["AI Engineer"]
+    SME["Compliance SME"]
+    DJ["Core Platform (Django)"]
+
+    P71("7.1<br/>Golden Case Curation<br/>expert-labelled pairs, versioned")
+    P72("7.2<br/>Configuration Change Detection<br/>prompt · model · embedding gen")
+    P73("7.3<br/>Harness Run<br/>full pipeline over golden set")
+    P74("7.4<br/>Metric Computation<br/>precision · recall · accuracy · groundedness")
+    P75{"7.5<br/>Promotion Gate<br/>accuracy ≥ 85% (ADR-025)"}
+    P76("7.6<br/>Activation<br/>status → active, partial unique index")
+    P77("7.7<br/>Production Feedback<br/>human override rate per suggestion")
+
+    D7[("D7 | Model &amp; Prompt Registry")]
+    D8[("D8 | Golden Dataset &amp; Eval Runs")]
+
+    SME -->|"labelled WSP-section ↔ Requirement pairs"| P71
+    P71 -->|"dataset_version"| D8
+    ENG -->|"new prompt_template / model_config"| D7
+    D7 -->|"status = evaluating"| P72
+    P71 -->|"dataset updated → re-validate<br/>the CURRENT active config"| P72
+    P72 --> P73
+    D8 -->|"golden cases"| P73
+    P73 ==>|"runs 4.0 → 5.0 unchanged"| P45OUT(["pipeline under test"])
+    P45OUT --> P74
+    P74 -->|"ai_eval_run record"| D8
+    P74 --> P75
+    P75 -->|"pass"| P76 -->|"exactly one active per template_name"| D7
+    P75 -->|"fail — configuration blocked<br/>from UAT and production"| BLOCK(["remains 'evaluating'"])
+    DJ -->|"confirm / edit / reject events"| P77
+    P77 -->|"override rate, aggregated<br/>into the same metric store"| D8
+    P77 -.->|"regression signal"| P72
+
+    classDef ext fill:#F2F2F2,stroke:#555555,stroke-width:1.5px,color:#111111
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    classDef store fill:#FDF3E3,stroke:#B26B00,stroke-width:1.5px,color:#111111
+    classDef gate fill:#FFF9E6,stroke:#8A6D00,stroke-width:2px,color:#111111
+    classDef human fill:#FDE8E8,stroke:#A32020,stroke-width:2px,color:#111111
+    classDef port fill:#FFFFFF,stroke:#1F3B63,stroke-width:1px,stroke-dasharray:4 3,color:#111111
+    class DJ ext
+    class ENG,SME human
+    class P71,P72,P73,P74,P76,P77 proc
+    class P75 gate
+    class D7,D8 store
+    class P45OUT,BLOCK port

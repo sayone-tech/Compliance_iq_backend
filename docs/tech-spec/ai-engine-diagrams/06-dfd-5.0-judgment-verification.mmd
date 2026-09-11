@@ -1,0 +1,66 @@
+flowchart TB
+    IN(["from 4.0 — evidence bundle + input_sha256"])
+    PROV["AI Providers (EU)<br/>completion · groundedness judge"]
+
+    D6[("D6 | Evaluation &amp; Finding Store")]
+    D7[("D7 | Model &amp; Prompt Registry")]
+    D9[("D9 | Dependency Index")]
+    D10[("D10 | Result Cache")]
+
+    C1{"Cache probe<br/>input_sha256 match<br/>and reuse permitted?"}
+    LAYER{"Control<br/>evaluation_layer"}
+    P51("5.1<br/>Deterministic Controls<br/>regex · thresholds · TOC completeness")
+    P52("5.2<br/>Prompt Assembly<br/>static prefix (system + control + regulation)<br/>+ variable evidence suffix")
+    P53("5.3<br/>Constrained Generation<br/>JSON-schema-enforced decoding")
+    P54("5.4<br/>Provenance Fill<br/>page + section copied from chunk metadata")
+    P55{"5.5<br/>Span existence<br/>verbatim at offsets?"}
+    P56{"5.6<br/>Citation integrity<br/>right document version?"}
+    P57{"5.7<br/>Groundedness judge<br/>claim-level entailment"}
+    P58("5.8<br/>Composite Confidence<br/>retrieval + groundedness + self-consistency")
+    P59{"5.9<br/>Threshold policy<br/>(asymmetric)"}
+    P510("5.10<br/>Persist Append-Only<br/>status = pending_review")
+    HR("NEEDS_HUMAN_REVIEW<br/>first-class terminal state")
+    HC("Human confirmation<br/>required before display")
+
+    D10 -.->|"prior verdict lookup"| C1
+    IN --> C1
+    C1 -->|"hit — carry forward,<br/>reused_from_evaluation_id set"| P510
+    C1 -->|"miss, or invalidates flag set"| LAYER
+    LAYER -->|"deterministic — no model call"| P51
+    P51 --> P510
+    LAYER -->|"semantic / hybrid"| P52
+    D7 -->|"active prompt_template + model_config"| P52
+    P52 -->|"prompt + evidence<br/>(tenant content — EU routing enforced)"| PROV
+    PROV -->|"decision · confidence · chunk_ids ·<br/>quoted_span · gaps"| P53
+    P53 --> P54 --> P55
+    P55 -->|"no — regenerate once"| P52
+    P55 -->|"no on retry"| HR
+    P55 -->|"yes"| P56
+    P56 -->|"no"| HR
+    P56 -->|"yes"| P57
+    P57 <-->|"second model, different prompt"| PROV
+    P57 -->|"&lt; 0.7 — blocked"| HR
+    P57 -->|"0.7–0.8 — flagged for sampling"| P58
+    P57 -->|"≥ 0.8"| P58
+    P58 --> P59
+    P59 -->|"confidence &lt; 0.6"| HR
+    P59 -->|"0.6–0.8 and FAIL / PARTIAL"| HC
+    P59 -->|"0.6–0.8 and PASS, or ≥ 0.8"| P510
+    HR --> P510
+    HC --> P510
+    P510 -->|"verdict + citations + provenance"| D6
+    P510 -->|"consulted sections + input hashes"| D9
+    P510 -.->|"store verdict by input_sha256"| D10
+
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    classDef store fill:#FDF3E3,stroke:#B26B00,stroke-width:1.5px,color:#111111
+    classDef prov fill:#EDE7F6,stroke:#5B3FA0,stroke-width:2px,color:#111111
+    classDef gate fill:#FFF9E6,stroke:#8A6D00,stroke-width:2px,color:#111111
+    classDef human fill:#FDE8E8,stroke:#A32020,stroke-width:2px,color:#111111
+    classDef port fill:#FFFFFF,stroke:#1F3B63,stroke-width:1px,stroke-dasharray:4 3,color:#111111
+    class PROV prov
+    class P51,P52,P53,P54,P58,P510 proc
+    class C1,LAYER,P55,P56,P57,P59 gate
+    class D6,D7,D9,D10 store
+    class HR,HC human
+    class IN port

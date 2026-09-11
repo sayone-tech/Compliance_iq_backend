@@ -1,0 +1,57 @@
+sequenceDiagram
+    autonumber
+    actor CCO as Compliance Officer
+    participant DJ as Django Core
+    participant P3 as 3.0 Doc Intelligence
+    participant P4 as 4.0 Retrieval
+    participant P5 as 5.0 Judgment
+    participant PR as Provider Gateway (EU)
+    participant P1 as 1.0 Reg Ingestion
+    participant P6 as 6.0 Revalidation
+    actor ANA as Regulatory Analyst
+
+    rect rgb(240, 245, 252)
+    Note over CCO,PR: Journey A — new WSP version uploaded
+    CCO->>DJ: upload WSP v3 (PDF)
+    DJ->>DJ: persist wsp_version, write outbox event
+    DJ->>P3: ai_job(parse) — S3 ref, tenant context
+    P3->>P3: parse · OCR fallback · normalise · section tree · hash
+    P3->>PR: embed chunks (tenant content, EU-routed)
+    PR-->>P3: vectors
+    P3->>DJ: section tree + chunks + vectors (written via Django)
+    P3-->>P4: wsp.embedded
+    loop per applicable control
+        P4->>P4: applicability · dense+BM25 · RRF · rerank
+        P4->>P5: evidence bundle + input_sha256
+        alt cache hit on input_sha256
+            P5->>P5: carry forward prior verdict (no model call)
+        else deterministic control
+            P5->>P5: regex / threshold check
+        else semantic control
+            P5->>PR: prompt (static prefix cached) + evidence
+            PR-->>P5: schema-constrained JSON
+            P5->>P5: span match · citation integrity · groundedness
+        end
+    end
+    P5->>DJ: verdicts + citations, all status = pending_review
+    DJ-->>CCO: findings queue + coverage dashboard
+    CCO->>DJ: confirm / override / dismiss
+    DJ->>DJ: override signal → 7.7 feedback metrics
+    end
+
+    rect rgb(252, 246, 240)
+    Note over P1,ANA: Journey B — regulation changes (continuous, upload-independent)
+    P1->>P1: daily SPARQL poll — amends/corrects on tracked CELEX
+    P1->>P1: fetch Formex · parse · hash · tree-diff vs stored expression
+    P1->>P6: ChangeSet (eId refs + hash pairs)
+    P6->>P6: impact map via control→article index, then blast radius
+    P6->>ANA: impact report — MANDATORY review gate
+    ANA-->>P6: approve new control_version / mark invalidates / reject
+    P6->>P6: fan out by firm, per (firm, control) hash comparison
+    P6->>P4: residue only — unchanged inputs carried forward
+    P4->>P5: evidence bundles (batched, grouped by prompt_sha256)
+    P5-->>P6: verdicts
+    P6->>P6: diff vs previous run per control lineage
+    P6->>DJ: NEW_GAP / WORSENED → alert · IMPROVED → digest · UNCHANGED → silent
+    DJ-->>CCO: alert on transitions only
+    end

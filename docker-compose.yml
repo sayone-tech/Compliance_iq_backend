@@ -1,0 +1,63 @@
+# `docker compose up -d qdrant` brings up the vector store on its own -- the app
+# service sits behind the "cli" profile because it is a one-shot command runner,
+# not a daemon:
+#
+#   docker compose up -d qdrant
+#   docker compose run --rm wsp-poc python3 scripts/wsp_poc/validate_wsp.py --wsp ...
+#
+#   docker compose down       keeps the index and the embedding cache
+#   docker compose down -v    destroys both (~$0.003 of OpenAI spend to rebuild)
+
+services:
+  qdrant:
+    # Pinned, never :latest -- the on-disk storage format is version-specific.
+    # Keep this minor in step with qdrant-client in requirements.txt.
+    image: qdrant/qdrant:v1.19.1
+    restart: unless-stopped
+    ports:
+      # Loopback only. This is a POC index holding client WSP prose in its
+      # payload; it has no business listening on every interface.
+      - "127.0.0.1:6333:6333"     # REST + dashboard at /dashboard
+      - "127.0.0.1:6334:6334"     # gRPC
+    volumes:
+      - qdrant_storage:/qdrant/storage
+      - qdrant_snapshots:/qdrant/snapshots
+    # No healthcheck: the qdrant image ships neither curl nor wget, so CMD-SHELL
+    # probes are version-fragile. Readiness is QdrantVectorStore.wait_ready(),
+    # which also covers "Qdrant in compose, script run natively" -- a workflow a
+    # compose healthcheck cannot reach.
+
+  wsp-poc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    profiles: ["cli"]
+    depends_on:
+      qdrant:
+        condition: service_started
+    environment:
+      - QDRANT_URL=http://qdrant:6333
+      - PYTHONPATH=/app/scripts
+      # List form, NOT `OPENAI_API_KEY: "${OPENAI_API_KEY:-}"`. The mapping form
+      # with a default sets the variable to the empty string when the host shell
+      # has none, and an empty-but-present variable shadows the .env file the app
+      # loads through the bind mount -- the run then dies with "no API key" even
+      # though scripts/wsp_poc/.env holds one. This form passes the variable
+      # through only when it is actually set, so the .env fallback still works.
+      # The key is never baked into the image or into this file.
+      - OPENAI_API_KEY
+    # UID is a bash shell variable and is not exported, so this usually falls back
+    # to the literal 1000 -- which is the uid of the image's `app` user and of the
+    # host user here, so reports land host-owned either way.
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      # The whole repo, deliberately: the PDFs live under docs/ and reports land
+      # in out/, both inside the tree, so every README path works verbatim inside
+      # the container. out/ must NOT get its own named volume -- that would hide
+      # the reports inside Docker.
+      - .:/app
+    working_dir: /app
+
+volumes:
+  qdrant_storage:
+  qdrant_snapshots:

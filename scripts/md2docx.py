@@ -37,6 +37,9 @@ TAG_COLOUR = {
     '11 Aug 2026 MOM': '008080',        # teal
     'Aug 2026 onboarding flow': '843C0C',  # brown
     '14 Aug 2026 MOM': 'CC00CC',        # magenta
+    'Sep 2026 scope decision': 'C00000',  # dark red -- v9.0, the descoping revision
+    'Sep 2026 model revision': '2E7D32',  # dark green -- v10.0, service line selection + per-step sampling
+    'Sep 2026 test model': '7B3F00',  # dark amber -- v11.0, the Test -> Requirement -> Article restructure
     'status note': '595959',            # grey
 }
 # Callout kind -> cell fill.
@@ -48,6 +51,7 @@ CALLOUT_FILL = {
 NOTE_FILL = {  # **NOTE** *(colour ...)* variants
     'blue': 'DDEBF7', 'orange': 'FCE4D6', 'purple': 'E6E0F5',
     'brown': 'F5E6D9', 'magenta': 'F9E0F9', 'grey': 'EDEDED',
+    'red': 'FBE4E4',
 }
 HEADER_FILL = '1F4E79'
 ID_COLOUR = '1155CC'

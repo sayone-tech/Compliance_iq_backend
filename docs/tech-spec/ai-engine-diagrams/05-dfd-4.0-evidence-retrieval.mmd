@@ -1,0 +1,49 @@
+flowchart TB
+    PROV["AI Provider (EU)<br/>cross-encoder rerank"]
+
+    D2[("D2 | Control Catalogue")]
+    D3[("D3 | WSP Version &amp; Section Store")]
+    D4[("D4 | Chunk &amp; Vector Index")]
+
+    P41("4.1<br/>Applicability Filter<br/>firm profile vs applicability_expr")
+    P42("4.2<br/>Query Formulation<br/>control templates + FINRA↔EU synonyms")
+    P43("4.3<br/>Dense Retrieval<br/>pgvector HNSW, wsp_version-filtered")
+    P44("4.4<br/>Lexical Retrieval<br/>GIN narrow → true BM25 rescore")
+    P45("4.5<br/>RRF Fusion<br/>50–150 candidates")
+    P46("4.6<br/>Cross-Encoder Rerank<br/>top 10–20")
+    P47("4.7<br/>Parent-Section Expansion<br/>child chunk → enclosing subsection")
+    P48{"4.8<br/>Relevance<br/>below floor?"}
+    NEG("Candidate FAIL<br/>absence_asserted = true<br/>lower confidence")
+    BUN("Evidence bundle<br/>chunks + offsets + section metadata<br/>+ input_sha256")
+    OUT(["to 5.0 Judgment &amp; Verification"])
+
+    D2 -->|"applicable controls,<br/>query templates, evaluation_layer"| P41
+    P41 -->|"in scope"| P42
+    P41 -->|"out of scope"| NA(["NOT_APPLICABLE<br/>reason recorded"])
+    P42 --> P43
+    P42 --> P44
+    D4 -->|"tenant- and version-filtered chunks"| P43
+    D4 --> P44
+    P43 --> P45
+    P44 --> P45
+    P45 --> P46
+    P46 <-->|"rerank scores"| PROV
+    P46 --> P47
+    D3 -->|"section path, page range<br/>(provenance, never model-authored)"| P47
+    P47 --> P48
+    P48 -->|"yes — no section addresses this control"| NEG
+    P48 -->|"no"| BUN
+    NEG --> OUT
+    BUN --> OUT
+    NA --> OUT
+
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    classDef store fill:#FDF3E3,stroke:#B26B00,stroke-width:1.5px,color:#111111
+    classDef prov fill:#EDE7F6,stroke:#5B3FA0,stroke-width:2px,color:#111111
+    classDef gate fill:#FFF9E6,stroke:#8A6D00,stroke-width:2px,color:#111111
+    classDef port fill:#FFFFFF,stroke:#1F3B63,stroke-width:1px,stroke-dasharray:4 3,color:#111111
+    class PROV prov
+    class P41,P42,P43,P44,P45,P46,P47,NEG,BUN proc
+    class P48 gate
+    class D2,D3,D4 store
+    class OUT,NA port

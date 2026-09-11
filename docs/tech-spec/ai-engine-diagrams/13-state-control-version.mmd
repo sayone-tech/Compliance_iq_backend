@@ -1,0 +1,16 @@
+stateDiagram-v2
+    [*] --> draft : 2.0 compiles from an approved Requirement, or 6.0 proposes from a ChangeSet
+    draft --> in_review : queued to Regulatory Analyst
+    in_review --> draft : edits requested
+    in_review --> active : analyst approves — immutable version issued
+    in_review --> rejected : no impact / not adopted
+    active --> superseded : a newer version is activated
+    active --> invalidated : interpretation-only change (text unchanged, meaning changed)
+    invalidated --> superseded : replacement version activated
+    superseded --> [*] : retained — historical verdicts cite it
+    rejected --> [*]
+
+    note right of invalidated
+        The one state where input hashes still
+        match but verdict reuse is FORBIDDEN.
+    end note

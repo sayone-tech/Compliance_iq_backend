@@ -1,0 +1,17 @@
+flowchart LR
+    subgraph L0["Layer 0 — avoid the call entirely"]
+        C1["Applicability filter<br/>controls out of scope for the firm<br/>never enter the pipeline"]
+        C2["Deterministic controls<br/>regex / threshold / structural — no LLM"]
+    end
+    subgraph L1["Layer 1 — reuse a prior result"]
+        C3["Embedding cache<br/>key: (embedding_model, text_sha256)"]
+        C4["Verdict reuse<br/>key: input_sha256 = H(section_text ‖ reg_text ‖ prompt ‖ model)"]
+    end
+    subgraph L2["Layer 2 — make the call cheaper"]
+        C5["Provider prompt cache<br/>static prefix: system + control + regulation text<br/>variable suffix: firm evidence"]
+        C6["Batch submission<br/>revalidation residue grouped by<br/>(model, prompt_sha256)"]
+    end
+    L0 --> L1 --> L2
+
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    class C1,C2,C3,C4,C5,C6 proc

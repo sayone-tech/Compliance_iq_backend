@@ -1,0 +1,13 @@
+flowchart LR
+    E["External entity<br/>(outside the engine)"]
+    P("n.0 Process<br/>(transforms data)")
+    D[("Dn | Data store")]
+    E -->|"data flow (labelled)"| P
+    P --> D
+
+    classDef ext fill:#F2F2F2,stroke:#555555,stroke-width:1.5px,color:#111111
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    classDef store fill:#FDF3E3,stroke:#B26B00,stroke-width:1.5px,color:#111111
+    class E ext
+    class P proc
+    class D store

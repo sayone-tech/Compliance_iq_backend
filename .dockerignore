@@ -1,0 +1,15 @@
+# Build context only. The compose bind mount shadows /app entirely at run time,
+# so this file matters for build speed and for keeping .env out of an image
+# layer -- not for what the container can see when it runs.
+.git/
+.gitignore
+__pycache__/
+*.pyc
+out/
+# 350pp of PDFs have no business in a layer; the mount provides them at run time.
+docs/
+.env
+.env.local
+*.md
+.venv/
+venv/

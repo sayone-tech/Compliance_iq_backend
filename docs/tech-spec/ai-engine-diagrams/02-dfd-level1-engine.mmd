@@ -1,0 +1,104 @@
+flowchart TB
+    EUR["EUR-Lex / CELLAR"]
+    ESA["ESMA / EBA feeds"]
+    S3["Object Store (EU)"]
+    DJ["Core Platform (Django)<br/>system of record · review queues"]
+    PROV["AI Providers (EU region)<br/>embed · rerank · complete · judge"]
+    ANA["Regulatory Analyst"]
+    CCO["Compliance Officer / CCO"]
+
+    subgraph REG["A · Regulatory plane — global, tenant-independent"]
+        direction TB
+        P1("1.0<br/>Regulatory Knowledge<br/>Ingestion")
+        D1[("D1 | Regulation Version Store<br/>articles · paragraphs · content_hash")]
+        P2("2.0<br/>Control Compilation<br/>&amp; Versioning")
+        D2[("D2 | Control Catalogue<br/>immutable control_versions · ELI anchors")]
+        P1 -->|"article + paragraph records"| D1
+        D1 -->|"provision text + hash"| P2
+        P2 -->|"immutable control_version"| D2
+    end
+
+    subgraph DOC["B · Firm document plane — tenant-scoped"]
+        direction TB
+        P3("3.0<br/>WSP Document<br/>Intelligence")
+        D3[("D3 | WSP Version &amp; Section Store<br/>section tree · page ranges · hashes")]
+        D4[("D4 | Chunk &amp; Vector Index<br/>pgvector HNSW + tsvector")]
+        D5[("D5 | AI Job Store<br/>ai_job · result_payload")]
+        P3 -->|"section tree + hashes"| D3
+        P3 -->|"contextualised chunks + vectors"| D4
+        P3 -->|"job status"| D5
+    end
+
+    subgraph EV["C · Evaluation plane — tenant-scoped"]
+        direction TB
+        P4("4.0<br/>Evidence Retrieval<br/>hybrid RAG")
+        P5("5.0<br/>Judgment &amp;<br/>Verification")
+        D6[("D6 | Evaluation &amp; Finding Store<br/>append-only verdicts + citations")]
+        D9[("D9 | Dependency Index<br/>control ↔ section ↔ input hashes")]
+        D10[("D10 | Result Cache<br/>keyed by content hash")]
+        P4 -->|"evidence bundle + input_sha256"| P5
+        P5 -->|"verdicts, status = pending_review"| D6
+        P5 -->|"consulted sections + input hashes"| D9
+        P5 <-->|"verdict reuse by input_sha256"| D10
+    end
+
+    subgraph CH["D · Continuity plane"]
+        direction TB
+        P6("6.0<br/>Change Impact<br/>&amp; Revalidation")
+    end
+
+    subgraph GOV["E · Governance plane"]
+        direction TB
+        P7("7.0<br/>Model &amp; Prompt Governance<br/>+ Evaluation Harness")
+        D7[("D7 | Model &amp; Prompt Registry")]
+        D8[("D8 | Golden Dataset &amp; Eval Runs")]
+        D8 -->|"golden cases"| P7
+        P7 -->|"metrics"| D8
+        P7 -->|"promote on gate ≥ 85%"| D7
+    end
+
+    EUR -->|"Formex XML + CDM metadata"| P1
+    ESA -->|"guidance / Q&amp;A deltas"| P1
+    ANA -->|"approved control version"| P2
+    S3 -->|"WSP PDF"| P3
+    DJ -->|"ai_job: parse this WSP version"| P3
+    P3 <-->|"embed"| PROV
+    P4 <-->|"rerank"| PROV
+    P5 <-->|"complete · judge"| PROV
+
+    D2 -->|"applicable controls + query templates"| P4
+    D3 -->|"section metadata for provenance"| P4
+    D4 -->|"candidate chunks"| P4
+    D7 -->|"active prompt + model config"| P5
+    P2 -->|"control → article inverted index"| D9
+
+    P1 ==>|"ChangeSet (eId-level diff)"| P6
+    D9 -.->|"prior input hashes · blast radius"| P6
+    D6 -.->|"latest verdict per lineage"| P6
+    P6 ==>|"residue only — re-evaluate"| P4
+    P6 -->|"impact report"| DJ
+    P6 -->|"NEW_GAP / WORSENED alerts"| DJ
+
+    D6 -->|"findings + mapping suggestions"| DJ
+    P5 -->|"result_payload"| D5
+    DJ -->|"regulatory review queue"| ANA
+    DJ -->|"finding + mapping queue"| CCO
+    CCO -->|"confirm / override / dismiss"| DJ
+    DJ -->|"human override signal"| P7
+    P7 -.->|"harness runs the same pipeline"| P4
+
+    classDef ext fill:#F2F2F2,stroke:#555555,stroke-width:1.5px,color:#111111
+    classDef proc fill:#E8F0FB,stroke:#1F3B63,stroke-width:2px,color:#111111
+    classDef store fill:#FDF3E3,stroke:#B26B00,stroke-width:1.5px,color:#111111
+    classDef prov fill:#EDE7F6,stroke:#5B3FA0,stroke-width:2px,color:#111111
+    classDef human fill:#FDE8E8,stroke:#A32020,stroke-width:2px,color:#111111
+    class EUR,ESA,S3,DJ ext
+    class PROV prov
+    class ANA,CCO human
+    class P1,P2,P3,P4,P5,P6,P7 proc
+    class D1,D2,D3,D4,D5,D6,D7,D8,D9,D10 store
+    style REG fill:#FBFCFE,stroke:#8FA3BF,stroke-width:1.5px,stroke-dasharray:5 4
+    style DOC fill:#FBFCFE,stroke:#8FA3BF,stroke-width:1.5px,stroke-dasharray:5 4
+    style EV fill:#FBFCFE,stroke:#8FA3BF,stroke-width:1.5px,stroke-dasharray:5 4
+    style CH fill:#FBFCFE,stroke:#8FA3BF,stroke-width:1.5px,stroke-dasharray:5 4
+    style GOV fill:#FBFCFE,stroke:#8FA3BF,stroke-width:1.5px,stroke-dasharray:5 4

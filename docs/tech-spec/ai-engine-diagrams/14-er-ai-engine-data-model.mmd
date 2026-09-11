@@ -1,0 +1,87 @@
+erDiagram
+    regulations ||--o{ regulation_expressions : "versioned as"
+    regulation_expressions ||--o{ articles : contains
+    articles ||--o{ paragraphs : contains
+    paragraphs ||--o{ requirements : yields
+    requirements ||--o{ control_requirement_map : "mapped by"
+    controls ||--o{ control_versions : "versioned as"
+    control_versions ||--o{ control_requirement_map : maps
+    control_versions ||--o{ expected_evidence : specifies
+    regulation_expressions ||--o{ change_sets : "diffed into"
+    change_sets ||--o{ change_impacts : produces
+    control_versions ||--o{ change_impacts : impacted
+
+    firms ||--o{ wsp_documents : owns
+    wsp_documents ||--o{ wsp_versions : "versioned as"
+    wsp_versions ||--o{ wsp_sections : contains
+    wsp_sections ||--o{ wsp_sections : "parent of"
+    wsp_sections ||--o{ wsp_chunks : "chunked into"
+    wsp_sections ||--o{ ai_mappings : "suggested for"
+    requirements ||--o{ ai_mappings : "suggested to"
+
+    wsp_versions ||--o{ evaluation_runs : "evaluated in"
+    evaluation_runs ||--o{ evaluations : produces
+    control_versions ||--o{ evaluations : "judged by"
+    evaluations ||--o{ findings : surfaces
+    evaluations ||--o{ control_section_dependency : "depends on"
+    wsp_sections ||--o{ control_section_dependency : "consulted in"
+    ai_jobs ||--o{ evaluations : "produced by"
+    model_configs ||--o{ prompt_templates : targets
+    prompt_templates ||--o{ evaluations : "generated under"
+    golden_cases ||--o{ ai_eval_runs : "measured by"
+
+    articles {
+        text article_id "Formex IDENTIFIER e.g. 017"
+        text eid "AKN-style art_17"
+        text label
+        text heading
+        jsonb chapter_path
+        text content_hash "sha256 — revalidation key"
+    }
+    control_versions {
+        uuid id PK
+        int version
+        text evaluation_layer "deterministic|semantic|hybrid"
+        jsonb applicability_expr
+        text requirement_text_sha256 "pinned provision hash"
+        text prompt_sha256
+        date effective_from
+        enum lifecycle_status
+    }
+    wsp_sections {
+        uuid id PK
+        uuid parent_section_id FK
+        text section_number "2.4.7"
+        ltree path
+        int page_start
+        int page_end
+        text section_text_sha256 "reuse key"
+    }
+    wsp_chunks {
+        uuid id PK
+        uuid wsp_section_id FK
+        text chunk_kind "prose|table|list"
+        vector embedding
+        tsvector tsv
+        int char_start
+        int char_end
+    }
+    evaluations {
+        uuid id PK
+        uuid control_version_id FK
+        enum verdict "PASS|PARTIAL|FAIL|NOT_APPLICABLE|NEEDS_HUMAN_REVIEW"
+        numeric confidence
+        jsonb confidence_components
+        jsonb citations "page+section system-filled"
+        text input_sha256 "cache + reuse key"
+        uuid reused_from_evaluation_id FK
+        enum status "always pending_review on write"
+    }
+    control_section_dependency {
+        uuid evaluation_id PK
+        uuid wsp_section_id PK
+        text section_text_sha256
+        text reg_text_sha256
+        text prompt_sha256
+        text model_id
+    }

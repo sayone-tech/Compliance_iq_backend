@@ -1,0 +1,16 @@
+# WSP validation POC
+requests>=2.31        # used by ../fetch_regulation.py (CELLAR fetch)
+lxml>=5.0             # used by ../fetch_regulation.py (Formex parse)
+openai>=1.40          # embeddings + judge calls
+numpy>=1.26           # cosine ranking (a pure-python fallback exists but is slow)
+tiktoken>=0.7         # exact token counts for the cost meter (falls back to chars/4)
+
+# Vector store. The upper bound earns its place: qdrant-client majors have
+# moved API shapes before (search became query_points), and a floor-only spec
+# is how this file silently breaks months from now. Keep this minor in step
+# with the qdrant/qdrant image pinned in docker-compose.yml.
+qdrant-client>=1.19,<1.20
+
+# PDF text extraction uses the poppler `pdftotext` binary, not a python library:
+#   sudo apt install poppler-utils
+# The container image carries it already -- see the repository-root Dockerfile.

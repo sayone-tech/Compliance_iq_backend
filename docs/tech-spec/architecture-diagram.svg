@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="1200" viewBox="0 0 1520 1200">
+<defs>
+<marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9e9e9e"/></marker>
+<marker id="mb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4a86e8"/></marker>
+</defs>
+<rect x="0" y="0" width="1520" height="1200" fill="#ffffff"/>
+<text x="55" y="34" font-family="Liberation Sans, Arial, sans-serif" font-size="20" fill="#9e9e9e" font-weight="bold" text-anchor="start">Clients</text>
+<rect x="118" y="55" width="338" height="110" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="287.0" y="87" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Firm Application</text>
+<text x="287.0" y="110" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">React SPA · shared app domain</text>
+<text x="287.0" y="133" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">WSP · testing · findings · reports</text>
+<rect x="590" y="55" width="338" height="110" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="759.0" y="87" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Platform Admin Portal</text>
+<text x="759.0" y="110" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">React SPA · admin subdomain</text>
+<text x="759.0" y="133" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">content pipeline · firm mgmt</text>
+<rect x="1062" y="55" width="338" height="110" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="1231.0" y="87" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Marketing Site</text>
+<text x="1231.0" y="110" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">Next.js · Amplify Hosting</text>
+<text x="1231.0" y="133" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">static · headless CMS</text>
+<text x="55" y="225" font-family="Liberation Sans, Arial, sans-serif" font-size="20" fill="#9e9e9e" font-weight="bold" text-anchor="start">Edge</text>
+<rect x="520" y="240" width="480" height="92" rx="10" fill="#f5f5f5" stroke="#c9c9c9" stroke-width="1.5"/>
+<text x="760.0" y="272" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">CloudFront / ALB</text>
+<text x="760.0" y="295" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">AWS WAF · Shield · TLS 1.3</text>
+<text x="760.0" y="316" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">Route 53 DNS · ACM certificates</text>
+<rect x="520" y="362" width="480" height="86" rx="10" fill="#f5f5f5" stroke="#c9c9c9" stroke-width="1.5"/>
+<text x="760.0" y="394" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Caddy Reverse Proxy</text>
+<text x="760.0" y="417" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">automatic HTTPS (ACME) · TLS termination</text>
+<text x="760.0" y="438" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">ingress for api-web · ai-service · HTTP + WebSocket</text>
+<path d="M287,167 C330,215 470,220 560,238" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<text x="360" y="206" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="middle">HTTPS · JWT</text>
+<path d="M759,167 L759,236" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<path d="M1231,167 C1180,210 1060,215 985,236" fill="none" stroke="#9e9e9e" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#m)"/>
+<text x="1163" y="193" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="middle">lead capture · rate-limited</text>
+<path d="M760,334 L760,358" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<path d="M640,450 C500,490 380,478 305,502" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<text x="55" y="478" font-family="Liberation Sans, Arial, sans-serif" font-size="20" fill="#9e9e9e" font-weight="bold" text-anchor="start">Application</text>
+<rect x="60" y="492" width="1400" height="248" rx="12" fill="none" stroke="#d5d5d5" stroke-width="1.5" stroke-dasharray="7 6"/>
+<rect x="118" y="505" width="297" height="207" rx="10" fill="#f5f5f5" stroke="#c9c9c9" stroke-width="1.5"/>
+<text x="266.5" y="537" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Core API</text>
+<text x="266.5" y="560" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">Django + DRF modular monolith</text>
+<line x1="138" y1="577" x2="395" y2="577" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="266.5" y="606" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">tenancy middleware · auth · MFA</text>
+<text x="266.5" y="629" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">outbox · state machines</text>
+<text x="266.5" y="652" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">dual control · audit writes</text>
+<rect x="450" y="505" width="295" height="207" rx="10" fill="#ffffff" stroke="#4a86e8" stroke-width="2.2"/>
+<text x="597.5" y="537" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Redis</text>
+<text x="597.5" y="560" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">ElastiCache · broker + cache</text>
+<line x1="470" y1="577" x2="725" y2="577" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="597.5" y="606" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">Celery queues per workload</text>
+<text x="597.5" y="629" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">WebSocket pub/sub · config cache</text>
+<text x="597.5" y="652" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">user sessions · instant revocation</text>
+<rect x="780" y="505" width="295" height="207" rx="10" fill="#ffffff" stroke="#4a86e8" stroke-width="2.2"/>
+<text x="927.5" y="537" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Worker Fleet</text>
+<text x="927.5" y="560" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">Celery · one service per queue</text>
+<line x1="800" y1="577" x2="1055" y2="577" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="927.5" y="606" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">outbox relay · ai · reporting</text>
+<text x="927.5" y="629" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">notifications · reg monitoring</text>
+<text x="927.5" y="652" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">evaluation runs</text>
+<rect x="1110" y="505" width="295" height="207" rx="10" fill="#ffffff" stroke="#4a86e8" stroke-width="2.2"/>
+<text x="1257.5" y="537" font-family="Liberation Sans, Arial, sans-serif" font-size="19" fill="#1f1f1f" font-weight="bold" text-anchor="middle">AI Service</text>
+<text x="1257.5" y="560" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">FastAPI · LangChain pipelines</text>
+<line x1="1130" y1="577" x2="1385" y2="577" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="1257.5" y="606" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">parsing · OCR · embeddings</text>
+<text x="1257.5" y="629" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">hybrid retrieval · mapping</text>
+<text x="1257.5" y="652" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">gap analysis · eval harness</text>
+<path d="M417,610 L446,610" fill="none" stroke="#4a86e8" stroke-width="2" marker-end="url(#mb)"/>
+<text x="432" y="598" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="middle">enqueue</text>
+<path d="M747,610 L776,610" fill="none" stroke="#4a86e8" stroke-width="2" marker-end="url(#mb)"/>
+<text x="762" y="598" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="middle">consume</text>
+<path d="M1077,610 L1106,610" fill="none" stroke="#4a86e8" stroke-width="2" marker-end="url(#mb)"/>
+<text x="1092" y="598" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="middle">internal API</text>
+<path d="M1200,714 C1000,788 550,788 302,716" fill="none" stroke="#4a86e8" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#mb)"/>
+<text x="750" y="795" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="middle">signed callback · job status</text>
+<text x="55" y="830" font-family="Liberation Sans, Arial, sans-serif" font-size="20" fill="#9e9e9e" font-weight="bold" text-anchor="start">Data &amp; Storage</text>
+<rect x="118" y="850" width="247" height="136" rx="10" fill="#f5f5f5" stroke="#c9c9c9" stroke-width="1.5"/>
+<text x="241.5" y="882" font-family="Liberation Sans, Arial, sans-serif" font-size="17" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Aurora PostgreSQL</text>
+<text x="241.5" y="905" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">Multi-AZ · full-text search</text>
+<line x1="138" y1="922" x2="345" y2="922" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="241.5" y="951" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">shared tables · tenant_id + RLS</text>
+<text x="241.5" y="974" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">immutability triggers</text>
+<rect x="388" y="850" width="247" height="136" rx="10" fill="#f5f5f5" stroke="#c9c9c9" stroke-width="1.5"/>
+<text x="511.5" y="882" font-family="Liberation Sans, Arial, sans-serif" font-size="17" fill="#1f1f1f" font-weight="bold" text-anchor="middle">S3 Object Storage</text>
+<text x="511.5" y="905" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">presigned URLs · quarantine</text>
+<line x1="408" y1="922" x2="615" y2="922" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="511.5" y="951" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">WSP · evidence · reports</text>
+<text x="511.5" y="974" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">golden dataset</text>
+<rect x="656" y="850" width="247" height="136" rx="10" fill="#f5f5f5" stroke="#c9c9c9" stroke-width="1.5"/>
+<text x="779.5" y="882" font-family="Liberation Sans, Arial, sans-serif" font-size="17" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Qdrant</text>
+<text x="779.5" y="905" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">vector DB · EU-resident</text>
+<line x1="676" y1="922" x2="883" y2="922" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="779.5" y="951" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">HNSW · tenant_id filters</text>
+<text x="779.5" y="974" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">generation-versioned</text>
+<rect x="924" y="850" width="247" height="136" rx="10" fill="#f5f5f5" stroke="#c9c9c9" stroke-width="1.5"/>
+<text x="1047.5" y="882" font-family="Liberation Sans, Arial, sans-serif" font-size="17" fill="#1f1f1f" font-weight="bold" text-anchor="middle">KMS</text>
+<text x="1047.5" y="905" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">envelope encryption</text>
+<line x1="944" y1="922" x2="1151" y2="922" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="1047.5" y="951" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">one CMK per tenant</text>
+<text x="1047.5" y="974" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">annual rotation</text>
+<rect x="1192" y="850" width="247" height="136" rx="10" fill="#f5f5f5" stroke="#c9c9c9" stroke-width="1.5"/>
+<text x="1315.5" y="882" font-family="Liberation Sans, Arial, sans-serif" font-size="17" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Secrets Manager</text>
+<text x="1315.5" y="905" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">all credentials</text>
+<line x1="1212" y1="922" x2="1419" y2="922" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="1315.5" y="951" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">90-day rotation</text>
+<text x="1315.5" y="974" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">no secrets in code</text>
+<path d="M230,714 L230,846" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<path d="M840,714 C760,780 600,790 530,846" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<path d="M1170,714 C1000,780 850,790 790,846" fill="none" stroke="#4a86e8" stroke-width="2" marker-end="url(#mb)"/>
+<text x="55" y="1026" font-family="Liberation Sans, Arial, sans-serif" font-size="20" fill="#9e9e9e" font-weight="bold" text-anchor="start">External Services</text>
+<rect x="118" y="1046" width="200" height="140" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="218.0" y="1078" font-family="Liberation Sans, Arial, sans-serif" font-size="16" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Payment Provider</text>
+<text x="218.0" y="1101" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">hosted checkout</text>
+<line x1="138" y1="1118" x2="298" y2="1118" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="218.0" y="1147" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">activation webhook</text>
+<text x="218.0" y="1170" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">no card data</text>
+<rect x="342" y="1046" width="200" height="140" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="442.0" y="1078" font-family="Liberation Sans, Arial, sans-serif" font-size="16" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Email Delivery</text>
+<text x="442.0" y="1101" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">outbound channel</text>
+<line x1="362" y1="1118" x2="522" y2="1118" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="442.0" y="1147" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">localised templates</text>
+<text x="442.0" y="1170" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">delivery recorded</text>
+<rect x="566" y="1046" width="200" height="140" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="666.0" y="1078" font-family="Liberation Sans, Arial, sans-serif" font-size="16" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Regulatory Feeds</text>
+<text x="666.0" y="1101" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">official sources only</text>
+<line x1="586" y1="1118" x2="746" y2="1118" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="666.0" y="1147" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">EUR-Lex/CELLAR</text>
+<text x="666.0" y="1170" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">EBA · ESMA · national</text>
+<rect x="790" y="1046" width="200" height="140" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="890.0" y="1078" font-family="Liberation Sans, Arial, sans-serif" font-size="16" fill="#1f1f1f" font-weight="bold" text-anchor="middle">Amazon Textract</text>
+<text x="890.0" y="1101" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">OCR</text>
+<line x1="810" y1="1118" x2="970" y2="1118" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="890.0" y="1147" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">scanned documents only</text>
+<rect x="1014" y="1046" width="200" height="140" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="1114.0" y="1078" font-family="Liberation Sans, Arial, sans-serif" font-size="16" fill="#1f1f1f" font-weight="bold" text-anchor="middle">LLM Providers</text>
+<text x="1114.0" y="1101" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">EU · zero retention</text>
+<line x1="1034" y1="1118" x2="1194" y2="1118" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="1114.0" y="1147" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">Bedrock · OpenAI</text>
+<text x="1114.0" y="1170" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">Anthropic · Azure</text>
+<rect x="1238" y="1046" width="200" height="140" rx="10" fill="#fafafa" stroke="#c4c4c4" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="1338.0" y="1078" font-family="Liberation Sans, Arial, sans-serif" font-size="16" fill="#1f1f1f" font-weight="bold" text-anchor="middle">LangSmith Cloud</text>
+<text x="1338.0" y="1101" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#9e9e9e" text-anchor="middle">LLM observability</text>
+<line x1="1258" y1="1118" x2="1418" y2="1118" stroke="#e3e3e3" stroke-width="1.5"/>
+<text x="1338.0" y="1147" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">traces · prompts · cost</text>
+<text x="1338.0" y="1170" font-family="Liberation Sans, Arial, sans-serif" font-size="13.5" fill="#8a8a8a" text-anchor="middle">PII-redacted only</text>
+<path d="M160,1044 C85,960 85,800 160,714" fill="none" stroke="#9e9e9e" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#m)"/>
+<text x="230" y="1016" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="start">activation webhook (server-to-server)</text>
+<path d="M866,716 C790,830 700,950 445,1042" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<path d="M950,716 C955,830 908,950 700,1042" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<text x="700" y="1016" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="start">scheduled fetch · content hash</text>
+<path d="M1180,716 C1050,800 915,900 893,1042" fill="none" stroke="#9e9e9e" stroke-width="2" marker-end="url(#m)"/>
+<path d="M1330,714 C1360,850 1180,970 1116,1042" fill="none" stroke="#4a86e8" stroke-width="2" marker-end="url(#mb)"/>
+<text x="1305" y="825" font-family="Liberation Sans, Arial, sans-serif" font-size="13" fill="#9e9e9e" text-anchor="start">EU-region</text>
+<path d="M1395,714 C1465,850 1445,970 1345,1042" fill="none" stroke="#4a86e8" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#mb)"/>
+</svg>
