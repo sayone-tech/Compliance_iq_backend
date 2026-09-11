@@ -3,6 +3,8 @@
 FROM python:3.12-slim
 
 # PDF text extraction shells out to poppler's pdftotext, not a Python library.
+# The image serves both the WSP validation CLI and the test-case execution API
+# (scripts/testcase_poc, `uvicorn testcase_poc.app:app` -- see docker-compose.yml).
 # tini reaps the child processes that subprocess call leaves behind, so Ctrl-C on
 # a long run does not strand a pdftotext.
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -22,8 +24,11 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-COPY scripts/wsp_poc/requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+# testcase_poc/requirements.txt includes wsp_poc/requirements.txt via `-r ../wsp_poc/...`,
+# so the relative path must survive the copy.
+COPY scripts/wsp_poc/requirements.txt /tmp/req/wsp_poc/requirements.txt
+COPY scripts/testcase_poc/requirements.txt /tmp/req/testcase_poc/requirements.txt
+RUN pip install -r /tmp/req/testcase_poc/requirements.txt
 
 # The whole scripts/ tree, not just wsp_poc/: validate_wsp.py inserts its parent
 # directory on sys.path and imports fetch_regulation from it.

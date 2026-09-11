@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "testcase": "./graph.py:graph"
+  },
+  "env": ".env"
+}
