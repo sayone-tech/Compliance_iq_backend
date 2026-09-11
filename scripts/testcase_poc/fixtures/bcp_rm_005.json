@@ -1,0 +1,96 @@
+{
+  "control_id": "BCP-RM-005",
+  "title": "Personnel & Facilities",
+  "assessment_question": "Determine whether documented continuity arrangements exist for key personnel, alternate work locations, and essential business facilities.",
+  "evidence_ref": "docs/SampleTest/Evidence.pdf",
+  "firm_name": "ABC, LLC (ABC)",
+  "steps": [
+    {
+      "id": "step_1",
+      "number": 1,
+      "instruction": "Obtain the Personnel and Facility Continuity Plan and confirm it is current and approved.",
+      "sample_methodology": "Tier 1: 100% Census"
+    },
+    {
+      "id": "step_2",
+      "number": 2,
+      "instruction": "Verify critical personnel are identified and designated successors are documented for key roles.",
+      "sample_methodology": "Tier 1: 100% Census"
+    },
+    {
+      "id": "step_3",
+      "number": 3,
+      "instruction": "Confirm alternate work locations and remote working capabilities are documented and available.",
+      "sample_methodology": "Tier 1: 100% Census"
+    },
+    {
+      "id": "step_4",
+      "number": 4,
+      "instruction": "Verify facility recovery plans and access arrangements exist for essential business facilities.",
+      "sample_methodology": "Tier 1: 100% Census"
+    },
+    {
+      "id": "step_5",
+      "number": 5,
+      "instruction": "Confirm essential hardware, software, and physical equipment requirements are identified for continuity scenarios.",
+      "sample_methodology": "Tier 1: 100% Census"
+    },
+    {
+      "id": "step_6",
+      "number": 6,
+      "instruction": "Verify workforce communication procedures exist for notifying personnel during an emergency relocation.",
+      "sample_methodology": "Tier 1: 100% Census"
+    },
+    {
+      "id": "step_7",
+      "number": 7,
+      "instruction": "Confirm an emergency contact list/roster is current and accessible to relevant personnel.",
+      "sample_methodology": "Tier 1: 100% Census"
+    }
+  ],
+  "ground_truth": [
+    {
+      "step_id": "step_1",
+      "tag": "FAIL",
+      "action_taken": "Not Validated",
+      "narrative": "CITT obtained the Business Continuity Plan and confirmed a formal approval signature by James L Raper Jr., Chief Compliance Officer, dated January 5th, 2023. CITT performed a reconciliation of the plan against current organizational records to evaluate control strength. However, CITT was not able to validate that the plan is within its mandatory 12-month annual review cycle per FINRA Rule 4370 requirements. Because the documented review date exceeds the required annual lifecycle without a documented current re-certification on file, the control fails the currency verification step."
+    },
+    {
+      "step_id": "step_2",
+      "tag": "FAIL",
+      "action_taken": "Not Validated",
+      "narrative": "CITT reconciled the critical personnel listed in the Business Continuity Plan against the active HR employee roster to evaluate control coverage. The reconciliation confirmed that key roles across operational and executive functions are currently active employees. Designated successors were confirmed for the Disaster Recovery Coordinator (Donna Arles named as Back-up Coordinator) and for AML Reporting Escalation (Bill Robbins designated for confidential reports). However, CITT was not able to validate designated successors for other essential key roles—specifically the Chief Financial Officer / Financial Operations Principal (FinOp), Chief Compliance Officer (CCO), and Chief Executive Officer (CEO). While cross-supervision exists between the CEO and CCO for day-to-day oversight, no formal succession or interim coverage paths are documented for extended absences or incapacitation for these key positions."
+    },
+    {
+      "step_id": "step_3",
+      "tag": "PASS",
+      "action_taken": "Validated",
+      "narrative": "CITT confirmed that an alternate physical facility located at 1801 E. Cary Street, Richmond, VA 23219 is formally documented for primary office evacuations. CITT reconciled the active HR employee list against remote access provision records to confirm that remote working capabilities from personal residences are authorized and operationally available for all active staff during localized evacuations or broader health crises. CITT verified that remote access arrangements are supported by mandatory off-site cybersecurity standards—including required firewalls, anti-virus protections, and secure connections—alongside remote telecommunications routing and webmail access (hosted Gmail)."
+    },
+    {
+      "step_id": "step_4",
+      "tag": "PASS",
+      "action_taken": "Validated",
+      "narrative": "CITT verified that comprehensive facility recovery plans and facility access arrangements exist for all essential business operations. In the event of a primary facility disruption, operational access seamlessly transitions to the designated alternate site or authorized residential setups. CITT reconciled the essential business facilities and data repositories against the master IT systems inventory, confirming that core books, records, and client portals are maintained via off-site, cloud-hosted 17a-4 compliant solutions (ShareFile, Smarsh). As a result, recovery does not depend on physical server access at the primary home office. The plan documents clear target recovery timelines of 24 hours for internal disruptions and 24 to 48 hours for wide-scale external disruptions."
+    },
+    {
+      "step_id": "step_5",
+      "tag": "PASS",
+      "action_taken": "Validated",
+      "narrative": "CITT reconciled the software, hardware, and physical equipment requirements listed in the BCP directly against the active IT software/systems inventory and vendor management registry to verify strong control mapping. The reconciliation confirmed complete alignment across all core applications, including Gmail (email), Smarsh (archiving), ShareFile (document backup/17a-4 storage), Intacct (accounting), Decisions (back-office operations), Quest CE (continuing education), RedOak AdMaster (advertising review), and due diligence databases (Thomson Reuters Clear, Refinitiv WorldCheck, IDology, Microbilt). Hardware recovery protocols outline procuring replacement workstations at the alternate site and routing phone communications to mobile/home devices. Required endpoint controls—such as active firewalls, full-disk encryption (BitLocker/FileVault), and up-to-date anti-malware software—were also verified."
+    },
+    {
+      "step_id": "step_6",
+      "tag": "PASS",
+      "action_taken": "Validated",
+      "narrative": "CITT verified that structured workforce communication procedures are established to notify personnel during emergency evacuations or facility relocations. CITT reconciled the notification channels specified in the BCP with the active HR contact list and communication tools, confirming that procedures cover 100% of current workforce members. The plan authorizes the Disaster Recovery Coordinator to assess disruptions and issue concise, direct announcements detailing emergency instructions. Permitted communication channels include personal contact, email broadcasts, text messaging, or phone calls depending on active system availability. Procedures also mandate ongoing direct communication from the Coordinator to update staff on event status and instructions for resuming work."
+    },
+    {
+      "step_id": "step_7",
+      "tag": "PASS",
+      "action_taken": "Validated",
+      "narrative": "CITT reconciled the emergency contact roster in the BCP against the current HR employee directory, executive directory, and active regulatory filings. The reconciliation confirmed that primary internal emergency contact persons (Donna Arles and James L Raper Jr.) are active and accurately listed, alongside complete contact details for external first responders and regulatory bodies (Retreat Doctor’s Hospital, Richmond Fire Station 18, Richmond Police Department Precinct 4, FINRA District Office, and SEC Regional Office). CITT verified multi-channel accessibility, noting hard copies stored at the primary office, electronic copies maintained off-site by compliance leadership, and electronic contact records maintained in the FINRA Contact System (FCS)."
+    }
+  ],
+  "overall_result_expected": "Partially Effective"
+}

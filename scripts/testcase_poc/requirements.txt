@@ -1,0 +1,12 @@
+# TestCase execution POC -- LangGraph + LangSmith + FastAPI.
+# Pulls the WSP POC deps too: extraction, chunking, Qdrant and the cost meter are reused.
+-r ../wsp_poc/requirements.txt
+
+langgraph>=0.4,<2
+langchain-core>=0.3
+langchain-openai>=0.3
+langsmith>=0.3
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9      # multipart uploads on POST /runs
+pydantic>=2.7

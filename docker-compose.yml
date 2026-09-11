@@ -58,6 +58,35 @@ services:
       - .:/app
     working_dir: /app
 
+  # Test-case execution POC (LangGraph + FastAPI). `docker compose up testcase-api`
+  # then http://127.0.0.1:8010/docs. Same image as wsp-poc; no profile, it is a daemon.
+  testcase-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      qdrant:
+        condition: service_started
+    command: ["uvicorn", "testcase_poc.app:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      # 8010 on the host: 8000 is commonly taken by other local stacks.
+      - "127.0.0.1:${TC_API_PORT:-8010}:8000"
+    environment:
+      - QDRANT_URL=http://qdrant:6333
+      - PYTHONPATH=/app/scripts
+      # Passthrough only when set on the host; otherwise scripts/testcase_poc/.env
+      # (bind-mounted) is read by the app. Same reasoning as wsp-poc above.
+      - OPENAI_API_KEY
+      - LANGSMITH_TRACING
+      - LANGSMITH_API_KEY
+      - LANGSMITH_PROJECT
+      - LANGSMITH_ENDPOINT
+      - TC_JUDGE_MODEL
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - .:/app
+    working_dir: /app
+
 volumes:
   qdrant_storage:
   qdrant_snapshots:
